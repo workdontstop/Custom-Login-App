@@ -1,0 +1,15 @@
+@font-face {
+  font-family: "kaushan_scriptregular";
+  src: url("./font-kaushan/kaushanscript-regular-webfont.woff2") format("woff2"),
+    url("./font-kaushan/kaushanscript-regular-webfont.woff") format("woff");
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}

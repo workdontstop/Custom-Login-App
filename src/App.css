@@ -1,0 +1,288 @@
+/*  A  */
+.app-little-text-typography {
+  font-weight: normal;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  padding-top: 12px;
+}
+
+/*  B  */
+.Background-header-light {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(160, 160, 160, 1),
+    rgba(160, 160, 160, 0.95),
+    rgba(160, 160, 160, 0.9),
+    rgba(160, 160, 160, 0.85),
+    rgba(160, 160, 160, 0.8),
+    rgba(160, 160, 160, 0.75),
+    rgba(160, 160, 160, 0.7),
+    rgba(160, 160, 160, 0.65),
+    rgba(160, 160, 160, 0.6),
+    rgba(160, 160, 160, 0.55),
+    rgba(160, 160, 160, 0.5),
+    rgba(160, 160, 160, 0.45),
+    rgba(160, 160, 160, 0.4),
+    rgba(160, 160, 160, 0.35),
+    rgba(160, 160, 160, 0.3),
+    rgba(160, 160, 160, 0.25),
+    rgba(160, 160, 160, 0.2),
+    rgba(160, 160, 160, 0.15),
+    rgba(160, 160, 160, 0.1),
+    rgba(160, 160, 160, 0.075),
+    rgba(160, 160, 160, 0.05),
+    rgba(160, 160, 160, 0.025),
+    rgba(160, 160, 160, 0)
+  );
+}
+
+.Background-header-dark {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(51, 53, 53, 1),
+    rgba(51, 53, 53, 0.95),
+    rgba(51, 53, 53, 0.9),
+    rgba(51, 53, 53, 0.85),
+    rgba(51, 53, 53, 0.8),
+    rgba(51, 53, 53, 0.75),
+    rgba(51, 53, 53, 0.7),
+    rgba(51, 53, 53, 0.65),
+    rgba(51, 53, 53, 0.6),
+    rgba(51, 53, 53, 0.55),
+    rgba(51, 53, 53, 0.5),
+    rgba(51, 53, 53, 0.45),
+    rgba(51, 53, 53, 0.4),
+    rgba(51, 53, 53, 0.35),
+    rgba(51, 53, 53, 0.3),
+    rgba(51, 53, 53, 0.25),
+    rgba(51, 53, 53, 0.2),
+    rgba(51, 53, 53, 0.15),
+    rgba(51, 53, 53, 0.1),
+    rgba(51, 53, 53, 0.075),
+    rgba(51, 53, 53, 0.05),
+    rgba(51, 53, 53, 0.025),
+    rgba(51, 53, 53, 0)
+  );
+}
+.buttonshake:active {
+  position: relative;
+  top: 4px;
+}
+.buttonpad {
+  padding-top: 40px;
+}
+
+/*  C */
+
+.centeranything {
+  -ms-transform: translateY(42%);
+  transform: translateY(42%);
+}
+.containerapp {
+  align-items: center;
+  width: 100%;
+  align-content: center;
+  position: fixed;
+  top: 10vh;
+  z-index: 0;
+  padding: 0px;
+}
+.containerappmobile {
+  align-items: center;
+  width: 100%;
+  align-content: center;
+  position: fixed;
+  top: 19vh;
+  padding: 0px;
+}
+
+.centericon {
+  margin: auto;
+}
+
+.containerloginpc {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.containerloginmobile {
+  padding-left: 22%;
+  padding-right: 22%;
+}
+
+/*  D  */
+.dontallowhighlighting {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  outline: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+}
+.dontallowhighlighting::-moz-selection {
+  background: transparent;
+  outline: none;
+}
+.dontallowhighlighting::selection {
+  background: transparent;
+  outline: none;
+}
+
+/*  E  */
+.element-bop {
+  -webkit-animation: element-bop-keyframe 0.5s infinite; /* Safari 4+ */
+  -moz-animation: element-bop-keyframe 0.5s infinite; /* Fx 5+ */
+  -o-animation: element-bop-keyframe 0.5s infinite; /* Opera 12+ */
+  animation: element-bop-keyframe 0.5s infinite; /* IE 10+, Fx 29+ */
+}
+@keyframes element-bop-keyframe {
+  0% {
+    margin-right: -4.5px;
+    font-size: 250%;
+  }
+  30% {
+    margin-right: -11.5px;
+    font-size: 100%;
+  }
+  100% {
+    margin-right: -20.5px;
+    font-size: 160%;
+  }
+}
+
+/*  F  */
+.fadeboyin {
+  -webkit-animation: fadeboyin-keyframe 5s linear 1 forwards; /* Safari 4+ */
+  -moz-animation: fadeboyin-keyframe 5s linear 1 forwards; /* Fx 5+ */
+  -o-animation: fadeboyin-keyframe 5s linear 1 forwards; /* Opera 12+ */
+  animation: fadeboyin-keyframe 5s linear 1 forwards; /* IE 10+, Fx 29+ */
+}
+
+@keyframes fadeboyin-keyframe {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.1;
+  }
+
+  65% {
+    opacity: 0.1;
+  }
+
+  75% {
+    opacity: 0.5;
+  }
+
+  85% {
+    opacity: 0.75;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+/*  H  */
+.heartbeat {
+  -webkit-animation: heartbeat-keyframe 0.5s infinite; /* Safari 4+ */
+  -moz-animation: heartbeat-keyframe 0.5s infinite; /* Fx 5+ */
+  -o-animation: heartbeat-keyframe 0.5s infinite; /* Opera 12+ */
+  animation: heartbeat-keyframe 0.5s infinite; /* IE 10+, Fx 29+ */
+}
+@keyframes heartbeat-keyframe {
+  0% {
+    margin-top: -4.5px;
+    margin-right: 4px;
+    font-size: 250%;
+  }
+  30% {
+    margin-top: -2px;
+    font-size: 200%;
+  }
+  100% {
+    font-size: 160%;
+  }
+}
+
+/*  L  */
+.logbuttonspace {
+  padding: 6px;
+}
+
+.littletext-outter {
+  height: 16vh;
+}
+/*  M  */
+.make-small-icons-clickable-light {
+  color: #999999;
+  opacity: 0.6;
+  cursor: pointer;
+  padding: 5px;
+  transition: 140ms transform ease-in;
+  transform: scale(1.6);
+}
+
+.make-small-icons-clickable-light:hover {
+  background-color: rgba(000, 000, 005, 0.2);
+  border-radius: 25px;
+  padding: 5px;
+  transition: 140ms transform ease-in;
+  transform: scale(1.9);
+}
+
+.make-small-icons-clickable-light:active {
+  transition: 200ms transform ease-in;
+  transform: scale(1.2);
+}
+
+.make-small-icons-clickable-dark {
+  color: #bbbbbb;
+  opacity: 0.2;
+  padding: 5px;
+  cursor: pointer;
+  transition: 140ms transform ease-in;
+  transform: scale(1.6);
+}
+
+.make-small-icons-clickable-dark:hover {
+  background-color: rgba(000, 000, 005, 0.5);
+  border-radius: 25px;
+  padding: 5px;
+  transition: 140ms transform ease-in;
+  transform: scale(1.9);
+}
+
+.make-small-icons-clickable-dark:active {
+  transition: 200ms transform ease-in;
+  transform: scale(1.2);
+}
+
+/*  T  */
+.text-superstarz-dark {
+  text-align: center;
+  color: #e6e6e6ff;
+  -webkit-filter: drop-shadow(1.9px 0.1px 1.9px rgba(255, 255, 255, 0.4));
+  filter: drop-shadow(1.9px 0.1px 1.9px rgba(255, 255, 255, 0.4));
+}
+
+.text-superstarz-light {
+  text-align: center;
+  color: #0b1728;
+  -webkit-filter: drop-shadow(1.9px 0.1px 1.6px rgba(11, 23, 40, 0.55));
+  filter: drop-shadow(1.9px 0.1px 1.6px rgba(11, 23, 40, 0.55));
+}
+
+/*  Z  */
+.zuperking {
+  -webkit-filter: drop-shadow(1.9px 1.1px 3.3px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(1.9px 1.1px 3.3px rgba(0, 0, 0, 0.5));
+  color: #ffffff;
+}

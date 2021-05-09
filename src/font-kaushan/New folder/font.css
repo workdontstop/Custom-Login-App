@@ -1,0 +1,11 @@
+@font-face {
+	font-family: 'BROADW';
+	src: url('./BROADW.eot');
+	src: local('BROADW'), url('./BROADW.woff') format('woff'), url('./BROADW.ttf') format('truetype');
+}
+/* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_27182">Text with this font applied</p> */
+.fontsforweb_fontid_27182 {
+	font-family: 'BROADW' !important;
+}
+
+/* Font downloaded from FontsForWeb.com */

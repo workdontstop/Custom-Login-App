@@ -1,0 +1,9 @@
+.text-align-left {
+  text-align: left;
+  margin-left: -1px;
+}
+
+.text-align-right {
+  text-align: right;
+  margin-left: -1px;
+}

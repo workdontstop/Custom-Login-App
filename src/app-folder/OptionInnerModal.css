@@ -1,0 +1,25 @@
+.add-rounded-icon-right {
+  text-align: right;
+}
+
+.dialog-container {
+  cursor: pointer;
+  height: 100vh;
+  width: 100%;
+  z-index: 100;
+  top: 0em;
+  position: fixed;
+}
+
+.switchopacity {
+  opacity: 0.3;
+}
+
+.theme-more-container {
+  padding-top: 2.1rem;
+  top: 1em;
+  display: flex;
+  align-items: center;
+
+  font-weight: bold;
+}
