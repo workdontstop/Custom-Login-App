@@ -1,12 +1,20 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useCallback } from "react";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { Grid, Typography } from "@material-ui/core";
-import * as CSS from "csstype";
-import OptionInnerModal from "./OptionInnerModal";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import { OptionInnerModal } from "./OptionInnerModal";
 import { IOption } from "./appFolder-Interfaces";
+
+import {
+  Paper,
+  Grid,
+  Typography,
+  makeStyles,
+  createMuiTheme,
+  MuiThemeProvider,
+} from "@material-ui/core";
 import "./Option.css";
 
-export default function Option({
+function Optionx({
   darkmode,
   setDarkmode,
   marginData,
@@ -17,71 +25,74 @@ export default function Option({
 }: IOption): JSX.Element {
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  //
-  //
-  //
-  // CLOSE MODAL (STARTS AN ONPOPSTATE EVENT)
-  const closemodal = (backbutton: number) => {
-    //pop states fires when back and forward buttons used
-    if (backbutton == 1) {
-      window.onpopstate = () => {
-        window.history.pushState(null, "", window.location.href);
+  ///
+  ///
+  ///
+  /// CLOSE MODAL (STARTS AN ONPOPSTATE EVENT)
+  const closemodal = useCallback(
+    (backbutton: number) => {
+      //pop states fires when back and forward buttons used
+      if (backbutton === 1) {
+        window.onpopstate = () => {
+          window.history.pushState(null, "", window.location.href);
+          window.onpopstate = null;
+          setShowModal(false);
+        };
+      } else {
+        window.history.pushState(null, "", ".");
         window.onpopstate = null;
         setShowModal(false);
-      };
-    } else {
-      window.history.pushState(null, "", ".");
-      window.onpopstate = null;
-      setShowModal(false);
-    }
-  };
+      }
+    },
+    [setShowModal]
+  );
 
-  //
-  //
-  //
-  //OPEN MODAL THEN CALL CLOSEMODAL FUNCTION WHICH WAITS FOR A POP EVENT(for closing modal)
-  const Openmodal = () => {
+  ///
+  ///
+  ///
+  ///OPEN MODAL THEN CALL CLOSEMODAL FUNCTION WHICH WAITS FOR A POP EVENT(for closing modal)
+  const Openmodal = useCallback(() => {
     setShowModal(!showModal);
     //pushstate add enteries to your history
     window.history.pushState(null, "", "Options");
     closemodal(1);
-  };
+  }, [setShowModal, showModal, closemodal]);
 
-  //
-  //
-  //
-  // use USEREF TO  TARGET A DIVS(background) AND CLOSES MODAL ON CLICK(OF DIV)
-  const inputRef = useRef<HTMLInputElement>(null);
-  const onBackgroundFocus = (e: any): void => {
-    if (inputRef.current === e.target) {
-      closemodal(0);
-    }
-  };
+  console.log("zerformance issues");
 
   return (
-    <Grid container xs={12}>
+    <Grid container>
       {showModal ? null : (
         <Grid item xs={12} className={optionsContainer}>
-          <Grid item xs={6}>
-            <Typography className={superFont}>
-              <p
+          <Grid item xs={6} style={{ textAlign: "left" }}>
+            <span className={superFont}>
+              <span
                 className={
                   darkmode
-                    ? "text-superstarz-dark   text-align-left"
-                    : "text-superstarz-light   text-align-left"
+                    ? "text-superstarz-dark   text-superstarz-dark-colorA  "
+                    : "text-superstarz-light  text-superstarz-light-colorA  "
                 }
               >
-                SuperstarZ
-              </p>
-            </Typography>
+                Super
+              </span>
+              <span
+                className={
+                  darkmode
+                    ? "text-superstarz-dark     text-superstarz-dark-colorB  "
+                    : "text-superstarz-light   text-superstarz-light-colorB   "
+                }
+              >
+                starZ
+              </span>
+            </span>
           </Grid>
 
-          <Grid item xs={6} className=" text-align-right">
-            <MoreVertIcon
+          <Grid item xs={6} className="text-align-right">
+            <MoreHorizIcon
               onClick={Openmodal}
               className={
                 darkmode
-                  ? "make-small-icons-clickable-dark  dontallowhighlighting  "
+                  ? "make-small-icons-clickable-dark dontallowhighlighting  "
                   : "make-small-icons-clickable-light  dontallowhighlighting  "
               }
               fontSize="large"
@@ -104,3 +115,5 @@ export default function Option({
     </Grid>
   );
 }
+
+export const Option = React.memo(Optionx);

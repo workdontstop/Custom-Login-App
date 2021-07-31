@@ -1,9 +1,19 @@
-.text-align-left {
-  text-align: left;
-  margin-left: -1px;
-}
-
 .text-align-right {
   text-align: right;
-  margin-left: -1px;
+  padding: 0px;
+}
+.text-superstarz-dark-colorA {
+  color: #ffffff;
+}
+
+.text-superstarz-dark-colorB {
+  color: #f7f7f7;
+}
+
+.text-superstarz-light-colorA {
+  color: #0b1728;
+}
+
+.text-superstarz-light-colorB {
+  color: #0c1829;
 }

@@ -16,18 +16,32 @@ export type IGrid =
   | 11
   | 12;
 
-export interface ILogin {
-  loginclass: string;
-  signupclass: string;
+export interface ILogButtons {
+  loginstyle: CSS.Properties;
+  signupstyle: CSS.Properties;
   match: boolean;
   OpenModalForm: (formtypedata: number) => void;
 }
 
-export interface ImodalLogFormError {
+export interface ImodalFormSignupError {
+  ErrorType: number;
+  textField: string;
+  errorFormChecking: boolean;
   type: boolean;
   cantPassBadEmail: boolean;
   ErrorDisplay: number;
   ErrorData: string | null;
+  darkmode: boolean;
+  WidthHolder: string;
+  device: string;
+}
+
+export interface ImodalFormLoginError {
+  device: string;
+  darkmode: boolean;
+  WidthHolder: string;
+  type: boolean;
+  ErrorDisplay: number;
 }
 
 export interface IOption {
@@ -51,12 +65,54 @@ export interface IOptionInnerModal {
   switchsize: "medium" | "small" | undefined;
 }
 
+export interface IServerError {
+  device: string;
+  setServerErrorData: (serverErrorData: string | null) => void;
+  serverErrorDisplay: number;
+  serverErrorData: string | null;
+  darkmode: boolean;
+  serverEmojiplain: boolean;
+}
+
 export interface ImodalLog {
-  signupclass: string;
-  loginclass: string;
   formtype: number;
+  screenHeight: number;
+  signupstyle: CSS.Properties;
+  loginstyle: CSS.Properties;
   CloseModalForm: (DeviceBackButtonClicked: number) => void;
   showModalForm: boolean;
-  setShowModalForm: (showModalForm: boolean) => void;
   PaperStyle: string;
+  darkmode: boolean;
+  zoomedModal: boolean;
+  setZoomedModal: (zoomedModal: boolean) => void;
+  mobileZoom: boolean;
+  setMobileZoom: (mobileZoom: boolean) => void;
+}
+
+export interface ItextfIeldLogin {
+  updateLoginvalues: (e: any) => void;
+  rawLoginValues: {
+    inputedUsername: string;
+    inputedPassword: string;
+  };
+  ShowLoginPasswordForaWhile: any;
+  loginShowPassword: boolean;
+  size: "small" | "medium" | undefined;
+  passwordType: boolean;
+  withHolder: string;
+}
+
+export interface ItextfIeldSignup {
+  updateSignvalues: (e: any) => void;
+  rawSignupValues: {
+    inputedUsername: string;
+    inputedPassword: string;
+    inputedEmail: string;
+  };
+  ShowSignupPasswordForaWhile: any;
+  signupShowPassword: boolean;
+  size: "small" | "medium" | undefined;
+  passwordType: boolean;
+  emailType: boolean;
+  withHolder: string;
 }

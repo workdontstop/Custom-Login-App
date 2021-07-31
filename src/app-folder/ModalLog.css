@@ -1,3 +1,29 @@
+.containerStyle {
+  height: auto;
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.2);
+  color: #000000;
+  position: relative;
+  z-index: 10;
+}
+
+.FormDialog-container-mobile {
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  top: 0em;
+  z-index: 8;
+
+  margin-top: -3px;
+  background-image: linear-gradient(
+    to bottom,
+    rgb(160, 160, 160, 1),
+    rgb(160, 160, 160, 0.95),
+    rgb(160, 160, 160, 0.9),
+    rgb(160, 160, 160, 0.85),
+    rgb(160, 160, 160, 0.8)
+  );
+}
+
 .FormDialog-container {
   height: 100vh;
   width: 100%;
@@ -18,14 +44,35 @@
   );
 }
 
-.vv {
+.FormDialog-containerx {
+  height: 100vh;
+  position: fixed;
+  top: 0em;
+  z-index: 80;
+  margin-top: -3px;
+}
+
+.modal-hold-signup {
+  margin-top: 20px;
+  z-index: 3;
+}
+
+.text-password {
+  padding-bottom: 30px;
+  z-index: 1;
+}
+
+.hide-logo {
+  display: none;
+}
+
+.center-content-vertically {
   margin: 0;
   position: absolute;
-  top: 50%;
+  top: 48%;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-
 .formholder {
   display: flex;
   flex-direction: column;
@@ -34,4 +81,215 @@
 
   text-align: center;
   color: #141414;
+}
+
+.zoom-login-logo {
+  opacity: 0.2;
+  object-fit: contain;
+  width: 11%;
+  position: fixed;
+  top: -13vh;
+  right: -4vw;
+  cursor: pointer;
+}
+
+.zoom-login-logo:hover {
+  opacity: 0.6;
+}
+
+.zoom-signup-logo {
+  opacity: 0.2;
+  object-fit: contain;
+  width: 11%;
+  position: fixed;
+  top: -7vh;
+  right: -4vw;
+  cursor: pointer;
+}
+
+.zoom-signup-logo:hover {
+  opacity: 0.6;
+}
+
+.log-logoMobile {
+  opacity: 0.3;
+  position: fixed;
+  top: -7.1em;
+  right: -14vw;
+}
+.log-logoMobile:hover {
+  opacity: 0.6;
+}
+
+.log-logoMobileZoom {
+  opacity: 0.4;
+  position: fixed;
+  top: -7.1em;
+  right: -14vw;
+}
+.log-logoMobileZoom:hover {
+  opacity: 0.6;
+}
+
+.log-logo {
+  opacity: 0.3;
+  position: fixed;
+  top: -2em;
+  left: -3.8vw;
+}
+.log-logo:hover {
+  opacity: 0.6;
+}
+
+.fadermodal-imageslider-zoomload {
+  -webkit-animation: fadermodal-slider-keyframe 1.6s linear 1 forwards; /* Safari 4+ */
+  -moz-animation: fadermodal-slider-keyframe 1.6s linear 1 forwards; /* Fx 5+ */
+  -o-animation: fadermodal-slider-keyframe 1.6s linear 1 forwards; /* Opera 12+ */
+  animation: fadermodal-slider-keyframe 1.6s linear 1 forwards; /* IE 10+, Fx 29+ */
+}
+
+@keyframes fadermodal-slider-keyframe {
+  0% {
+    opacity: 0.2;
+  }
+  10% {
+    opacity: 0.2;
+  }
+  20% {
+    opacity: 0.25;
+  }
+  30% {
+    opacity: 0.3;
+  }
+
+  40% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.5;
+  }
+
+  60% {
+    opacity: 0.6;
+  }
+
+  70% {
+    opacity: 0.7;
+  }
+
+  80% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.fadermodal-imageslider {
+  -webkit-animation: fadermodal-keyframe 0.6s linear 1 forwards; /* Safari 4+ */
+  -moz-animation: fadermodal-keyframe 0.6s linear 1 forwards; /* Fx 5+ */
+  -o-animation: fadermodal-keyframe 0.6s linear 1 forwards; /* Opera 12+ */
+  animation: fadermodal-keyframe 0.6s linear 1 forwards; /* IE 10+, Fx 29+ */
+}
+
+.fadermodal {
+  -webkit-animation: fadermodal-keyframe 1s linear 1 forwards; /* Safari 4+ */
+  -moz-animation: fadermodal-keyframe 1s linear 1 forwards; /* Fx 5+ */
+  -o-animation: fadermodal-keyframe 1s linear 1 forwards; /* Opera 12+ */
+  animation: fadermodal-keyframe 1s linear 1 forwards; /* IE 10+, Fx 29+ */
+}
+
+@keyframes fadermodal-keyframe {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.1;
+  }
+
+  65% {
+    opacity: 0.1;
+  }
+
+  75% {
+    opacity: 0.5;
+  }
+
+  85% {
+    opacity: 0.75;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.fader-back {
+  -webkit-animation: fadermodal-keyframe-back 0.3s linear 1 forwards; /* Safari 4+ */
+  -moz-animation: fadermodal-keyframe-back 0.3s linear 1 forwards; /* Fx 5+ */
+  -o-animation: fadermodal-keyframe-back 0.3s linear 1 forwards; /* Opera 12+ */
+  animation: fadermodal-keyframe-back 0.3s linear 1 forwards; /* IE 10+, Fx 29+ */
+}
+
+@keyframes fadermodal-keyframe-back {
+  0% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.23;
+  }
+
+  65% {
+    opacity: 0.18;
+  }
+
+  75% {
+    opacity: 0.16;
+  }
+
+  85% {
+    opacity: 0.13;
+  }
+
+  95% {
+    opacity: 0.12;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.modalImageStylex {
+  cursor: pointer;
+  width: 100%;
+  height: auto;
+  border-right: 0px;
+}
+
+.modalImageStyle {
+  cursor: pointer;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  border-radius: 0px;
+}
+
+.modalMobileImageStyle {
+  cursor: pointer;
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  border-radius: 0px;
+  padding: 0px;
 }

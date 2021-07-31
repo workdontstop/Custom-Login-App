@@ -2,13 +2,12 @@ import React, { useRef, useEffect, useCallback } from "react";
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
 import { Grid, Switch, DialogContent } from "@material-ui/core";
 import { useSpring, animated } from "react-spring";
-import * as CSS from "csstype";
 import { IOptionInnerModal } from "./appFolder-Interfaces";
 import "./OptionInnerModal.css";
 
 var toggleDarkMode: boolean = false;
 
-export default function OptionInnerModal({
+function OptionInnerModalx({
   closemodal,
   showModal,
   setShowModal,
@@ -24,22 +23,11 @@ export default function OptionInnerModal({
   //USE SLIDE DOWN ANIMATION FROM REACT SPRING
   const animation = useSpring({
     config: {
-      duration: 500,
+      duration: 250,
     },
     opacity: showModal ? 1 : 0.0,
     transform: showModal ? `translateY(0%)` : `translateY(-100%)`,
   });
-
-  //
-  //
-  //
-  //SETS DARKMODE FROM LOCAL STORAGE IF NOT EMPTY
-  useEffect(() => {
-    let themelocaldata = JSON.parse(localStorage.getItem("darkmode")!);
-    if (themelocaldata !== null) {
-      setDarkmode(themelocaldata);
-    }
-  }, [setDarkmode]);
 
   //
   //
@@ -51,8 +39,9 @@ export default function OptionInnerModal({
         closemodal(0);
       }
     },
-    [setShowModal, showModal]
+    [showModal, closemodal]
   );
+
   useEffect(() => {
     document.addEventListener("keydown", escapePress);
     return () => document.removeEventListener("keydown", escapePress);
@@ -63,6 +52,7 @@ export default function OptionInnerModal({
   //
   //USEREF TARGETS A DIV(BACKGROUND) AND CLOSES MODAL ON CLICK
   const inputRef = useRef<HTMLInputElement>(null);
+
   const onBackgroundFocus = (e: any): void => {
     if (inputRef.current === e.target) {
       closemodal(0);
@@ -83,7 +73,6 @@ export default function OptionInnerModal({
           <animated.div style={animation}>
             <Grid
               container
-              xs={12}
               className={
                 darkmode
                   ? "Background-header-dark theme-more-container"
@@ -96,12 +85,17 @@ export default function OptionInnerModal({
                 xs={2}
                 sm={2}
                 md={1}
-                className="switchopacity  zuperking"
+                className="zuperking"
                 style={marginData}
               >
                 <Switch
                   size={switchsize}
                   checked={darkmode}
+                  className={
+                    darkmode
+                      ? "icon-color-dark dontallowhighlighting  "
+                      : "icon-color-light  dontallowhighlighting  "
+                  }
                   onChange={() => {
                     toggleDarkMode = !darkmode;
                     setDarkmode(!darkmode);
@@ -135,3 +129,5 @@ export default function OptionInnerModal({
     </>
   );
 }
+
+export const OptionInnerModal = React.memo(OptionInnerModalx);

@@ -20,26 +20,23 @@ const register = `INSERT INTO members (username,password) VALUES (?,?)`;
 const update = `UPDATE members SET  username = ?  WHERE username = "tanu";`;
 const del = `DELETE FROM members  WHERE id = ?`;
 
-app.get(
-  "/select",
-  async (req: Request, res: Response): Promise<void> => {
-    const username: string = "tanu";
+app.get("/select", async (req: Request, res: Response): Promise<void> => {
+  const username: string = "tanu";
 
-    const connection = mysql.createConnection(CONNECTION_CONFIG);
-    const loginQuery = util.promisify(connection.query.bind(connection));
+  const connection = mysql.createConnection(CONNECTION_CONFIG);
+  const loginQuery = util.promisify(connection.query.bind(connection));
 
-    try {
-      const logindata = await loginQuery(login, [username]);
+  try {
+    const logindata = await loginQuery(login, [username]);
 
-      res.json(logindata[0].username);
-      connection.end();
-    } catch {
-      res.status(400).json("error");
+    res.json(logindata[0].username);
+    connection.end();
+  } catch {
+    res.status(400).json("error");
 
-      connection.end();
-    }
+    connection.end();
   }
-);
+});
 
 app.post("/reg", async (req, res) => {
   const { username, password } = req.body;

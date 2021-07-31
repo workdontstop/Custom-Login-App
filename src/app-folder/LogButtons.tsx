@@ -1,24 +1,24 @@
+import React from "react";
 import { Grid, Button } from "@material-ui/core";
-import { ILogin } from "./appFolder-Interfaces";
+import { ILogButtons } from "./appFolder-Interfaces";
 
-export function LoginButtons({
-  loginclass,
-  signupclass,
+function LoginButtonsx({
+  loginstyle,
+  signupstyle,
   match,
   OpenModalForm,
-}: ILogin) {
+}: ILogButtons) {
   return (
     <Grid
       container
       className={match ? "containerloginpc" : "containerloginmobile "}
       item
-      xs={12}
     >
-      <Grid item sm={4} md={5}></Grid>
-      <Grid item className="buttonpad buttonshake" xs={12} sm={4} md={2}>
+      <Grid item sm={3} md={5}></Grid>
+      <Grid item className="buttonpad buttonshake" xs={12} sm={6} md={2}>
         <Button
-          onMouseDown={() => OpenModalForm(1)}
-          className={loginclass}
+          onClick={() => OpenModalForm(1)}
+          style={loginstyle}
           fullWidth={true}
           variant="outlined"
           size="large"
@@ -29,11 +29,11 @@ export function LoginButtons({
       </Grid>
       <Grid item sm={12} className="logbuttonspace"></Grid>
 
-      <Grid item sm={4} md={5}></Grid>
-      <Grid item className="buttonpad buttonshake" xs={12} sm={4} md={2}>
+      <Grid item sm={3} md={5}></Grid>
+      <Grid item className="buttonpad buttonshake" xs={12} sm={6} md={2}>
         <Button
-          onMouseDown={() => OpenModalForm(0)}
-          className={signupclass}
+          onClick={() => OpenModalForm(0)}
+          style={signupstyle}
           fullWidth={true}
           variant="contained"
           size="large"
@@ -46,3 +46,5 @@ export function LoginButtons({
     </Grid>
   );
 }
+
+export const LoginButtons = React.memo(LoginButtonsx);
