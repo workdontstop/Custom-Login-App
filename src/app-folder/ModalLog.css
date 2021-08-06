@@ -52,9 +52,14 @@
   margin-top: -3px;
 }
 
+.modal-hold-login {
+  margin-top: 100px;
+  z-index: 2;
+}
+
 .modal-hold-signup {
-  margin-top: 20px;
-  z-index: 3;
+  margin-top: 40px;
+  z-index: 2;
 }
 
 .text-password {
@@ -84,7 +89,7 @@
 }
 
 .zoom-login-logo {
-  opacity: 0.2;
+  opacity: 0.15;
   object-fit: contain;
   width: 11%;
   position: fixed;
@@ -98,7 +103,7 @@
 }
 
 .zoom-signup-logo {
-  opacity: 0.2;
+  opacity: 0.15;
   object-fit: contain;
   width: 11%;
   position: fixed;
@@ -112,19 +117,20 @@
 }
 
 .log-logoMobile {
-  opacity: 0.3;
-  position: fixed;
-  top: -7.1em;
-  right: -14vw;
+  opacity: 0.2;
+  position: absolute;
+  top: -0.72em;
+  right: -13.4vw;
+  z-index: 30;
 }
 .log-logoMobile:hover {
   opacity: 0.6;
 }
 
 .log-logoMobileZoom {
-  opacity: 0.4;
-  position: fixed;
-  top: -7.1em;
+  opacity: 0.2;
+  position: absolute;
+  margin-top: -16.5vh;
   right: -14vw;
 }
 .log-logoMobileZoom:hover {
@@ -132,7 +138,7 @@
 }
 
 .log-logo {
-  opacity: 0.3;
+  opacity: 0.2;
   position: fixed;
   top: -2em;
   left: -3.8vw;
@@ -287,9 +293,15 @@
 
 .modalMobileImageStyle {
   cursor: pointer;
-  object-fit: contain;
+  object-fit: cover;
   width: 100%;
   height: 100%;
   border-radius: 0px;
   padding: 0px;
+}
+
+.yyy {
+  transition: width 500ms, height 500ms;
+  -webkit-transition: width 500ms, height 500ms;
+  transition-delay: 5s;
 }

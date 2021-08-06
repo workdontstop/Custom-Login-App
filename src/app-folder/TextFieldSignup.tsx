@@ -56,7 +56,7 @@ function TextFieldSignupx({
             width: width,
             paddingBottom: paddingBottomE,
           }}
-          label="Email"
+          label="email"
           type="email"
           onChange={updateSignvalues}
           name="inputedEmail"
@@ -74,7 +74,7 @@ function TextFieldSignupx({
             paddingBottom: paddingBottomP,
             zIndex: zIndex,
           }}
-          label="Password"
+          label="password"
           type={signupShowPassword ? "text" : "password"}
           onChange={updateSignvalues}
           name="inputedPassword"
@@ -84,7 +84,6 @@ function TextFieldSignupx({
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton
-                  onClick={ShowSignupPasswordForaWhile}
                   onMouseDown={ShowSignupPasswordForaWhile}
                   aria-label="toggle password visibility"
                 >
@@ -108,7 +107,7 @@ function TextFieldSignupx({
             width: width,
             paddingBottom: paddingBottomU,
           }}
-          label="Username"
+          label="username"
           type="text"
           onChange={updateSignvalues}
           name="inputedUsername"

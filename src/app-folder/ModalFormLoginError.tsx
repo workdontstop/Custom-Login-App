@@ -123,7 +123,7 @@ export default function ModalFormLoginError({
               >
                 <span style={{ textAlign: "right", marginRight: marginRight }}>
                   <span style={{ verticalAlign: "middle" }}>
-                    Username required{" "}
+                    username required{" "}
                   </span>
                   <FiberManualRecordIcon
                     style={{
@@ -181,7 +181,7 @@ export default function ModalFormLoginError({
               >
                 <span style={{ textAlign: "right", marginRight: marginRight }}>
                   <span style={{ verticalAlign: "middle" }}>
-                    Password required{" "}
+                    password required{" "}
                   </span>
                   <FiberManualRecordIcon
                     style={{

@@ -89,6 +89,12 @@ export interface ImodalLog {
   setMobileZoom: (mobileZoom: boolean) => void;
 }
 
+export interface Ispinnerinterface {
+  inputedUsername: boolean;
+  inputedPassword: boolean;
+  inputedEmail: boolean;
+}
+
 export interface ItextfIeldLogin {
   updateLoginvalues: (e: any) => void;
   rawLoginValues: {

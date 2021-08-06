@@ -50,7 +50,7 @@ function TextFieldLoginx({
             paddingBottom: "40px",
             zIndex: zIndex,
           }}
-          label="Password"
+          label="password"
           onChange={updateLoginvalues}
           type={loginShowPassword ? "text" : "password"}
           name="inputedPassword"
@@ -60,7 +60,6 @@ function TextFieldLoginx({
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton
-                  onClick={ShowLoginPasswordForaWhile}
                   onMouseDown={ShowLoginPasswordForaWhile}
                   aria-label="toggle password visibility"
                 >
@@ -84,7 +83,7 @@ function TextFieldLoginx({
             width: width,
             paddingBottom: "70px",
           }}
-          label="Username"
+          label="username"
           margin="normal"
           type="text"
           onChange={updateLoginvalues}

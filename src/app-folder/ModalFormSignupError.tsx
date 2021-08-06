@@ -294,7 +294,7 @@ export default function ModalLogFormError({
               }}
             >
               {" "}
-              <div className={classes.root} style={{ opacity: "0.25" }}>
+              <div className={classes.root} style={{ opacity: "0.15" }}>
                 <CircularProgress
                   variant="determinate"
                   className={classes.bottom}
@@ -400,7 +400,7 @@ export default function ModalLogFormError({
               }}
             >
               {" "}
-              <div className={classes.root} style={{ opacity: "0.25" }}>
+              <div className={classes.root} style={{ opacity: "0.15" }}>
                 <CircularProgress
                   variant="determinate"
                   className={classes.bottom}

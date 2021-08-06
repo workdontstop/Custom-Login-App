@@ -1,26 +1,25 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
+import { useHistory } from "react-router-dom";
+import Axios from "axios";
 
 import { useSpring, animated } from "react-spring";
-
 import {
-  IconButton,
   DialogContent,
   Button,
   useTheme,
   Paper,
   useMediaQuery,
   Grid,
-  Typography,
-  makeStyles,
-  createMuiTheme,
-  MuiThemeProvider,
 } from "@material-ui/core";
+import { Scrollbars } from "react-custom-scrollbars";
 
-import { ImodalLog, IGrid } from "./appFolder-Interfaces";
 import "./ModalLog.css";
-import Axios from "axios";
-
-import { useHistory } from "react-router-dom";
+import { ImodalLog, IGrid, Ispinnerinterface } from "./appFolder-Interfaces";
+import { TextFieldLogin } from "./TextFieldLogin";
+import { TextFieldSignup } from "./TextFieldSignup";
+import ServerError from "./ServerError";
+import ModalFormSignupError from "./ModalFormSignupError";
+import ModalFormLoginError from "./ModalFormLoginError";
 
 import image1 from "./images/modalpic1.jpg";
 import image2 from "./images/modalpic2.jpg";
@@ -28,19 +27,10 @@ import image3 from "./images/modalpic3.png";
 import image4 from "./images/modalpic4.jpg";
 import image5 from "./images/modalpic5.jpg";
 import image6 from "./images/modalpic6.jpg";
-import { TextFieldLogin } from "./TextFieldLogin";
-import { TextFieldSignup } from "./TextFieldSignup";
 import SuperstarzIconLight from "./../images/ssmall.png";
 import SuperstarzIconDark from "./../images/sdsmall.png";
-import ServerError from "./ServerError";
-import ModalFormSignupError from "./ModalFormSignupError";
-import ModalFormLoginError from "./ModalFormLoginError";
 
-import { Scrollbars } from "react-custom-scrollbars";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
-import VisibilityIcon from "@material-ui/icons/Visibility";
 require("dotenv").config();
-
 Axios.defaults.withCredentials = true;
 
 function ModalLogx({
@@ -67,7 +57,7 @@ function ModalLogx({
   ///CREATE A SLIDE UP ANIMATION WITH  REACT SPRING
   const modalanimation = useSpring({
     config: {
-      duration: 400,
+      duration: 500,
     },
     opacity: showModalForm ? 1 : 0.9,
     transform: showModalForm ? `translateY(0%)` : `translateY(100%)`,
@@ -75,7 +65,7 @@ function ModalLogx({
 
   const modalanimationTwo = useSpring({
     config: {
-      duration: 350,
+      duration: 450,
     },
     opacity: showModalForm ? 1 : 0.9,
     transform: showModalForm ? `translateY(0%)` : `translateY(100%)`,
@@ -84,24 +74,24 @@ function ModalLogx({
   ///
   ///
   ///
-  ///CREATE A SLIDE UP ANIMATION WITH  REACT SPRING
+  ///ANIMATE MOBILE IMAGE ON ZOOM STATE CHANGE
   const mobileLogmodalanimation: any = useSpring({
     config: {
-      duration: 115,
+      duration: 20,
     },
+    transition: "height 1s",
     opacity: mobileZoom ? 1 : 0.98,
-    position: mobileZoom ? `static` : `fixed`,
-    top: "27vh",
-    zindex: 100,
-    transform: mobileZoom ? `translateY(0%)` : `translateY(-10%)`,
+    height: mobileZoom ? "100%" : `15vh`,
   });
 
+  ///
   ///
   ///
   ///HISTORY VARIABLE
   const history = useHistory();
   ///
   ///
+  ///ACESSING DOT ENV FILE VARIABLES
   const { REACT_APP_SUPERSTARZ_URL } = process.env;
 
   ///
@@ -119,24 +109,18 @@ function ModalLogx({
     inputedUsername: 0,
     inputedPassword: 0,
   };
-
   const [rawLoginValues, setRawLoginValues] = useState(initialLogValue);
   const [cleanLoginValues, setCleanLoginValues] =
     useState(initialCleanLogValue);
   const [errorsLoginValues, setErrorsLoginValues] =
     useState(initialErrorLogValue);
 
-  const [loginShowPassword, setLoginShowPassword] = useState<boolean>(false);
-  const loginShowPasswordTimer = useRef<ReturnType<typeof setTimeout> | null>(
-    null
-  );
   ///
   ///
   ///
   /// SANITISE LOG IN FORM INPUT CLIENT SIDE
   const updateLoginvalues = (e: any) => {
     const { name, value } = e.target;
-
     setErrorsLoginValues({ ...errorsLoginValues, [name]: 0 });
     setRawLoginValues({ ...rawLoginValues, [name]: value });
     setCleanLoginValues({ ...cleanLoginValues, [name]: value });
@@ -161,12 +145,12 @@ function ModalLogx({
       )
         .then((response) => {
           if (response.data.message === "Wrong Password") {
-            setServerErrorData("Wrong username and  password combination");
+            setServerErrorData("wrong username and  password combination");
             setServerErrorDisplay(1);
             setserverEmojiplain(false);
           } else {
             if (response.data.message === "Wrong username") {
-              setServerErrorData("Username does not exist");
+              setServerErrorData("username does not exist");
               setServerErrorDisplay(1);
               setserverEmojiplain(false);
             } else if (response.data.payload) {
@@ -175,7 +159,7 @@ function ModalLogx({
                 state: { userdata: response.data.payload },
               });
             } else {
-              setServerErrorData("User info could not be retrieved");
+              setServerErrorData("user info could not be retrieved");
               setServerErrorDisplay(1);
               setserverEmojiplain(false);
             }
@@ -188,7 +172,7 @@ function ModalLogx({
             // Request made and server responded
             //express typo can activate this
             //let textFieldParam = error.response.data.error.errors[0].param;
-            let affectedTextField = "Wrong password and username combination";
+            let affectedTextField = "wrong password and username combination";
 
             let dynamicError = `${affectedTextField}  `;
             setServerErrorData(dynamicError);
@@ -198,13 +182,13 @@ function ModalLogx({
             // The request was made but no response was received Or request not made
             // Axios.post("http://localhost:3003/reg" can activate this error
             setServerErrorData(
-              "Error connecting to server, Check your connection"
+              "error connecting to server, check your connection"
             );
             setServerErrorDisplay(1);
             setserverEmojiplain(true);
           } else {
             // Something happened in setting up the request that triggered an Error
-            setServerErrorData("Request setup failed , Pls try again");
+            setServerErrorData("request setup failed , pls try again");
             setServerErrorDisplay(1);
             setserverEmojiplain(true);
           }
@@ -267,12 +251,6 @@ function ModalLogx({
     null
   );
 
-  interface Ispinnerinterface {
-    inputedUsername: boolean;
-    inputedPassword: boolean;
-    inputedEmail: boolean;
-  }
-
   const initialspinner: Ispinnerinterface = {
     inputedUsername: false,
     inputedPassword: false,
@@ -284,7 +262,6 @@ function ModalLogx({
     null
   );
 
-  const [signupShowPassword, setSignupShowPassword] = useState<boolean>(false);
   const [cantPassBadEmail, setCantPassBadEmail] = useState<boolean>(false);
 
   const updateSignvalues = (e: any) => {
@@ -497,14 +474,14 @@ function ModalLogx({
         })
           .then((response) => {
             if (response.data.message === "username not unique") {
-              setServerErrorData("Username is taken");
+              setServerErrorData("username is taken");
               setServerErrorDisplay(1);
               setserverEmojiplain(true);
             } else if (response.data.message === "Registration Successful") {
               console.log(response.status);
               alert("REGISTRATION COMPLETE");
             } else {
-              setServerErrorData("Something went wrong");
+              setServerErrorData("something went wrong");
               setServerErrorDisplay(1);
               setserverEmojiplain(true);
             }
@@ -517,12 +494,12 @@ function ModalLogx({
               let affectedTextField = " ";
 
               if (textFieldParam === "values.inputedPassword") {
-                affectedTextField = "Password must be at Least 8 characters";
+                affectedTextField = "password must be at least 8 characters";
               } else if (textFieldParam === "values.inputedEmail") {
-                affectedTextField = "Email address is not valid";
+                affectedTextField = "email address is not valid";
               } else {
                 affectedTextField =
-                  "Usernames use letters, numbers, underscores and periods";
+                  "usernames use letters, numbers, underscores and periods";
               }
               let dynamicError = `${affectedTextField}.  ${error.response.data.error.errors[0].msg} `;
               setServerErrorData(dynamicError);
@@ -532,13 +509,13 @@ function ModalLogx({
               // The request was made but no response was received Or request not made
               // Axios.post("http://localhost:3003/reg" can activate this error
               setServerErrorData(
-                "Error connecting to server, Check your connection"
+                "error connecting to server, check your connection"
               );
               setServerErrorDisplay(1);
               setserverEmojiplain(true);
             } else {
               // Something happened in setting up the request that triggered an Error
-              setServerErrorData("Request setup failed , Pls try again");
+              setServerErrorData("request setup failed , pls try again");
               setServerErrorDisplay(1);
               setserverEmojiplain(true);
             }
@@ -583,7 +560,25 @@ function ModalLogx({
   ///
   ///
   ///
-  /// SHOW A FULLSCREEN MODAL VIEW
+  ///CLOSE MODAL FORM ON SMALL ICON PRESS
+  const iconclicked = () => {
+    CloseModalForm(0);
+  };
+
+  ///
+  ///
+  ///
+  /// AUTO SCROLL WINDOWS AND CONTENT GRID
+  const contentScrollRef = useRef<any>(null);
+  const autoScrollWindowNImage: any = () => {
+    window.scrollTo(0, 0);
+    contentScrollRef.current.scrollTo(0, 10);
+  };
+
+  ///
+  ///
+  ///
+  /// SHOW A F ZOOMED/LOCKED MODAL VIEW PC
   const zoomlogmodal = () => {
     setZoomedModal(!zoomedModal);
   };
@@ -591,7 +586,66 @@ function ModalLogx({
   ///
   ///
   ///
+  /// SHOW A  ZOOMED/LOCKED  MODAL VIEW  MOBILE(CHANGE MOBILEZOOM WITH A CLICK)
+  const clickMobileZoom = () => {
+    setMobileZoom(!mobileZoom);
+    if (mobileZoom) {
+      setCallMobileZoomLimiter(true);
+    } else {
+      setCallMobileZoomLimiter(false);
+    }
+    if (contentScrollRef.current && contentScrollRef) {
+      autoScrollWindowNImage();
+    }
+  };
+
+  ///
+  ///
+  ///
+  ///CHANGE MOBILEZOOM WITH A SCROLL(SCROLL CHANGE LAYOUT)
+  const imagescrollRef = useRef<any>(null);
+  const [callMobileZoomLimiter, setCallMobileZoomLimiter] =
+    useState<boolean>(false);
+  const slide = useCallback(
+    (e) => {
+      if (
+        contentScrollRef.current.scrollTop <= 8 ||
+        contentScrollRef.current.scrollTop <= 0
+      ) {
+        if (!callMobileZoomLimiter) {
+          setMobileZoom(true);
+          setCallMobileZoomLimiter(true);
+        }
+      } else if (contentScrollRef.current.scrollTop >= 16) {
+        if (callMobileZoomLimiter) {
+          autoScrollWindowNImage();
+          setMobileZoom(false);
+          setCallMobileZoomLimiter(false);
+        }
+      } else {
+      }
+    },
+    [mobileZoom, callMobileZoomLimiter, contentScrollRef]
+  );
+
+  ///
+  ///
+  ///
+  ///ACTIVATE MOBILE VIEW TOP SCROLL(ZOOMABLE) ON INITIAL LOAD
+  const mobileImageOnLoad = () => {
+    if (contentScrollRef.current && contentScrollRef) {
+      autoScrollWindowNImage();
+    }
+  };
+
+  ///
+  ///
+  ///
   /// SHOW  LOGIN PASSWORD FOR A WHILE
+  const [loginShowPassword, setLoginShowPassword] = useState<boolean>(false);
+  const loginShowPasswordTimer = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
   const ShowLoginPasswordForaWhile = useCallback(() => {
     if (loginShowPasswordTimer.current) {
       clearTimeout(loginShowPasswordTimer.current);
@@ -600,13 +654,13 @@ function ModalLogx({
     loginShowPasswordTimer.current = setTimeout(() => {
       setLoginShowPassword(false);
     }, 1500);
-  }, [setLoginShowPassword]);
+  }, [loginShowPassword]);
 
   ///
   ///
   ///
   /// SHOW  SIGNUP PASSWORD FOR A WHILE
-
+  const [signupShowPassword, setSignupShowPassword] = useState<boolean>(false);
   const signupShowPasswordTimer = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
@@ -619,7 +673,7 @@ function ModalLogx({
     signupShowPasswordTimer.current = setTimeout(() => {
       setSignupShowPassword(false);
     }, 1500);
-  }, [setSignupShowPassword]);
+  }, [signupShowPassword]);
 
   ///
   ///
@@ -657,14 +711,6 @@ function ModalLogx({
   ///
   ///
   ///
-  ///CLOSE MODAL FORM ON SMALL ICON PRESS
-  const iconclicked = () => {
-    CloseModalForm(0);
-  };
-
-  ///
-  ///
-  ///
   /// RANDOMISE IMAGE
   const [showimage, setShowimage] = useState<string>(" ");
   useEffect(() => {
@@ -688,7 +734,7 @@ function ModalLogx({
     }
     img.src = result; //src forces a download
     setShowimage(result);
-  }, [setShowimage]);
+  }, [showimage]);
 
   ///
   ///
@@ -714,7 +760,7 @@ function ModalLogx({
         }
       }
     },
-    [setImageHeightoverflow, setWideImage, screenHeight]
+    [imageHeightoverflow, wideImage, screenHeight]
   );
 
   const logout = () => {
@@ -861,19 +907,19 @@ function ModalLogx({
   switch (errorsSignupValues.inputedUsername) {
     case 1:
       usernameErrorData =
-        "Usernames can only use letters, numbers, underscores and periods ";
+        "usernames can only use letters, numbers, underscores and periods ";
       usernameErrorDisplay = 1;
       break;
     case 2:
-      usernameErrorData = "Username is taken";
+      usernameErrorData = "username is taken";
       usernameErrorDisplay = 1;
       break;
     case 3:
-      usernameErrorData = "Username is available";
+      usernameErrorData = "username is available";
       usernameErrorDisplay = 1;
       break;
     case 4:
-      usernameErrorData = "Username  required";
+      usernameErrorData = "username  required";
       usernameErrorDisplay = 1;
       break;
 
@@ -885,17 +931,17 @@ function ModalLogx({
 
   switch (errorsSignupValues.inputedPassword) {
     case 1:
-      passwordErrorData = "Password must be at Least 8 characters";
+      passwordErrorData = "password must be at Least 8 characters";
       passwordErrorDisplay = 1;
       break;
 
     case 2:
-      passwordErrorData = "Checking";
+      passwordErrorData = "checking";
       passwordErrorDisplay = 1;
 
       break;
     case 4:
-      passwordErrorData = " Password  required ";
+      passwordErrorData = " password  required ";
       passwordErrorDisplay = 1;
       break;
 
@@ -907,22 +953,22 @@ function ModalLogx({
 
   switch (errorsSignupValues.inputedEmail) {
     case 1:
-      emailErrorData = "Checking";
+      emailErrorData = "checking";
       emailErrorDisplay = 1;
       break;
 
     case 2:
-      emailErrorData = "Email address is not valid";
+      emailErrorData = "email address is not valid";
       emailErrorDisplay = 1;
       break;
 
     case 3:
-      emailErrorData = "Email is restricted to certain characters";
+      emailErrorData = "email is restricted to certain characters";
       emailErrorDisplay = 1;
       break;
 
     case 4:
-      emailErrorData = "Email required";
+      emailErrorData = "email required";
       emailErrorDisplay = 1;
       break;
 
@@ -939,6 +985,7 @@ function ModalLogx({
 
   return (
     <>
+      <meta name="apple-mobile-web-app-capable" content="yes" />
       {showModalForm ? (
         matchPc ? (
           /*PC  PC  PC  PC  PC  PC  PC  PC  PPC  PC  PC  PC  PC  PC  PC  PC  PC PC  PC  PC  PC  PC  PC  PC  PC  PC PC  PC  PC  PC  PC  PC  PC  PC  PC C */ <DialogContent
@@ -1266,11 +1313,13 @@ function ModalLogx({
           /*MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE*/
           <DialogContent
             className="fadermodal FormDialog-container-mobile dontallowhighlighting"
+            ref={imagescrollRef}
             style={{
               overflow: "auto",
               cursor: "pointer",
               padding: "0px",
               zIndex: 100,
+              backgroundImage: PaperStyle,
             }}
           >
             <ServerError
@@ -1283,19 +1332,28 @@ function ModalLogx({
             />
             <animated.div style={modalanimation}>
               <Paper
-                className={PaperStyle}
                 style={{
                   cursor: "default",
+                  backgroundColor: "rgba(0,0,0,0.0)",
                 }}
               >
                 <Grid container>
-                  <Grid item xs={12} style={{ marginTop: "-2.5px" }}>
-                    <img
-                      onClick={() => setMobileZoom(!mobileZoom)}
-                      onLoad={onimageload}
+                  <Grid
+                    item
+                    xs={12}
+                    className="yyy"
+                    style={{
+                      marginTop: "0.5px",
+                      height: "auto",
+                    }}
+                  >
+                    <animated.img
+                      onClick={clickMobileZoom}
+                      onLoad={mobileImageOnLoad}
                       src={showimage}
-                      className="modalMobileImageStyle"
+                      className="modalMobileImageStyle slow-Div-Change"
                       alt="SuperstarZ"
+                      style={mobileLogmodalanimation}
                     />
                   </Grid>
                   <Grid
@@ -1304,7 +1362,19 @@ function ModalLogx({
                     className={mobileZoom ? "zoomMobile" : "smallMobile"}
                   >
                     {" "}
-                    <animated.div style={mobileLogmodalanimation}>
+                    <Paper
+                      onScroll={slide}
+                      ref={contentScrollRef}
+                      style={{
+                        overflow: "auto",
+                        backgroundColor: "rgba(0,0,0,0.0)",
+                        cursor: "default",
+                        height: "95vh",
+                        borderRadius: "0px",
+                        marginTop: "-1.9px",
+                      }}
+                    >
+                      {" "}
                       <img
                         onClick={iconclicked}
                         className={
@@ -1314,203 +1384,176 @@ function ModalLogx({
                         }
                         src={SuperIcon}
                         alt="Express Yourself"
-                      />
-                      <Paper
-                        style={{
-                          backgroundImage: PaperStyle,
-                          cursor: "default",
-                          height: "99vh",
-                          borderRadius: "0px",
-                          marginTop: "-1.9px",
-                          borderTopRightRadius: mobilemodalrad,
-                          borderTopLeftRadius: mobilemodalrad,
-                        }}
-                      >
-                        <Grid xs={12} item className="formholder">
-                          {formtype ? (
-                            <Grid
-                              item
-                              xs={12}
-                              className=""
-                              style={{ marginTop: "-1.5px" }}
-                            >
-                              <ModalFormLoginError
-                                type={true}
-                                device="mobile"
-                                ErrorDisplay={errorsLoginValues.inputedUsername}
-                                darkmode={darkmode}
-                                WidthHolder={WidthHolder}
-                              />
+                      />{" "}
+                      <Grid item xs={12} style={{ height: "6vh" }}></Grid>{" "}
+                      <Grid xs={12} item className="formholder">
+                        {formtype ? (
+                          <Grid item xs={12} className="">
+                            <ModalFormLoginError
+                              type={true}
+                              device="mobile"
+                              ErrorDisplay={errorsLoginValues.inputedUsername}
+                              darkmode={darkmode}
+                              WidthHolder={WidthHolder}
+                            />
 
-                              <TextFieldLogin
-                                updateLoginvalues={updateLoginvalues}
-                                rawLoginValues={rawLoginValues}
-                                ShowLoginPasswordForaWhile={
-                                  ShowLoginPasswordForaWhile
-                                }
-                                loginShowPassword={loginShowPassword}
-                                size="small"
-                                passwordType={false}
-                                withHolder={WidthHolder}
-                              />
-                              <TextFieldLogin
-                                updateLoginvalues={updateLoginvalues}
-                                rawLoginValues={rawLoginValues}
-                                ShowLoginPasswordForaWhile={
-                                  ShowLoginPasswordForaWhile
-                                }
-                                loginShowPassword={loginShowPassword}
-                                size="small"
-                                passwordType={true}
-                                withHolder={WidthHolder}
-                              />
-                              <ModalFormLoginError
-                                type={false}
-                                ErrorDisplay={errorsLoginValues.inputedPassword}
-                                device="mobile"
-                                darkmode={darkmode}
-                                WidthHolder={WidthHolder}
-                              />
+                            <TextFieldLogin
+                              updateLoginvalues={updateLoginvalues}
+                              rawLoginValues={rawLoginValues}
+                              ShowLoginPasswordForaWhile={
+                                ShowLoginPasswordForaWhile
+                              }
+                              loginShowPassword={loginShowPassword}
+                              size="small"
+                              passwordType={false}
+                              withHolder={WidthHolder}
+                            />
+                            <TextFieldLogin
+                              updateLoginvalues={updateLoginvalues}
+                              rawLoginValues={rawLoginValues}
+                              ShowLoginPasswordForaWhile={
+                                ShowLoginPasswordForaWhile
+                              }
+                              loginShowPassword={loginShowPassword}
+                              size="small"
+                              passwordType={true}
+                              withHolder={WidthHolder}
+                            />
+                            <ModalFormLoginError
+                              type={false}
+                              ErrorDisplay={errorsLoginValues.inputedPassword}
+                              device="mobile"
+                              darkmode={darkmode}
+                              WidthHolder={WidthHolder}
+                            />
+                            <Grid container className="modal-hold-login">
+                              <Grid item xs={4}></Grid>
                               <Grid
-                                container
-                                style={{ marginTop: "40px", zIndex: 2 }}
+                                item
+                                className="buttonpad buttonshake"
+                                xs={4}
                               >
-                                <Grid item xs={4}></Grid>
-                                <Grid
-                                  item
-                                  className="buttonpad buttonshake"
-                                  xs={4}
+                                <Button
+                                  onClick={logmein}
+                                  style={loginstyle}
+                                  fullWidth={true}
+                                  variant="outlined"
+                                  size="large"
+                                  color="primary"
                                 >
-                                  <Button
-                                    onClick={logmein}
-                                    style={loginstyle}
-                                    fullWidth={true}
-                                    variant="outlined"
-                                    size="large"
-                                    color="primary"
-                                  >
-                                    Log In
-                                  </Button>
-                                </Grid>{" "}
-                              </Grid>
+                                  Log In
+                                </Button>
+                              </Grid>{" "}
                             </Grid>
-                          ) : (
-                            <Grid
-                              item
-                              xs={12}
-                              className=""
-                              style={{ marginTop: "-1.5px" }}
-                            >
-                              <ModalFormSignupError
-                                device="mobile"
-                                ErrorType={0}
-                                textField="email"
-                                errorFormChecking={
-                                  errorFormChecking.inputedEmail
-                                }
-                                WidthHolder={WidthHolder}
-                                darkmode={darkmode}
-                                type={true}
-                                cantPassBadEmail={cantPassBadEmail}
-                                ErrorDisplay={emailErrorDisplay}
-                                ErrorData={emailErrorData}
-                              />
+                          </Grid>
+                        ) : (
+                          <Grid
+                            item
+                            xs={12}
+                            className=""
+                            style={{ marginTop: "-1.5px" }}
+                          >
+                            <ModalFormSignupError
+                              device="mobile"
+                              ErrorType={0}
+                              textField="email"
+                              errorFormChecking={errorFormChecking.inputedEmail}
+                              WidthHolder={WidthHolder}
+                              darkmode={darkmode}
+                              type={true}
+                              cantPassBadEmail={cantPassBadEmail}
+                              ErrorDisplay={emailErrorDisplay}
+                              ErrorData={emailErrorData}
+                            />
 
-                              <TextFieldSignup
-                                updateSignvalues={updateSignvalues}
-                                rawSignupValues={rawSignupValues}
-                                ShowSignupPasswordForaWhile={
-                                  ShowSignupPasswordForaWhile
-                                }
-                                signupShowPassword={signupShowPassword}
-                                size="small"
-                                emailType={true}
-                                passwordType={false}
-                                withHolder={WidthHolder}
-                              />
-
-                              <ModalFormSignupError
-                                device="mobile"
-                                ErrorType={errorsSignupValues.inputedUsername}
-                                textField="username"
-                                errorFormChecking={
-                                  errorFormChecking.inputedUsername
-                                }
-                                WidthHolder={WidthHolder}
-                                darkmode={darkmode}
-                                type={true}
-                                cantPassBadEmail={cantPassBadEmail}
-                                ErrorDisplay={usernameErrorDisplay}
-                                ErrorData={usernameErrorData}
-                              />
-                              <TextFieldSignup
-                                updateSignvalues={updateSignvalues}
-                                rawSignupValues={rawSignupValues}
-                                ShowSignupPasswordForaWhile={
-                                  ShowSignupPasswordForaWhile
-                                }
-                                signupShowPassword={signupShowPassword}
-                                size="small"
-                                emailType={false}
-                                passwordType={false}
-                                withHolder={WidthHolder}
-                              />
-
-                              <TextFieldSignup
-                                updateSignvalues={updateSignvalues}
-                                rawSignupValues={rawSignupValues}
-                                ShowSignupPasswordForaWhile={
-                                  ShowSignupPasswordForaWhile
-                                }
-                                signupShowPassword={signupShowPassword}
-                                size="small"
-                                emailType={false}
-                                passwordType={true}
-                                withHolder={WidthHolder}
-                              />
-                              <ModalFormSignupError
-                                device="mobile"
-                                ErrorType={0}
-                                textField="password"
-                                errorFormChecking={
-                                  errorFormChecking.inputedPassword
-                                }
-                                darkmode={darkmode}
-                                WidthHolder={WidthHolder}
-                                type={false}
-                                cantPassBadEmail={cantPassBadEmail}
-                                ErrorDisplay={passwordErrorDisplay}
-                                ErrorData={passwordErrorData}
-                              />
-
+                            <TextFieldSignup
+                              updateSignvalues={updateSignvalues}
+                              rawSignupValues={rawSignupValues}
+                              ShowSignupPasswordForaWhile={
+                                ShowSignupPasswordForaWhile
+                              }
+                              signupShowPassword={signupShowPassword}
+                              size="small"
+                              emailType={true}
+                              passwordType={false}
+                              withHolder={WidthHolder}
+                            />
+                            <ModalFormSignupError
+                              device="mobile"
+                              ErrorType={errorsSignupValues.inputedUsername}
+                              textField="username"
+                              errorFormChecking={
+                                errorFormChecking.inputedUsername
+                              }
+                              WidthHolder={WidthHolder}
+                              darkmode={darkmode}
+                              type={true}
+                              cantPassBadEmail={cantPassBadEmail}
+                              ErrorDisplay={usernameErrorDisplay}
+                              ErrorData={usernameErrorData}
+                            />
+                            <TextFieldSignup
+                              updateSignvalues={updateSignvalues}
+                              rawSignupValues={rawSignupValues}
+                              ShowSignupPasswordForaWhile={
+                                ShowSignupPasswordForaWhile
+                              }
+                              signupShowPassword={signupShowPassword}
+                              size="small"
+                              emailType={false}
+                              passwordType={false}
+                              withHolder={WidthHolder}
+                            />
+                            <TextFieldSignup
+                              updateSignvalues={updateSignvalues}
+                              rawSignupValues={rawSignupValues}
+                              ShowSignupPasswordForaWhile={
+                                ShowSignupPasswordForaWhile
+                              }
+                              signupShowPassword={signupShowPassword}
+                              size="small"
+                              emailType={false}
+                              passwordType={true}
+                              withHolder={WidthHolder}
+                            />
+                            <ModalFormSignupError
+                              device="mobile"
+                              ErrorType={0}
+                              textField="password"
+                              errorFormChecking={
+                                errorFormChecking.inputedPassword
+                              }
+                              darkmode={darkmode}
+                              WidthHolder={WidthHolder}
+                              type={false}
+                              cantPassBadEmail={cantPassBadEmail}
+                              ErrorDisplay={passwordErrorDisplay}
+                              ErrorData={passwordErrorData}
+                            />
+                            <Grid container className="modal-hold-signup">
+                              <Grid item xs={4}></Grid>
                               <Grid
-                                container
-                                style={{ marginTop: "40px", zIndex: 2 }}
-                                className="modal-hold-signup"
+                                item
+                                className="buttonpad buttonshake"
+                                xs={4}
                               >
-                                <Grid item xs={4}></Grid>
-                                <Grid
-                                  item
-                                  className="buttonpad buttonshake"
-                                  xs={4}
+                                <Button
+                                  style={signupstyle}
+                                  onClick={signmeup}
+                                  fullWidth={true}
+                                  variant="contained"
+                                  size="large"
+                                  color="secondary"
                                 >
-                                  <Button
-                                    style={signupstyle}
-                                    onClick={signmeup}
-                                    fullWidth={true}
-                                    variant="contained"
-                                    size="large"
-                                    color="secondary"
-                                  >
-                                    Sign Up
-                                  </Button>
-                                </Grid>{" "}
-                              </Grid>
+                                  Sign Up
+                                </Button>
+                              </Grid>{" "}
                             </Grid>
-                          )}
-                        </Grid>
-                      </Paper>
-                    </animated.div>
+                          </Grid>
+                        )}
+                      </Grid>
+                      <Grid item xs={12} style={{ height: "60vh" }}></Grid>{" "}
+                    </Paper>
                   </Grid>
                 </Grid>
               </Paper>

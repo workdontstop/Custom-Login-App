@@ -191,7 +191,7 @@ const Home = () => {
   var signupButton: CSS.Properties = {
     fontSize: buttonFont,
     transform: buttonTransform,
-    padding: "13.3px",
+    padding: "14px",
     borderRadius: "50px",
     MozBoxShadow: `0 0 4.5px ${appVariables.shade}`,
     WebkitBoxShadow: `0 0 4.5px ${appVariables.shade} `,
@@ -405,12 +405,34 @@ const Home = () => {
                     color: appVariables.littleTextColor,
                   }}
                 >
-                  Express Yourself ...
-                  <span style={{ display: displayEmo1 }}>&#129419;</span>
-                  <span style={{ display: displayEmo2 }}>&#9996;</span>
-                  <span style={{ display: displayEmo3 }}>&#127911;</span>
-                  <span style={{ display: displayEmo4 }}>&#128150;</span>
-                  <span style={{ display: displayEmo5 }}>&#10024;</span>
+                  <span style={{ verticalAlign: "middle" }}>
+                    express yourself
+                  </span>
+                  <span
+                    style={{ display: displayEmo1, verticalAlign: "middle" }}
+                  >
+                    &#129419;
+                  </span>
+                  <span
+                    style={{ display: displayEmo2, verticalAlign: "middle" }}
+                  >
+                    &#9996;
+                  </span>
+                  <span
+                    style={{ display: displayEmo3, verticalAlign: "middle" }}
+                  >
+                    &#127911;
+                  </span>
+                  <span
+                    style={{ display: displayEmo4, verticalAlign: "middle" }}
+                  >
+                    &#128150;
+                  </span>
+                  <span
+                    style={{ display: displayEmo5, verticalAlign: "middle" }}
+                  >
+                    &#10024;
+                  </span>
                 </span>
               </Typography>
             </Grid>
