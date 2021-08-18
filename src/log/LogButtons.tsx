@@ -1,17 +1,18 @@
 import React from "react";
 import { Grid, Button } from "@material-ui/core";
-import { ILogButtons } from "./appFolder-Interfaces";
+import { isBrowser } from "react-device-detect";
+import { ILogButtons } from "./log-Interfaces";
 
 function LoginButtonsx({
   loginstyle,
   signupstyle,
-  match,
   OpenModalForm,
 }: ILogButtons) {
+  var matchPc = isBrowser;
   return (
     <Grid
       container
-      className={match ? "containerloginpc" : "containerloginmobile "}
+      className={matchPc ? "containerloginpc" : "containerloginmobile "}
       item
     >
       <Grid item sm={3} md={5}></Grid>

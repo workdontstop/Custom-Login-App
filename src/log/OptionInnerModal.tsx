@@ -1,22 +1,48 @@
 import React, { useRef, useEffect, useCallback } from "react";
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
 import { Grid, Switch, DialogContent } from "@material-ui/core";
+import { isBrowser, isTablet } from "react-device-detect";
 import { useSpring, animated } from "react-spring";
-import { IOptionInnerModal } from "./appFolder-Interfaces";
-import "./OptionInnerModal.css";
+import { IOptionInnerModal } from "./log-Interfaces";
+import "./logCss.css";
+import * as CSS from "csstype";
 
 var toggleDarkMode: boolean = false;
 
 function OptionInnerModalx({
   closemodal,
   showModal,
-  setShowModal,
   darkmode,
   setDarkmode,
-  marginData,
-  fontData,
-  switchsize,
 }: IOptionInnerModal): JSX.Element {
+  var matchPc = isBrowser;
+  var matchTablet = isTablet;
+
+  var marginData: CSS.Properties;
+  var fontData: CSS.Properties;
+  const fontDataPc: CSS.Properties = { fontSize: "2.4vw" };
+  const fontDataTablet: CSS.Properties = { fontSize: "3.4vh" };
+  const fontDataMobile: CSS.Properties = { fontSize: "3.8vh" };
+  const marginDataPc: CSS.Properties = { marginLeft: "-35px" };
+  const marginDataMobile: CSS.Properties = { marginLeft: "-15.5px" };
+
+  ///
+  ///
+  ///
+  ///CONDITIONAL STATEMENT FOR DEVICE TYPE
+  if (matchPc) {
+    marginData = marginDataPc;
+    fontData = fontDataPc;
+    ///
+  } else if (matchTablet) {
+    marginData = marginDataPc;
+    fontData = fontDataTablet;
+    ///
+  } else {
+    marginData = marginDataMobile;
+    fontData = fontDataMobile;
+  }
+
   //
   //
   //
@@ -52,7 +78,6 @@ function OptionInnerModalx({
   //
   //USEREF TARGETS A DIV(BACKGROUND) AND CLOSES MODAL ON CLICK
   const inputRef = useRef<HTMLInputElement>(null);
-
   const onBackgroundFocus = (e: any): void => {
     if (inputRef.current === e.target) {
       closemodal(0);
@@ -67,6 +92,8 @@ function OptionInnerModalx({
           onClick={onBackgroundFocus}
           style={{
             padding: "0px",
+
+            height: "100vh",
           }}
           ref={inputRef}
         >
@@ -89,7 +116,7 @@ function OptionInnerModalx({
                 style={marginData}
               >
                 <Switch
-                  size={switchsize}
+                  size="medium"
                   checked={darkmode}
                   className={
                     darkmode

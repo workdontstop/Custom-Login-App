@@ -1,9 +1,9 @@
+import React from "react";
 import { animated, useSpring } from "react-spring";
 import { Grid, DialogContent } from "@material-ui/core";
-import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
-import { IServerError } from "./appFolder-Interfaces";
-import "./ServerError.css";
-export default function ServerError({
+import { IServerError } from "./log-Interfaces";
+import "./logCss.css";
+function ServerErrorx({
   device,
   serverEmojiplain,
   setServerErrorData,
@@ -138,3 +138,5 @@ export default function ServerError({
     </>
   );
 }
+
+export const ServerError = React.memo(ServerErrorx);

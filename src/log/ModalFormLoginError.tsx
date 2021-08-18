@@ -1,14 +1,17 @@
+import React from "react";
 import { animated, useSpring } from "react-spring";
 import { Grid } from "@material-ui/core";
-import { ImodalFormLoginError } from "./appFolder-Interfaces";
+import { ImodalFormLoginError } from "./log-Interfaces";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import zIndex from "@material-ui/core/styles/zIndex";
 
-export default function ModalFormLoginError({
+function ModalFormLoginErrorx({
   device,
   type,
   ErrorDisplay,
   darkmode,
   WidthHolder,
+  focus,
 }: ImodalFormLoginError) {
   ///
   ///
@@ -19,6 +22,8 @@ export default function ModalFormLoginError({
       duration: 100,
     },
     width: "100%",
+    position: "relative" as "relative",
+    zIndex: focus ? 15 : 0,
     opacity: ErrorDisplay,
     transform: ErrorDisplay ? `translateY(0%)` : `translateY(100%)`,
   });
@@ -31,8 +36,9 @@ export default function ModalFormLoginError({
     config: {
       duration: 100,
     },
+    position: "relative" as "relative",
+    zIndex: focus ? 15 : 0,
     opacity: ErrorDisplay,
-    zIndex: 0,
     marginTop: ErrorDisplay ? `-74px` : `-125px`,
     transform: ErrorDisplay ? `translateY(100%)` : `translateY(0%)`,
   });
@@ -51,9 +57,9 @@ export default function ModalFormLoginError({
     marginRight = "-16px";
     radi = "0px";
     texttrans = "scale(1)";
-  } else if (device === "tablet") {
-    errorwidth = WidthHolder;
-    textfont = "1vw";
+  } else if (device === "Tablet") {
+    errorwidth = "69%";
+    textfont = "1.9vh";
     radi = "10px";
     marginRight = "-35px";
     texttrans = "scale(0.8)";
@@ -68,13 +74,12 @@ export default function ModalFormLoginError({
   if (darkmode) {
     dotColor = "#00ccff";
     ErrorColor =
-      "linear-gradient(0deg,  rgba(17, 17, 17, 0.0075), rgba(17, 17, 17, 0.0125),rgba(17, 17, 17, 0.0125),rgba(17, 17, 17, 0.015),rgba(17, 17, 17, 0.03125),rgba(17, 17, 17, 0.075),rgba(17, 17, 17, 0.080),rgba(17, 17, 17, 0.085),rgba(17, 17, 17, 0.095),rgba(17, 17, 17, 0.105))";
+      "linear-gradient(0deg,  rgba(17, 17, 17, 0.0025), rgba(17, 17, 17, 0.0041),rgba(17, 17, 17, 0.0041),rgba(17, 17, 17, 0.005),rgba(17, 17, 17, 0.0104),rgba(17, 17, 17, 0.025),rgba(17, 17, 17, 0.026),rgba(17, 17, 17, 0.028),rgba(17, 17, 17, 0.031),rgba(17, 17, 17, 0.035))";
     ErrorTextColor = "#dddddd";
   } else {
     dotColor = "red";
     ErrorColor =
-      "linear-gradient(0deg,  rgba(221, 221, 221, 0.0125), rgba(221, 221, 221, 0.025),rgba(221, 221, 221, 0.05),rgba(221, 221, 221, 0.05),rgba(221, 221, 221, 0.125),rgba(221, 221, 221, 0.15),rgba(221, 221, 221, 0.175),rgba(221, 221, 221, 0.2),rgba(221, 221, 221, 0.22),rgba(221, 221, 221, 0.26))";
-
+      "linear-gradient(0deg,  rgba(221, 221, 221, 0.0041), rgba(221, 221, 221, 0.0083),rgba(221, 221, 221, 0.0166),rgba(221, 221, 221, 0.0166),rgba(221, 221, 221, 0.0416),rgba(221, 221, 221, 0.05),rgba(221, 221, 221, 0.058),rgba(221, 221, 221, 0.066),rgba(221, 221, 221, 0.0733),rgba(221, 221, 221, 0.08)";
     ErrorTextColor = "#222222";
   }
 
@@ -83,6 +88,7 @@ export default function ModalFormLoginError({
       {type ? (
         <animated.div style={animationModalLogError}>
           <Grid
+            xs={12}
             container
             style={{
               width: errorwidth,
@@ -93,7 +99,6 @@ export default function ModalFormLoginError({
               borderTopLeftRadius: radi,
               borderTopRightRadius: radi,
               marginBottom: "-1.5px",
-              display: "flex",
             }}
           >
             <Grid
@@ -199,3 +204,5 @@ export default function ModalFormLoginError({
     </>
   );
 }
+
+export const ModalFormLoginError = React.memo(ModalFormLoginErrorx);

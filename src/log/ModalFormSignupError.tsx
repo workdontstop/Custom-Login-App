@@ -1,12 +1,13 @@
+import React from "react";
 import { animated, useSpring } from "react-spring";
 import { Grid } from "@material-ui/core";
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
-import { ImodalFormSignupError } from "./appFolder-Interfaces";
+import { ImodalFormSignupError } from "./log-Interfaces";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
-export default function ModalLogFormError({
+function ModalFormSignupErrorx({
   ErrorType,
   textField,
   errorFormChecking,
@@ -17,6 +18,7 @@ export default function ModalLogFormError({
   darkmode,
   WidthHolder,
   device,
+  focus,
 }: ImodalFormSignupError) {
   var ErrorColor = "";
   var ErrorTextColor = "";
@@ -46,11 +48,11 @@ export default function ModalLogFormError({
     spinnermarg = "-10px";
     texttrans = "scale(1)";
     marginRight = "-15px";
-  } else if (device === "tablet") {
+  } else if (device === "Tablet") {
     marginTop = "-98px";
-    errorwidth = WidthHolder;
     iconfont = "1vw";
-    textfont = "1vw";
+    errorwidth = "69%";
+    textfont = "1.9vh";
     emojiFont = "1.3vw";
     emojiLeft = "13px";
     spinnersize = 18;
@@ -76,13 +78,13 @@ export default function ModalLogFormError({
   if (darkmode) {
     dotColor = "#00ccff";
     ErrorColor =
-      "linear-gradient(0deg,  rgba(17, 17, 17, 0.0075), rgba(17, 17, 17, 0.0125),rgba(17, 17, 17, 0.0125),rgba(17, 17, 17, 0.015),rgba(17, 17, 17, 0.03125),rgba(17, 17, 17, 0.075),rgba(17, 17, 17, 0.080),rgba(17, 17, 17, 0.085),rgba(17, 17, 17, 0.095),rgba(17, 17, 17, 0.105))";
+      "linear-gradient(0deg,  rgba(17, 17, 17, 0.0025), rgba(17, 17, 17, 0.0041),rgba(17, 17, 17, 0.0041),rgba(17, 17, 17, 0.005),rgba(17, 17, 17, 0.0104),rgba(17, 17, 17, 0.025),rgba(17, 17, 17, 0.026),rgba(17, 17, 17, 0.028),rgba(17, 17, 17, 0.031),rgba(17, 17, 17, 0.035))";
     ErrorTextColor = "#dddddd";
     ErrorIconColor = "#aaaaaa";
   } else {
     dotColor = "red";
     ErrorColor =
-      "linear-gradient(0deg,  rgba(221, 221, 221, 0.0125), rgba(221, 221, 221, 0.025),rgba(221, 221, 221, 0.05),rgba(221, 221, 221, 0.05),rgba(221, 221, 221, 0.125),rgba(221, 221, 221, 0.15),rgba(221, 221, 221, 0.175),rgba(221, 221, 221, 0.2),rgba(221, 221, 221, 0.22),rgba(221, 221, 221, 0.26))";
+      "linear-gradient(0deg,  rgba(221, 221, 221, 0.0041), rgba(221, 221, 221, 0.0083),rgba(221, 221, 221, 0.0166),rgba(221, 221, 221, 0.0166),rgba(221, 221, 221, 0.0416),rgba(221, 221, 221, 0.05),rgba(221, 221, 221, 0.058),rgba(221, 221, 221, 0.066),rgba(221, 221, 221, 0.0733),rgba(221, 221, 221, 0.08)";
 
     ErrorTextColor = "#222222";
     ErrorIconColor = "#333333";
@@ -131,7 +133,8 @@ export default function ModalLogFormError({
       duration: 100,
     },
     opacity: ErrorDisplay,
-
+    position: "relative" as "relative",
+    zIndex: focus ? 15 : 0,
     transform: ErrorData ? `translateY(0%)` : `translateY(100%)`,
   });
 
@@ -144,8 +147,10 @@ export default function ModalLogFormError({
       duration: 10,
     },
     opacity: ErrorDisplay,
-    marginTop: marginTop,
-    zIndex: 0,
+    position: "relative" as "relative",
+    zIndex: focus ? 15 : 0,
+    marginTop: focus ? "-5vh" : marginTop,
+
     transform: ErrorData ? `translateY(100%)` : `translateY(0%)`,
   });
 
@@ -428,3 +433,5 @@ export default function ModalLogFormError({
     </>
   );
 }
+
+export const ModalFormSignupError = React.memo(ModalFormSignupErrorx);

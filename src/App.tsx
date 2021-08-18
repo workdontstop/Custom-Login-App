@@ -1,31 +1,22 @@
 import "./App.css";
 import "typeface-roboto";
-import React, {
-  useMemo,
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-} from "react";
+import { useMemo, useState, useEffect, useRef, useCallback } from "react";
 import SuperstarzIconLight from "./images/s.png";
 import SuperstarzIconDark from "./images/sd.png";
 import {
-  useTheme,
   Paper,
-  useMediaQuery,
   Grid,
   Typography,
-  makeStyles,
   createMuiTheme,
   MuiThemeProvider,
 } from "@material-ui/core";
-import { BrowserRouter, Route, Switch, useLocation } from "react-router-dom";
-import { Option } from "./app-folder/Option";
-import { LoginButtons } from "./app-folder/LogButtons";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { Option } from "./log/Option";
+import { LoginButtons } from "./log/LogButtons";
 import * as CSS from "csstype";
-import { ModalLog } from "./app-folder/ModalLog";
+import { ModalLog } from "./log/ModalLog";
+import { isBrowser, isTablet } from "react-device-detect";
 import Supercheck from "./Supercheck";
-import { ViewArraySharp } from "@material-ui/icons";
 
 function App(): JSX.Element {
   return (
@@ -39,23 +30,12 @@ function App(): JSX.Element {
 }
 
 const Home = () => {
-  const [darkmode, setDarkmode] = useState<boolean>(false);
   const [showModalForm, setShowModalForm] = useState<boolean>(false);
 
-  const [randomicon, setRandomicon] = useState<number>(1);
+  var matchPc = isBrowser;
+  var matchTablet = isTablet;
 
-  const [OpenModalFormOnce, setOpenModalFormOnce] = useState<boolean>(false);
-  const [screenHeight, setScreenHeight] = useState<number>(0);
-  const [formtype, setFormtype] = useState<number>(1);
-  const [zoomedModal, setZoomedModal] = useState<boolean>(false);
-  const [mobileZoom, setMobileZoom] = useState<boolean>(false);
-
-  var usetheme = useTheme();
-  var matchPc = useMediaQuery(usetheme.breakpoints.up("md"));
-  var matchTablet = useMediaQuery(usetheme.breakpoints.up("sm"));
-  var matchMobile = useMediaQuery(usetheme.breakpoints.up("xs"));
   const RefAppContainer = useRef<HTMLDivElement>(null);
-  const firstTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   interface IappVariables {
     shade: string;
@@ -85,7 +65,7 @@ const Home = () => {
 
   var appVariablesDARK: IappVariables = {
     shade: "#cccccc",
-    shade2: "#cccccc",
+    shade2: "#ffffff",
     shade2num: "1.1",
     shade2nump: "1.8",
     logoimage: SuperstarzIconDark,
@@ -114,6 +94,7 @@ const Home = () => {
   ///
   ///
   ///CONDITIONAL STATEMENT FOR DARKMODE
+  const [darkmode, setDarkmode] = useState<boolean>(false);
   if (darkmode) {
     appVariables = appVariablesDARK;
   } else {
@@ -122,20 +103,11 @@ const Home = () => {
 
   var containerApp = "";
   var icon = "";
-  var superstarzText = "";
+
   var littleText = "";
   var buttonFont = "";
   var buttonTransform = "";
-  var optionsContainer = "";
-  var switchsize: "medium" | "small" | undefined;
-  var marginData: CSS.Properties;
-  var fontData: CSS.Properties;
-
-  const fontDataPc: CSS.Properties = { fontSize: "3.1rem" };
-  const fontDataTablet: CSS.Properties = { fontSize: "3.2rem" };
-  const fontDataMobile: CSS.Properties = { fontSize: "1.7rem" };
-  const marginDataPc: CSS.Properties = { marginLeft: "-35px" };
-  const marginDataMobile: CSS.Properties = { marginLeft: "-15.5px" };
+  var pad = "";
 
   ///
   ///
@@ -144,44 +116,34 @@ const Home = () => {
   if (matchPc) {
     containerApp = "containerapp";
     icon = "iconPc";
-    superstarzText = "super-starz-text-Pc";
     littleText = "littletext-Pc";
     buttonFont = "1vw";
     buttonTransform = " ";
-    optionsContainer = "optionsContainer-Pc-Tab";
-    switchsize = "medium";
-    marginData = marginDataPc;
-    fontData = fontDataPc;
+    pad = "14.5px";
+
     ///
   } else if (matchTablet) {
     containerApp = "containerapptablet";
     icon = "iconTablet";
-    superstarzText = "super-starz-text-Tablet";
     littleText = "littletext-Tablet";
     buttonFont = "2vw";
     buttonTransform = " ";
-    optionsContainer = "optionsContainer-Pc-Tab";
-    switchsize = "medium";
-    marginData = marginDataPc;
-    fontData = fontDataTablet;
+    pad = "16px";
+
     ///
   } else {
     containerApp = "containerappmobile";
     icon = "iconMobile";
-    superstarzText = "super-starz-text-Mobile";
     littleText = "littletext-Mobile";
     buttonFont = "";
     buttonTransform = "scale(0.95)";
-    optionsContainer = "optionsContainer-Mobile";
-    switchsize = "medium";
-    marginData = marginDataMobile;
-    fontData = fontDataMobile;
+    pad = "16px";
   }
 
   var loginButton: CSS.Properties = {
     fontSize: buttonFont,
     transform: buttonTransform,
-    padding: "11px",
+    padding: "11.5px",
     borderRadius: "52px",
     MozBoxShadow: `0 0 ${appVariables.shade2num}px ${appVariables.shade2} `,
     WebkitBoxShadow: `0 0 ${appVariables.shade2num}px ${appVariables.shade2} `,
@@ -191,7 +153,7 @@ const Home = () => {
   var signupButton: CSS.Properties = {
     fontSize: buttonFont,
     transform: buttonTransform,
-    padding: "14px",
+    padding: pad,
     borderRadius: "50px",
     MozBoxShadow: `0 0 4.5px ${appVariables.shade}`,
     WebkitBoxShadow: `0 0 4.5px ${appVariables.shade} `,
@@ -218,6 +180,7 @@ const Home = () => {
   ///
   ///
   ///CALCULATE NEW SCREEN HEIGHT
+  const [screenHeight, setScreenHeight] = useState<number>(0);
   const calculateScreenHeight = useMemo((): any => {
     const calculateScreenHeightx = () => {
       if (RefAppContainer.current && RefAppContainer.current.clientHeight) {
@@ -230,7 +193,7 @@ const Home = () => {
       }, 600);
     };
     return calculateScreenHeightx;
-  }, [setScreenHeight, RefAppContainer]);
+  }, [screenHeight, RefAppContainer]);
 
   ///
   ///
@@ -245,12 +208,13 @@ const Home = () => {
     if (themelocaldata !== null) {
       setDarkmode(themelocaldata);
     }
-  }, [calculateScreenHeight, setDarkmode]);
+  }, [calculateScreenHeight, darkmode]);
 
   ///
   ///
   ///
   ///CLOSE LOG MODAL
+  const [OpenModalFormOnce, setOpenModalFormOnce] = useState<boolean>(false);
   const CloseModalForm = useCallback(
     (DeviceBackButtonClicked: number) => {
       ///onpopstate fires when back and forward buttons used
@@ -262,21 +226,18 @@ const Home = () => {
       } else {
         setShowModalForm(false);
         setOpenModalFormOnce(false);
-        matchMobile
-          ? setTimeout(function () {
-              ///Replace modal history state with previous history state
-              window.history.back();
-            }, 500)
-          : window.history.back();
+        ///Replace modal history state with previous history state
+        window.history.back();
       }
     },
-    [setShowModalForm, setOpenModalFormOnce, matchMobile]
+    [showModalForm, OpenModalFormOnce]
   );
 
   ///
   ///
   ///
   ///OPEN LOG MODAL
+  const [formtype, setFormtype] = useState<number>(1);
   const OpenModalForm = useCallback(
     (formtypedata: number) => {
       setFormtype(formtypedata);
@@ -296,13 +257,14 @@ const Home = () => {
         CloseModalForm(1);
       }
     },
-    [setShowModalForm, setOpenModalFormOnce, CloseModalForm]
+    [showModalForm, OpenModalFormOnce, CloseModalForm]
   );
 
   ///
   ///
   ///
   /// RANDOME EMOJI
+  const [randomicon, setRandomicon] = useState<number>(1);
   useEffect(() => {
     let emojicontrol: number[] = [1, 2, 3, 4, 5];
     var randomemoji =
@@ -319,7 +281,7 @@ const Home = () => {
     } else {
       setRandomicon(5);
     }
-  }, [setRandomicon]);
+  }, [randomicon]);
 
   var displayEmo1 = "none";
   var displayEmo2 = "none";
@@ -359,6 +321,7 @@ const Home = () => {
     displayEmo5 = "inline";
   }
 
+  console.log("app");
   return (
     <MuiThemeProvider theme={themeGeneralSettings}>
       <Paper
@@ -370,15 +333,7 @@ const Home = () => {
         }}
       >
         <Grid container className="fadeboyin">
-          <Option
-            switchsize={switchsize}
-            darkmode={darkmode}
-            setDarkmode={setDarkmode}
-            marginData={marginData}
-            fontData={fontData}
-            superFont={superstarzText}
-            optionsContainer={optionsContainer}
-          />
+          <Option darkmode={darkmode} setDarkmode={setDarkmode} />
 
           <Grid container className={containerApp}>
             <Grid item xs={3} sm={4} md={4}></Grid>
@@ -441,14 +396,9 @@ const Home = () => {
             <LoginButtons
               loginstyle={loginButton}
               signupstyle={signupButton}
-              match={matchPc}
               OpenModalForm={OpenModalForm}
             />
             <ModalLog
-              zoomedModal={zoomedModal}
-              setZoomedModal={setZoomedModal}
-              mobileZoom={mobileZoom}
-              setMobileZoom={setMobileZoom}
               formtype={formtype}
               screenHeight={screenHeight}
               darkmode={darkmode}

@@ -16,10 +16,24 @@ export type IGrid =
   | 11
   | 12;
 
+export interface IFormHolder {
+  darkmode: boolean;
+  zoomedModal: boolean;
+  WidthHolder: string;
+  loginstyle: CSS.Properties;
+  signupstyle: CSS.Properties;
+  loginForm: boolean;
+  serverEmojiplain: boolean;
+  setserverEmojiplain: (serverEmojiplain: boolean) => void;
+  serverErrorData: string | null;
+  setServerErrorData: (serverErrorData: string | null) => void;
+  serverErrorDisplay: number;
+  setServerErrorDisplay: (serverErrorDisplay: number) => void;
+}
+
 export interface ILogButtons {
   loginstyle: CSS.Properties;
   signupstyle: CSS.Properties;
-  match: boolean;
   OpenModalForm: (formtypedata: number) => void;
 }
 
@@ -34,6 +48,7 @@ export interface ImodalFormSignupError {
   darkmode: boolean;
   WidthHolder: string;
   device: string;
+  focus: boolean;
 }
 
 export interface ImodalFormLoginError {
@@ -42,27 +57,19 @@ export interface ImodalFormLoginError {
   WidthHolder: string;
   type: boolean;
   ErrorDisplay: number;
+  focus: boolean;
 }
 
 export interface IOption {
   darkmode: boolean;
-  setDarkmode: (darkmodex: boolean) => void;
-  marginData: CSS.Properties;
-  fontData: CSS.Properties;
-  superFont: string;
-  switchsize: "medium" | "small" | undefined;
-  optionsContainer: string;
+  setDarkmode: (darkmode: boolean) => void;
 }
 
 export interface IOptionInnerModal {
   closemodal: (backbutton: number) => void;
   showModal: boolean;
-  setShowModal: (showModal: boolean) => void;
   darkmode: boolean;
-  setDarkmode: (darkmodex: boolean) => void;
-  marginData: CSS.Properties;
-  fontData: CSS.Properties;
-  switchsize: "medium" | "small" | undefined;
+  setDarkmode: (darkmode: boolean) => void;
 }
 
 export interface IServerError {
@@ -83,10 +90,6 @@ export interface ImodalLog {
   showModalForm: boolean;
   PaperStyle: string;
   darkmode: boolean;
-  zoomedModal: boolean;
-  setZoomedModal: (zoomedModal: boolean) => void;
-  mobileZoom: boolean;
-  setMobileZoom: (mobileZoom: boolean) => void;
 }
 
 export interface Ispinnerinterface {
@@ -103,9 +106,12 @@ export interface ItextfIeldLogin {
   };
   ShowLoginPasswordForaWhile: any;
   loginShowPassword: boolean;
-  size: "small" | "medium" | undefined;
+  size: any;
   passwordType: boolean;
   withHolder: string;
+  focus: boolean;
+  setFocus: (focus: boolean) => void;
+  darkmode: boolean;
 }
 
 export interface ItextfIeldSignup {
@@ -117,8 +123,15 @@ export interface ItextfIeldSignup {
   };
   ShowSignupPasswordForaWhile: any;
   signupShowPassword: boolean;
-  size: "small" | "medium" | undefined;
+  size: any;
   passwordType: boolean;
   emailType: boolean;
   withHolder: string;
+  focus: boolean;
+  setFocus: (focus: boolean) => void;
+  showFocusTextFieldByHidePadding: boolean;
+  setShowFocusTextFieldByHidePadding: (
+    showFocusTextFieldByHidePadding: boolean
+  ) => void;
+  darkmode: boolean;
 }

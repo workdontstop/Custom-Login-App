@@ -1,29 +1,47 @@
 import React, { useState, useCallback } from "react";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { OptionInnerModal } from "./OptionInnerModal";
-import { IOption } from "./appFolder-Interfaces";
+import { IOption } from "./log-Interfaces";
 
-import {
-  Paper,
-  Grid,
-  Typography,
-  makeStyles,
-  createMuiTheme,
-  MuiThemeProvider,
-} from "@material-ui/core";
-import "./Option.css";
+import { Grid } from "@material-ui/core";
+import { isBrowser, isTablet } from "react-device-detect";
 
-function Optionx({
-  darkmode,
-  setDarkmode,
-  marginData,
-  fontData,
-  switchsize,
-  superFont,
-  optionsContainer,
-}: IOption): JSX.Element {
+import "./logCss.css";
+import * as CSS from "csstype";
+
+function Optionx({ darkmode, setDarkmode }: IOption): JSX.Element {
   const [showModal, setShowModal] = useState<boolean>(false);
+  var matchTablet = isTablet;
+  var matchPc = isBrowser;
+
+  var superFont = "";
+  var optionsContainer = "";
+  var HorizIconfontData: CSS.Properties;
+
+  const fontDataPc: CSS.Properties = { fontSize: "2.4vw" };
+  const fontDataTablet: CSS.Properties = { fontSize: "3.7vh" };
+  const fontDataMobile: CSS.Properties = { fontSize: "3.8vh" };
+
+  ///
+  ///
+  ///
+  ///CONDITIONAL STATEMENT FOR DEVICE TYPE
+  if (matchPc) {
+    superFont = "super-starz-text-Pc";
+    optionsContainer = "optionsContainer-Pc-Tab";
+    HorizIconfontData = fontDataPc;
+    ///
+  } else if (matchTablet) {
+    superFont = "super-starz-text-Tablet";
+    optionsContainer = "optionsContainer-Pc-Tab";
+    HorizIconfontData = fontDataTablet;
+    ///
+  } else {
+    superFont = "super-starz-text-Mobile";
+    optionsContainer = "optionsContainer-Mobile";
+    HorizIconfontData = fontDataMobile;
+  }
 
   ///
   ///
@@ -44,7 +62,7 @@ function Optionx({
         setShowModal(false);
       }
     },
-    [setShowModal]
+    [showModal]
   );
 
   ///
@@ -56,9 +74,7 @@ function Optionx({
     //pushstate add enteries to your history
     window.history.pushState(null, "", "Options");
     closemodal(1);
-  }, [setShowModal, showModal, closemodal]);
-
-  console.log("zerformance issues");
+  }, [showModal, closemodal]);
 
   return (
     <Grid container>
@@ -96,7 +112,7 @@ function Optionx({
                   : "make-small-icons-clickable-light  dontallowhighlighting  "
               }
               fontSize="large"
-              style={fontData}
+              style={HorizIconfontData}
             />
           </Grid>
         </Grid>
@@ -105,12 +121,8 @@ function Optionx({
       <OptionInnerModal
         showModal={showModal}
         closemodal={closemodal}
-        setShowModal={setShowModal}
-        switchsize={switchsize}
         darkmode={darkmode}
         setDarkmode={setDarkmode}
-        marginData={marginData}
-        fontData={fontData}
       />
     </Grid>
   );
