@@ -2,26 +2,24 @@ import React, { useState, useCallback } from "react";
 
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { OptionInnerModal } from "./OptionInnerModal";
-import { IOption } from "./log-Interfaces";
 
 import { Grid } from "@material-ui/core";
-import { isBrowser, isTablet } from "react-device-detect";
+import { matchPc, matchTablet } from "../DetectDevice";
+import { useSelector } from "react-redux";
 
 import "./logCss.css";
 import * as CSS from "csstype";
 
-function Optionx({ darkmode, setDarkmode }: IOption): JSX.Element {
+function Optionx(): JSX.Element {
   const [showModal, setShowModal] = useState<boolean>(false);
-  var matchTablet = isTablet;
-  var matchPc = isBrowser;
 
   var superFont = "";
   var optionsContainer = "";
   var HorizIconfontData: CSS.Properties;
 
   const fontDataPc: CSS.Properties = { fontSize: "2.4vw" };
-  const fontDataTablet: CSS.Properties = { fontSize: "3.7vh" };
-  const fontDataMobile: CSS.Properties = { fontSize: "3.8vh" };
+  const fontDataTablet: CSS.Properties = { fontSize: "3.5vh" };
+  const fontDataMobile: CSS.Properties = { fontSize: "4vh" };
 
   ///
   ///
@@ -47,23 +45,20 @@ function Optionx({ darkmode, setDarkmode }: IOption): JSX.Element {
   ///
   ///
   /// CLOSE MODAL (STARTS AN ONPOPSTATE EVENT)
-  const closemodal = useCallback(
-    (backbutton: number) => {
-      //pop states fires when back and forward buttons used
-      if (backbutton === 1) {
-        window.onpopstate = () => {
-          window.history.pushState(null, "", window.location.href);
-          window.onpopstate = null;
-          setShowModal(false);
-        };
-      } else {
-        window.history.pushState(null, "", ".");
+  const closemodal = useCallback((backbutton: number) => {
+    //pop states fires when back and forward buttons used
+    if (backbutton === 1) {
+      window.onpopstate = () => {
+        window.history.pushState(null, "", window.location.href);
         window.onpopstate = null;
         setShowModal(false);
-      }
-    },
-    [showModal]
-  );
+      };
+    } else {
+      window.history.pushState(null, "", ".");
+      window.onpopstate = null;
+      setShowModal(false);
+    }
+  }, []);
 
   ///
   ///
@@ -76,15 +71,30 @@ function Optionx({ darkmode, setDarkmode }: IOption): JSX.Element {
     closemodal(1);
   }, [showModal, closemodal]);
 
+  ///
+  ///
+  ///
+  /// GET DARKMODE FROM REDUX STORE
+  interface RootStateGlobalReducer {
+    GlobalReducer: {
+      darkmode: boolean;
+    };
+  }
+  const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
+    ...state.GlobalReducer,
+  }));
+
+  const darkmodeReducer = darkmode;
+
   return (
-    <Grid container>
+    <Grid container style={{}}>
       {showModal ? null : (
-        <Grid item xs={12} className={optionsContainer}>
+        <Grid item xs={12} className={optionsContainer} style={{}}>
           <Grid item xs={6} style={{ textAlign: "left" }}>
             <span className={superFont}>
               <span
                 className={
-                  darkmode
+                  darkmodeReducer
                     ? "text-superstarz-dark   text-superstarz-dark-colorA  "
                     : "text-superstarz-light  text-superstarz-light-colorA  "
                 }
@@ -92,8 +102,9 @@ function Optionx({ darkmode, setDarkmode }: IOption): JSX.Element {
                 Super
               </span>
               <span
+                style={{ opacity: darkmodeReducer ? "0.73" : "0.7" }}
                 className={
-                  darkmode
+                  darkmodeReducer
                     ? "text-superstarz-dark     text-superstarz-dark-colorB  "
                     : "text-superstarz-light   text-superstarz-light-colorB   "
                 }
@@ -118,12 +129,7 @@ function Optionx({ darkmode, setDarkmode }: IOption): JSX.Element {
         </Grid>
       )}
 
-      <OptionInnerModal
-        showModal={showModal}
-        closemodal={closemodal}
-        darkmode={darkmode}
-        setDarkmode={setDarkmode}
-      />
+      <OptionInnerModal showModal={showModal} closemodal={closemodal} />
     </Grid>
   );
 }

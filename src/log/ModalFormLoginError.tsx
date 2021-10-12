@@ -2,17 +2,30 @@ import React from "react";
 import { animated, useSpring } from "react-spring";
 import { Grid } from "@material-ui/core";
 import { ImodalFormLoginError } from "./log-Interfaces";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
-import zIndex from "@material-ui/core/styles/zIndex";
+import { useSelector } from "react-redux";
 
 function ModalFormLoginErrorx({
   device,
   type,
   ErrorDisplay,
-  darkmode,
   WidthHolder,
   focus,
 }: ImodalFormLoginError) {
+  ///
+  ///
+  ///
+  /// GET DARKMODE FROM REDUX STORE
+  interface RootStateGlobalReducer {
+    GlobalReducer: {
+      darkmode: boolean;
+    };
+  }
+  const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
+    ...state.GlobalReducer,
+  }));
+
+  const darkmodeReducer = darkmode;
+
   ///
   ///
   ///
@@ -39,9 +52,10 @@ function ModalFormLoginErrorx({
     position: "relative" as "relative",
     zIndex: focus ? 15 : 0,
     opacity: ErrorDisplay,
-    marginTop: ErrorDisplay ? `-74px` : `-125px`,
+    marginTop: "-74px",
     transform: ErrorDisplay ? `translateY(100%)` : `translateY(0%)`,
   });
+
   var ErrorColor = "";
   var ErrorTextColor = "";
   var errorwidth = "";
@@ -49,7 +63,6 @@ function ModalFormLoginErrorx({
   var radi = "";
   var marginRight = "";
   var texttrans = "";
-  var dotColor = "";
 
   if (device === "pc") {
     errorwidth = WidthHolder;
@@ -71,13 +84,11 @@ function ModalFormLoginErrorx({
     texttrans = "scale(0.8)";
   }
 
-  if (darkmode) {
-    dotColor = "#00ccff";
+  if (darkmodeReducer) {
     ErrorColor =
       "linear-gradient(0deg,  rgba(17, 17, 17, 0.0025), rgba(17, 17, 17, 0.0041),rgba(17, 17, 17, 0.0041),rgba(17, 17, 17, 0.005),rgba(17, 17, 17, 0.0104),rgba(17, 17, 17, 0.025),rgba(17, 17, 17, 0.026),rgba(17, 17, 17, 0.028),rgba(17, 17, 17, 0.031),rgba(17, 17, 17, 0.035))";
     ErrorTextColor = "#dddddd";
   } else {
-    dotColor = "red";
     ErrorColor =
       "linear-gradient(0deg,  rgba(221, 221, 221, 0.0041), rgba(221, 221, 221, 0.0083),rgba(221, 221, 221, 0.0166),rgba(221, 221, 221, 0.0166),rgba(221, 221, 221, 0.0416),rgba(221, 221, 221, 0.05),rgba(221, 221, 221, 0.058),rgba(221, 221, 221, 0.066),rgba(221, 221, 221, 0.0733),rgba(221, 221, 221, 0.08)";
     ErrorTextColor = "#222222";
@@ -88,7 +99,6 @@ function ModalFormLoginErrorx({
       {type ? (
         <animated.div style={animationModalLogError}>
           <Grid
-            xs={12}
             container
             style={{
               width: errorwidth,
@@ -120,7 +130,7 @@ function ModalFormLoginErrorx({
               <Grid
                 item
                 style={{
-                  opacity: 0.5,
+                  opacity: focus ? 0.7 : 0.35,
                   fontSize: textfont,
                   transform: texttrans,
                 }}
@@ -130,13 +140,6 @@ function ModalFormLoginErrorx({
                   <span style={{ verticalAlign: "middle" }}>
                     username required{" "}
                   </span>
-                  <FiberManualRecordIcon
-                    style={{
-                      color: dotColor,
-                      verticalAlign: "middle",
-                      fontSize: "0.6rem",
-                    }}
-                  />
                 </span>
               </Grid>
             </Grid>
@@ -149,11 +152,9 @@ function ModalFormLoginErrorx({
             style={{
               width: errorwidth,
               height: "34px",
-
               backgroundImage: ErrorColor,
               margin: "auto",
               borderRadius: "0px",
-
               display: "flex",
             }}
           >
@@ -178,7 +179,7 @@ function ModalFormLoginErrorx({
                 item
                 xs={10}
                 style={{
-                  opacity: 0.5,
+                  opacity: focus ? 0.7 : 0.35,
                   fontSize: textfont,
                   transform: texttrans,
                   zIndex: 1,
@@ -188,13 +189,6 @@ function ModalFormLoginErrorx({
                   <span style={{ verticalAlign: "middle" }}>
                     password required{" "}
                   </span>
-                  <FiberManualRecordIcon
-                    style={{
-                      color: dotColor,
-                      verticalAlign: "middle",
-                      fontSize: "0.6rem",
-                    }}
-                  />
                 </span>
               </Grid>
             </Grid>

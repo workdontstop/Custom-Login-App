@@ -1,9 +1,13 @@
 import React, { useRef, useEffect, useCallback } from "react";
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
 import { Grid, Switch, DialogContent } from "@material-ui/core";
-import { isBrowser, isTablet } from "react-device-detect";
+import { matchPc, matchTablet } from "../DetectDevice";
 import { useSpring, animated } from "react-spring";
 import { IOptionInnerModal } from "./log-Interfaces";
+import { useSelector, useDispatch } from "react-redux";
+
+import { DarkmodeToggleAction } from ".././GlobalActions";
+
 import "./logCss.css";
 import * as CSS from "csstype";
 
@@ -12,19 +16,15 @@ var toggleDarkMode: boolean = false;
 function OptionInnerModalx({
   closemodal,
   showModal,
-  darkmode,
-  setDarkmode,
 }: IOptionInnerModal): JSX.Element {
-  var matchPc = isBrowser;
-  var matchTablet = isTablet;
-
   var marginData: CSS.Properties;
   var fontData: CSS.Properties;
   const fontDataPc: CSS.Properties = { fontSize: "2.4vw" };
-  const fontDataTablet: CSS.Properties = { fontSize: "3.4vh" };
-  const fontDataMobile: CSS.Properties = { fontSize: "3.8vh" };
+  const fontDataTablet: CSS.Properties = { fontSize: "3.9vh" };
+  const fontDataMobile: CSS.Properties = { fontSize: "4.1vh" };
   const marginDataPc: CSS.Properties = { marginLeft: "-35px" };
   const marginDataMobile: CSS.Properties = { marginLeft: "-15.5px" };
+  var paddingttop = "";
 
   ///
   ///
@@ -33,14 +33,17 @@ function OptionInnerModalx({
   if (matchPc) {
     marginData = marginDataPc;
     fontData = fontDataPc;
+    paddingttop = "2.1rem";
     ///
   } else if (matchTablet) {
     marginData = marginDataPc;
     fontData = fontDataTablet;
+    paddingttop = "5.5rem";
     ///
   } else {
     marginData = marginDataMobile;
     fontData = fontDataMobile;
+    paddingttop = "2.1rem";
   }
 
   //
@@ -84,6 +87,37 @@ function OptionInnerModalx({
     }
   };
 
+  ///
+  ///
+  ///
+  /// GET DARKMODE FROM REDUX STORE
+  interface RootStateGlobalReducer {
+    GlobalReducer: {
+      darkmode: boolean;
+    };
+  }
+  const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
+    ...state.GlobalReducer,
+  }));
+  const darkmodeReducer = darkmode;
+
+  ///
+  ///
+  ///
+  /// UPDATES  STATE.DARKMODE USING A DISPATCH TO THE REDUX STORE  SWITCH /TOGGLE  APP THEME
+  const dispatch = useDispatch();
+  const switchThemes = () => {
+    if (darkmodeReducer) {
+      toggleDarkMode = false;
+    } else {
+      toggleDarkMode = true;
+    }
+    dispatch(DarkmodeToggleAction());
+    ////ACESSING LOCALSTORAGE
+    localStorage.setItem("darkmode", toggleDarkMode.toString());
+    closemodal(0);
+  };
+
   return (
     <>
       {showModal ? (
@@ -92,16 +126,17 @@ function OptionInnerModalx({
           onClick={onBackgroundFocus}
           style={{
             padding: "0px",
-
             height: "100vh",
+            position: "fixed",
           }}
           ref={inputRef}
         >
           <animated.div style={animation}>
             <Grid
               container
+              style={{ paddingTop: paddingttop }}
               className={
-                darkmode
+                darkmodeReducer
                   ? "Background-header-dark theme-more-container"
                   : "Background-header-light theme-more-container"
               }
@@ -117,17 +152,14 @@ function OptionInnerModalx({
               >
                 <Switch
                   size="medium"
-                  checked={darkmode}
+                  checked={darkmodeReducer}
                   className={
-                    darkmode
+                    darkmodeReducer
                       ? "icon-color-dark dontallowhighlighting  "
                       : "icon-color-light  dontallowhighlighting  "
                   }
                   onChange={() => {
-                    toggleDarkMode = !darkmode;
-                    setDarkmode(!darkmode);
-                    localStorage.setItem("darkmode", toggleDarkMode.toString());
-                    closemodal(0);
+                    switchThemes();
                   }}
                 />
               </Grid>
@@ -141,7 +173,7 @@ function OptionInnerModalx({
               >
                 <AddRoundedIcon
                   className={
-                    darkmode
+                    darkmodeReducer
                       ? "make-small-icons-clickable-dark  dontallowhighlighting  "
                       : "make-small-icons-clickable-light  dontallowhighlighting  "
                   }

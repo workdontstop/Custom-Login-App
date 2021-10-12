@@ -11,8 +11,17 @@ const createTokens = (logindata: any) => {
   return accessToken;
 };
 
+const createTokensUpdate = (logindata: any) => {
+  const accessToken = sign(
+    { username: logindata.username, id: logindata.id },
+    secretKey
+  );
+
+  return accessToken;
+};
+
 const validateToken = (req: any, res: any, next: any) => {
-  const accessToken = req.cookies["access-token"];
+  const accessToken = req.cookies["accesst"];
 
   if (!accessToken)
     return res.status(400).json({ error: "user not authenthicated" });
@@ -27,4 +36,4 @@ const validateToken = (req: any, res: any, next: any) => {
   }
 };
 
-module.exports = { createTokens, validateToken };
+module.exports = { createTokens, validateToken, createTokensUpdate };

@@ -12,6 +12,7 @@ const applyMiddleware = redux.applyMiddleware;
 const thunkMiddleware = require("redux-thunk").default;
 
 require("dotenv").config();
+
 declare global {
   interface Window {
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;

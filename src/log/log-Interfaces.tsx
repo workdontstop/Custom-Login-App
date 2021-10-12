@@ -17,23 +17,19 @@ export type IGrid =
   | 12;
 
 export interface IFormHolder {
-  darkmode: boolean;
   zoomedModal: boolean;
   WidthHolder: string;
-  loginstyle: CSS.Properties;
-  signupstyle: CSS.Properties;
   loginForm: boolean;
-  serverEmojiplain: boolean;
   setserverEmojiplain: (serverEmojiplain: boolean) => void;
-  serverErrorData: string | null;
   setServerErrorData: (serverErrorData: string | null) => void;
-  serverErrorDisplay: number;
   setServerErrorDisplay: (serverErrorDisplay: number) => void;
+  checkSignupPasswordACTIVATE: boolean;
+  setcheckSignupPasswordACTIVATE: (
+    checkSignupPasswordACTIVATE: boolean
+  ) => void;
 }
 
 export interface ILogButtons {
-  loginstyle: CSS.Properties;
-  signupstyle: CSS.Properties;
   OpenModalForm: (formtypedata: number) => void;
 }
 
@@ -42,34 +38,26 @@ export interface ImodalFormSignupError {
   textField: string;
   errorFormChecking: boolean;
   type: boolean;
-  cantPassBadEmail: boolean;
   ErrorDisplay: number;
   ErrorData: string | null;
-  darkmode: boolean;
   WidthHolder: string;
   device: string;
   focus: boolean;
+  bop: boolean;
+  checkSignupPasswordACTIVATE: boolean;
 }
 
 export interface ImodalFormLoginError {
   device: string;
-  darkmode: boolean;
   WidthHolder: string;
   type: boolean;
   ErrorDisplay: number;
   focus: boolean;
 }
 
-export interface IOption {
-  darkmode: boolean;
-  setDarkmode: (darkmode: boolean) => void;
-}
-
 export interface IOptionInnerModal {
   closemodal: (backbutton: number) => void;
   showModal: boolean;
-  darkmode: boolean;
-  setDarkmode: (darkmode: boolean) => void;
 }
 
 export interface IServerError {
@@ -77,19 +65,13 @@ export interface IServerError {
   setServerErrorData: (serverErrorData: string | null) => void;
   serverErrorDisplay: number;
   serverErrorData: string | null;
-  darkmode: boolean;
   serverEmojiplain: boolean;
 }
 
 export interface ImodalLog {
   formtype: number;
-  screenHeight: number;
-  signupstyle: CSS.Properties;
-  loginstyle: CSS.Properties;
   CloseModalForm: (DeviceBackButtonClicked: number) => void;
   showModalForm: boolean;
-  PaperStyle: string;
-  darkmode: boolean;
 }
 
 export interface Ispinnerinterface {
@@ -111,7 +93,6 @@ export interface ItextfIeldLogin {
   withHolder: string;
   focus: boolean;
   setFocus: (focus: boolean) => void;
-  darkmode: boolean;
 }
 
 export interface ItextfIeldSignup {
@@ -133,5 +114,13 @@ export interface ItextfIeldSignup {
   setShowFocusTextFieldByHidePadding: (
     showFocusTextFieldByHidePadding: boolean
   ) => void;
-  darkmode: boolean;
+  checkSignupPasswordACTIVATE: boolean;
+}
+
+export interface IPasswordCheck {
+  widthHolder: string;
+  responseErrorConfirmPassword: boolean;
+  checkSignupPasswordACTIVATE: boolean;
+
+  signmeup: (checkSignupPasswordinputed: any) => void;
 }

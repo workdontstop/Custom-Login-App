@@ -1,418 +1,157 @@
 import "./App.css";
 import "typeface-roboto";
-import { useMemo, useState, useEffect, useRef, useCallback } from "react";
-import SuperstarzIconLight from "./images/s.png";
-import SuperstarzIconDark from "./images/sd.png";
-import {
-  Paper,
-  Grid,
-  Typography,
-  createMuiTheme,
-  MuiThemeProvider,
-} from "@material-ui/core";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { Option } from "./log/Option";
-import { LoginButtons } from "./log/LogButtons";
-import * as CSS from "csstype";
-import { ModalLog } from "./log/ModalLog";
-import { isBrowser, isTablet } from "react-device-detect";
+import { useEffect } from "react";
+import Axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import Home from "./Home";
 import Supercheck from "./Supercheck";
+import { IsLoggedAction } from "./log/actions/IsLoggedAction";
+import { IsLoggedProfileAction } from "./log/actions/IsLoggedAction";
+import { UserdataActionOnLoad } from "./log/actions/UserdataAction";
+import { UpdateColorAction } from "./GlobalActions";
+import ProfileOutter from "./profile/ProfileOutter";
+
+Axios.defaults.withCredentials = true;
 
 function App(): JSX.Element {
-  return (
-    <BrowserRouter>
-      <Switch>
-        <Route path="/" exact component={Home} />
-        <Route path="/Supercheck" exact component={Supercheck} />
-      </Switch>
-    </BrowserRouter>
-  );
-}
-
-const Home = () => {
-  const [showModalForm, setShowModalForm] = useState<boolean>(false);
-
-  var matchPc = isBrowser;
-  var matchTablet = isTablet;
-
-  const RefAppContainer = useRef<HTMLDivElement>(null);
-
-  interface IappVariables {
-    shade: string;
-    shade2: string;
-    shade2num: string;
-    shade2nump: string;
-    logoimage: string;
-    secondarymaincolor: string;
-    maincolor: string;
-    shade2nump22: string;
-    PaperStyle: string;
-    littleTextColor: string;
-  }
-
-  var appVariables: IappVariables = {
-    shade: "",
-    shade2: "",
-    shade2num: "",
-    shade2nump: "",
-    logoimage: "",
-    secondarymaincolor: "",
-    maincolor: "",
-    shade2nump22: "",
-    PaperStyle: "",
-    littleTextColor: "",
-  };
-
-  var appVariablesDARK: IappVariables = {
-    shade: "#cccccc",
-    shade2: "#ffffff",
-    shade2num: "1.1",
-    shade2nump: "1.8",
-    logoimage: SuperstarzIconDark,
-    secondarymaincolor: "#ccccccff",
-    maincolor: "#ccccccff",
-    shade2nump22: "5.5",
-    PaperStyle: "linear-gradient(0deg, #282c34, #282c36, #191919 )",
-    littleTextColor: "#ccccccff",
-  };
-
-  var appVariablesLIGHT: IappVariables = {
-    shade: "#0b111b",
-    shade2: "#0b111b",
-    shade2num: "1.5",
-    shade2nump: "1.5",
-    logoimage: SuperstarzIconLight,
-    secondarymaincolor: "#0b111b",
-    maincolor: "#0b111b",
-    shade2nump22: "8",
-    PaperStyle:
-      "linear-gradient(0deg,  rgb(220,225,225), rgb(255,255,255),rgb(246,250,255) )",
-    littleTextColor: "#0b111b",
-  };
+  ///
+  ///
+  ///
+  ///DISPATCH
+  const dispatch = useDispatch();
 
   ///
   ///
   ///
-  ///CONDITIONAL STATEMENT FOR DARKMODE
-  const [darkmode, setDarkmode] = useState<boolean>(false);
-  if (darkmode) {
-    appVariables = appVariablesDARK;
-  } else {
-    appVariables = appVariablesLIGHT;
-  }
-
-  var containerApp = "";
-  var icon = "";
-
-  var littleText = "";
-  var buttonFont = "";
-  var buttonTransform = "";
-  var pad = "";
-
-  ///
-  ///
-  ///
-  ///CONDITIONAL STATEMENT FOR DEVICE TYPE
-  if (matchPc) {
-    containerApp = "containerapp";
-    icon = "iconPc";
-    littleText = "littletext-Pc";
-    buttonFont = "1vw";
-    buttonTransform = " ";
-    pad = "14.5px";
-
-    ///
-  } else if (matchTablet) {
-    containerApp = "containerapptablet";
-    icon = "iconTablet";
-    littleText = "littletext-Tablet";
-    buttonFont = "2vw";
-    buttonTransform = " ";
-    pad = "16px";
-
-    ///
-  } else {
-    containerApp = "containerappmobile";
-    icon = "iconMobile";
-    littleText = "littletext-Mobile";
-    buttonFont = "";
-    buttonTransform = "scale(0.95)";
-    pad = "16px";
-  }
-
-  var loginButton: CSS.Properties = {
-    fontSize: buttonFont,
-    transform: buttonTransform,
-    padding: "11.5px",
-    borderRadius: "52px",
-    MozBoxShadow: `0 0 ${appVariables.shade2num}px ${appVariables.shade2} `,
-    WebkitBoxShadow: `0 0 ${appVariables.shade2num}px ${appVariables.shade2} `,
-    boxShadow: `0 0 ${appVariables.shade2num}px ${appVariables.shade2} `,
-  };
-
-  var signupButton: CSS.Properties = {
-    fontSize: buttonFont,
-    transform: buttonTransform,
-    padding: pad,
-    borderRadius: "50px",
-    MozBoxShadow: `0 0 4.5px ${appVariables.shade}`,
-    WebkitBoxShadow: `0 0 4.5px ${appVariables.shade} `,
-    boxShadow: `0 0 4.5px ${appVariables.shade}`,
-  };
-
-  ///
-  ///
-  ///
-  ///MATERIAL UI  THEME CUSTOMIZATAION
-  let themeGeneralSettings = createMuiTheme({
-    palette: {
-      primary: {
-        main: `${appVariables.maincolor}`,
-      },
-      secondary: {
-        main: `${appVariables.secondarymaincolor}`,
-      },
-      type: darkmode ? "dark" : "light",
-    },
-  });
-
-  ///
-  ///
-  ///
-  ///CALCULATE NEW SCREEN HEIGHT
-  const [screenHeight, setScreenHeight] = useState<number>(0);
-  const calculateScreenHeight = useMemo((): any => {
-    const calculateScreenHeightx = () => {
-      if (RefAppContainer.current && RefAppContainer.current.clientHeight) {
-        setScreenHeight(RefAppContainer.current.clientHeight);
-      }
-      setTimeout(function () {
-        if (RefAppContainer.current && RefAppContainer.current.clientHeight) {
-          setScreenHeight(RefAppContainer.current.clientHeight);
-        }
-      }, 600);
+  ///TYPES FOR ISLOGGEDIN
+  interface RootStateIsLogged {
+    IsLoggedReducer: {
+      loggedIn: boolean;
     };
-    return calculateScreenHeightx;
-  }, [screenHeight, RefAppContainer]);
+  }
+
+  /////////////////////////////
+  ///
+  ///
+  ///LOGGED IN DATA FROM REDUX
+  const { loggedIn } = useSelector((state: RootStateIsLogged) => ({
+    ...state.IsLoggedReducer,
+  }));
+  const loggedInReducer = loggedIn;
 
   ///
   ///
   ///
-  ///SETS DARKMODE FROM LOCAL STORAGE IF NOT EMPTY AND INSTANTIATE HISTORY.JS
-  useEffect(() => {
-    /// LOAD HISTORY ONCE ON EVERY FIRST PAGE LOAD OF THE APP
-    window.history.pushState(null, "", window.location.href);
-    /// LOAD HISTORY ONCE ON EVERY FIRST PAGE LOAD OF THE APP
-    calculateScreenHeight(); //
-    let themelocaldata = JSON.parse(localStorage.getItem("darkmode")!);
-    if (themelocaldata !== null) {
-      setDarkmode(themelocaldata);
-    }
-  }, [calculateScreenHeight, darkmode]);
+  ///TYPES FOR ISLOGGEDINPROFILE
+  interface RootStateIsLoggedProfile {
+    IsLoggedProfileReducer: {
+      loggedInProfile: boolean;
+    };
+  }
+  /////////////////////////
 
+  ///////////////////////
   ///
   ///
-  ///
-  ///CLOSE LOG MODAL
-  const [OpenModalFormOnce, setOpenModalFormOnce] = useState<boolean>(false);
-  const CloseModalForm = useCallback(
-    (DeviceBackButtonClicked: number) => {
-      ///onpopstate fires when back and forward buttons used
-      if (DeviceBackButtonClicked === 1) {
-        window.onpopstate = () => {
-          setShowModalForm(false);
-          setOpenModalFormOnce(false);
-        };
-      } else {
-        setShowModalForm(false);
-        setOpenModalFormOnce(false);
-        ///Replace modal history state with previous history state
-        window.history.back();
-      }
-    },
-    [showModalForm, OpenModalFormOnce]
+  ///LOGGEDPROFILE IN DATA FROM REDUX
+  const { loggedInProfile } = useSelector(
+    (state: RootStateIsLoggedProfile) => ({
+      ...state.IsLoggedProfileReducer,
+    })
   );
+  const loggedInProfileReducer = loggedInProfile;
+  //////////////
 
   ///
   ///
   ///
-  ///OPEN LOG MODAL
-  const [formtype, setFormtype] = useState<number>(1);
-  const OpenModalForm = useCallback(
-    (formtypedata: number) => {
-      setFormtype(formtypedata);
-      setShowModalForm(true);
-      ///Replace current history state (since opening a modal Level 2 grid)...
-      /// if this was a level 1 grid (profile-info page use Pushstate to create new history state)
-      let modalName;
-      if (formtypedata === 0) {
-        modalName = "SignUp";
-      } else {
-        modalName = "LogIn";
-      }
-
-      if (!OpenModalFormOnce) {
-        window.history.pushState(null, "", modalName);
-        setOpenModalFormOnce(true);
-        CloseModalForm(1);
-      }
-    },
-    [showModalForm, OpenModalFormOnce, CloseModalForm]
-  );
+  ///DOT ENV DATA
+  const { REACT_APP_SUPERSTARZ_URL } = process.env;
 
   ///
   ///
-  ///
-  /// RANDOME EMOJI
-  const [randomicon, setRandomicon] = useState<number>(1);
+  ///MODAL ZOOMED STATE
   useEffect(() => {
-    let emojicontrol: number[] = [1, 2, 3, 4, 5];
+    Axios.post(`http://${REACT_APP_SUPERSTARZ_URL}/checkIsLogged`, {
+      withCredentials: true,
+    })
+      .then((response) => {
+        if (response.data.message === "logged in") {
+          dispatch(IsLoggedAction());
+          dispatch(IsLoggedProfileAction());
+          dispatch(UserdataActionOnLoad(response.data.payload));
+        } else if (response.data.message === "logged out") {
+          alert("Connection malfunction");
+        }
+      })
+      .catch(function (error) {});
+  }, [REACT_APP_SUPERSTARZ_URL, dispatch]);
+
+  ///
+  ///
+  ///
+  /// GET DARK MODE REDUCER FROM REDUX STORE
+  interface RootStateGlobalReducer {
+    GlobalReducer: {
+      darkmode: boolean;
+    };
+  }
+  const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
+    ...state.GlobalReducer,
+  }));
+  const darkmodeReducer = darkmode;
+
+  ///
+  ///
+  ///
+  ///SET COLOR TO RANDOM WHEN LOGGED OUT
+  var color1 = "";
+  var color2 = "";
+
+  var color3 = "";
+  var color4 = "";
+
+  if (darkmodeReducer) {
+    color1 = "#ff2a7fd4";
+    color2 = "#ffd42ad6";
+    color3 = "#80b3ffbc";
+    color4 = "#00ff66bf";
+  } else {
+    color1 = "#ff0066ff";
+    color2 = "#ffd900";
+    color3 = "#00ccff";
+    color4 = "#00ff00ff";
+  }
+
+  useEffect(() => {
+    let emojicontrol: number[] = [1, 2, 3, 4];
     var randomemoji =
       emojicontrol[Math.floor(Math.random() * emojicontrol.length)];
 
     if (randomemoji === 1) {
-      setRandomicon(1);
+      dispatch(UpdateColorAction(color1));
     } else if (randomemoji === 2) {
-      setRandomicon(2);
+      dispatch(UpdateColorAction(color2));
     } else if (randomemoji === 3) {
-      setRandomicon(3);
-    } else if (randomemoji === 4) {
-      setRandomicon(4);
+      dispatch(UpdateColorAction(color3));
     } else {
-      setRandomicon(5);
+      dispatch(UpdateColorAction(color4));
     }
-  }, [randomicon]);
+  }, [color1, color2, color3, color4, dispatch]);
 
-  var displayEmo1 = "none";
-  var displayEmo2 = "none";
-  var displayEmo3 = "none";
-  var displayEmo4 = "none";
-  var displayEmo5 = "none";
-
-  if (randomicon === 1) {
-    displayEmo1 = "inline";
-    displayEmo2 = "none";
-    displayEmo3 = "none";
-    displayEmo4 = "none";
-    displayEmo5 = "none";
-  } else if (randomicon === 2) {
-    displayEmo1 = "none";
-    displayEmo2 = "inline";
-    displayEmo3 = "none";
-    displayEmo4 = "none";
-    displayEmo5 = "none";
-  } else if (randomicon === 3) {
-    displayEmo1 = "none";
-    displayEmo2 = "none";
-    displayEmo3 = "inline";
-    displayEmo4 = "none";
-    displayEmo5 = "none";
-  } else if (randomicon === 4) {
-    displayEmo1 = "none";
-    displayEmo2 = "none";
-    displayEmo3 = "none";
-    displayEmo4 = "inline";
-    displayEmo5 = "none";
-  } else {
-    displayEmo1 = "none";
-    displayEmo2 = "none";
-    displayEmo3 = "none";
-    displayEmo4 = "none";
-    displayEmo5 = "inline";
-  }
-
-  console.log("app");
   return (
-    <MuiThemeProvider theme={themeGeneralSettings}>
-      <Paper
-        ref={RefAppContainer}
-        className="app-paper-style"
-        style={{
-          borderRadius: "0px",
-          backgroundImage: appVariables.PaperStyle,
-        }}
-      >
-        <Grid container className="fadeboyin">
-          <Option darkmode={darkmode} setDarkmode={setDarkmode} />
-
-          <Grid container className={containerApp}>
-            <Grid item xs={3} sm={4} md={4}></Grid>
-            <Grid
-              item
-              className="centericon   dontallowhighlighting"
-              xs={6}
-              sm={4}
-              md={4}
-            >
-              <img
-                className={icon}
-                src={appVariables.logoimage}
-                alt="SuperstarZ logo"
-              />
-            </Grid>
-
-            <Grid item xs={3}></Grid>
-            <Grid item xs={4} className="littletext-outter">
-              <Typography className="app-little-text-typography">
-                <span
-                  className={littleText}
-                  style={{
-                    color: appVariables.littleTextColor,
-                  }}
-                >
-                  <span style={{ verticalAlign: "middle" }}>
-                    express yourself
-                  </span>
-                  <span
-                    style={{ display: displayEmo1, verticalAlign: "middle" }}
-                  >
-                    &#129419;
-                  </span>
-                  <span
-                    style={{ display: displayEmo2, verticalAlign: "middle" }}
-                  >
-                    &#9996;
-                  </span>
-                  <span
-                    style={{ display: displayEmo3, verticalAlign: "middle" }}
-                  >
-                    &#127911;
-                  </span>
-                  <span
-                    style={{ display: displayEmo4, verticalAlign: "middle" }}
-                  >
-                    &#128150;
-                  </span>
-                  <span
-                    style={{ display: displayEmo5, verticalAlign: "middle" }}
-                  >
-                    &#10024;
-                  </span>
-                </span>
-              </Typography>
-            </Grid>
-
-            <Grid item xs={3} sm={3} md={4}></Grid>
-            <LoginButtons
-              loginstyle={loginButton}
-              signupstyle={signupButton}
-              OpenModalForm={OpenModalForm}
-            />
-            <ModalLog
-              formtype={formtype}
-              screenHeight={screenHeight}
-              darkmode={darkmode}
-              signupstyle={signupButton}
-              loginstyle={loginButton}
-              PaperStyle={appVariables.PaperStyle}
-              showModalForm={showModalForm}
-              CloseModalForm={CloseModalForm}
-            />
-          </Grid>
-        </Grid>
-      </Paper>
-    </MuiThemeProvider>
+    <>
+      {loggedInReducer ? (
+        loggedInProfileReducer ? (
+          <ProfileOutter />
+        ) : (
+          <Supercheck />
+        )
+      ) : (
+        <Home />
+      )}
+    </>
   );
-};
+}
 
 export default App;

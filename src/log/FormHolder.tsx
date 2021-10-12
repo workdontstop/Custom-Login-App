@@ -1,85 +1,166 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
-import {
-  ImodalLog,
-  IGrid,
-  Ispinnerinterface,
-  IFormHolder,
-} from "./log-Interfaces";
+import React, { useRef, useState, useCallback, useEffect } from "react";
+import { Ispinnerinterface, IFormHolder } from "./log-Interfaces";
 import Axios from "axios";
 import SuperstarzIconLight from "./../images/ssmall.png";
 import SuperstarzIconDark from "./../images/sdsmall.png";
 import { TextFieldLogin } from "./TextFieldLogin";
 import { TextFieldSignup } from "./TextFieldSignup";
-import { ServerError } from "./ServerError";
 import { ModalFormSignupError } from "./ModalFormSignupError";
 import { ModalFormLoginError } from "./ModalFormLoginError";
-import { DialogContent, Button, Paper, Grid } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
-import { isBrowser, isTablet } from "react-device-detect";
+import { Button, Grid } from "@material-ui/core";
+import { matchPc, matchTablet } from "../DetectDevice";
 import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
-import IsLoggedReducer from "./reducers/IsloggedReducer";
-import { LoginApply } from "./actions/LoginApply";
+import { IsLoggedAction } from "./actions/IsLoggedAction";
+import { UserdataAction } from "./actions/UserdataAction";
+import { ActivateLoaderAction, HideLoaderAction } from "../GlobalActions";
+//////import { useHistory } from "react-router-dom";
+import { PasswordCheck } from "./PasswordCheck";
 
 function FormHolderx({
-  darkmode,
   zoomedModal,
   WidthHolder,
-  loginstyle,
   loginForm,
-  signupstyle,
-  serverEmojiplain,
   setServerErrorData,
-  serverErrorDisplay,
-  serverErrorData,
   setServerErrorDisplay,
   setserverEmojiplain,
+  checkSignupPasswordACTIVATE,
+  setcheckSignupPasswordACTIVATE,
 }: IFormHolder) {
   const dispatch = useDispatch();
 
-  const BUY_ICECREAM = "SIGN_IN";
-
-  const { loggedIn } = useSelector((state: RootStateOrAny) => ({
-    ...state.IsLoggedReducer,
-  }));
-
-  const matchPc = isBrowser;
-  const matchTablet = isTablet;
   const [focusUsername, setFocusUsername] = useState<boolean>(false);
   const [focusPassword, setFocusPassword] = useState<boolean>(false);
-
   const [focusUsernameSign, setFocusUsernameSign] = useState<boolean>(false);
   const [focusPasswordSign, setFocusPasswordSign] = useState<boolean>(false);
   const [focusEmailSign, setFocusEmailSign] = useState<boolean>(false);
 
+  const [bopEmail, setbopEmail] = useState<boolean>(false);
+  const [bopUsername, setbopUsername] = useState<boolean>(false);
+  const [bopPassword, setbopPassword] = useState<boolean>(false);
+
   const [showFocusTextFieldByHidePadding, setShowFocusTextFieldByHidePadding] =
+    useState<boolean>(false);
+
+  const [responseErrorConfirmPassword, setresponseErrorConfirmPassword] =
     useState<boolean>(false);
 
   var fieldSize = "";
   var tabletMobile = "";
-  if (matchTablet) {
+  var buttonFont = "";
+  var buttonTransform = " ";
+  var pad = "";
+
+  ///
+  ///
+  ///CONDITIONAL STATEMENT FOR DEVICE TYPE
+  if (matchPc) {
+    buttonFont = "1vw";
+    buttonTransform = " ";
+    pad = "14.5px";
+    ///
+  } else if (matchTablet) {
     fieldSize = "smallTablet";
     tabletMobile = "Tablet";
+
+    pad = "16px";
+    buttonFont = "2vw";
+    buttonTransform = " ";
+    ///
   } else {
     fieldSize = "small";
     tabletMobile = "Mobile";
+
+    buttonFont = "";
+    buttonTransform = "scale(0.95)";
+    pad = "16px";
+  }
+
+  ///
+  ///
+  ///
+  /// GET DARKMODE FROM REDUX STORE
+  interface RootStateGlobalReducer {
+    GlobalReducer: {
+      darkmode: boolean;
+    };
+  }
+  const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
+    ...state.GlobalReducer,
+  }));
+
+  const darkmodeReducer = darkmode;
+
+  ///
+  ///
+  ///
+  /// GET  SIGNUP BUTTON AND LOGIN BUTTON STYLE FROM REDUX
+  const { MozBoxShadowSD, WebkitBoxShadowSD, boxShadowSD } = useSelector(
+    (state: RootStateOrAny) => ({
+      ...state.ButtonsSignUpReducerDark,
+    })
+  );
+
+  const { MozBoxShadowSL, WebkitBoxShadowSL, boxShadowSL } = useSelector(
+    (state: RootStateOrAny) => ({
+      ...state.ButtonsSignUpReducerLight,
+    })
+  );
+
+  const { MozBoxShadowLD, WebkitBoxShadowLD, boxShadowLD } = useSelector(
+    (state: RootStateOrAny) => ({
+      ...state.ButtonsLoginReducerDark,
+    })
+  );
+
+  const { MozBoxShadowLL, WebkitBoxShadowLL, boxShadowLL } = useSelector(
+    (state: RootStateOrAny) => ({
+      ...state.ButtonsLoginReducerLight,
+    })
+  );
+
+  var MozBoxShadowReducerLogin = " ";
+  var WebkitBoxShadowReducerLogin = " ";
+  var boxShadowReducerLogin = " ";
+
+  var MozBoxShadowReducerSign = " ";
+  var WebkitBoxShadowReducerSign = " ";
+  var boxShadowReducerSign = " ";
+
+  if (darkmodeReducer) {
+    MozBoxShadowReducerLogin = MozBoxShadowLD;
+    WebkitBoxShadowReducerLogin = WebkitBoxShadowLD;
+    boxShadowReducerLogin = boxShadowLD;
+
+    MozBoxShadowReducerSign = MozBoxShadowSD;
+    WebkitBoxShadowReducerSign = WebkitBoxShadowSD;
+    boxShadowReducerSign = boxShadowSD;
+  } else {
+    MozBoxShadowReducerLogin = MozBoxShadowLL;
+    WebkitBoxShadowReducerLogin = WebkitBoxShadowLL;
+    boxShadowReducerLogin = boxShadowLL;
+
+    MozBoxShadowReducerSign = MozBoxShadowSL;
+    WebkitBoxShadowReducerSign = WebkitBoxShadowSL;
+    boxShadowReducerSign = boxShadowSL;
   }
 
   ///
   ///
   ///
   ///HISTORY VARIABLE
-  const history = useHistory();
+  ////const history = useHistory();
   ///
 
   ///
   ///
   ///SUPERSTARZ ICON SELECT
   var SuperIcon = "";
-  darkmode
+  darkmodeReducer
     ? (SuperIcon = SuperstarzIconDark)
     : (SuperIcon = SuperstarzIconLight);
 
   const { REACT_APP_SUPERSTARZ_URL } = process.env;
+
   ///
   ///
   ///LOGGING UPDATE VALUES DETAILS
@@ -134,8 +215,10 @@ function FormHolderx({
     [errorsLoginValues, rawLoginValues, cleanLoginValues]
   );
 
-  const logmein = () => {
+  const logmein = useCallback(() => {
     if (cleanLoginValues.inputedUsername && cleanLoginValues.inputedPassword) {
+      dispatch(ActivateLoaderAction());
+
       Axios.post(
         `http://${REACT_APP_SUPERSTARZ_URL}/loging`,
         {
@@ -148,22 +231,29 @@ function FormHolderx({
             setServerErrorData("wrong username and  password combination");
             setServerErrorDisplay(1);
             setserverEmojiplain(false);
+            dispatch(HideLoaderAction());
           } else {
             if (response.data.message === "Wrong username") {
               setServerErrorData("username does not exist");
               setServerErrorDisplay(1);
               setserverEmojiplain(false);
+              dispatch(HideLoaderAction());
             } else if (response.data.payload) {
-              history.push({
+              /*  history.push({
                 pathname: "/supercheck",
                 state: { userdata: response.data.payload },
-              });
-              ///dispatch(LoginApply());
+              });*/
+              ///console.log(response.data.payload);
               /// alert(loggedIn);
+              dispatch(HideLoaderAction());
+              dispatch(UserdataAction(response.data.payload));
+              dispatch(IsLoggedAction());
+              //dispatch(IsLoggedProfileAction());
             } else {
               setServerErrorData("user info could not be retrieved");
               setServerErrorDisplay(1);
               setserverEmojiplain(false);
+              dispatch(HideLoaderAction());
             }
           }
         })
@@ -180,6 +270,7 @@ function FormHolderx({
             setServerErrorData(dynamicError);
             setServerErrorDisplay(1);
             setserverEmojiplain(false);
+            dispatch(HideLoaderAction());
           } else if (error.request) {
             // The request was made but no response was received Or request not made
             // Axios.post("http://localhost:3003/reg" can activate this error
@@ -188,11 +279,13 @@ function FormHolderx({
             );
             setServerErrorDisplay(1);
             setserverEmojiplain(true);
+            dispatch(HideLoaderAction());
           } else {
             // Something happened in setting up the request that triggered an Error
             setServerErrorData("request setup failed , pls try again");
             setServerErrorDisplay(1);
             setserverEmojiplain(true);
+            dispatch(HideLoaderAction());
           }
         });
     } else {
@@ -214,7 +307,15 @@ function FormHolderx({
         inputedUsername: usernameErrorHolder,
       });
     }
-  };
+  }, [
+    REACT_APP_SUPERSTARZ_URL,
+    cleanLoginValues,
+    dispatch,
+    errorsLoginValues,
+    setServerErrorData,
+    setServerErrorDisplay,
+    setserverEmojiplain,
+  ]);
 
   ///
   ///
@@ -249,6 +350,7 @@ function FormHolderx({
   );
 
   const EmailCheckingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const UsernameCheckingTimer = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
@@ -268,7 +370,6 @@ function FormHolderx({
   const signupShowPasswordTimer = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
-  const [cantPassBadEmail, setCantPassBadEmail] = useState<boolean>(false);
 
   ///
   ///
@@ -394,7 +495,6 @@ function FormHolderx({
         if (checkUsernameClean) {
           if (UsernameCheckingTimer.current) {
             clearTimeout(UsernameCheckingTimer.current);
-            setErrorFormChecking({ ...errorFormChecking, [name]: false });
           }
           setErrorsSignupValues({ ...errorsSignupValues, [name]: 1 });
         } else {
@@ -418,13 +518,15 @@ function FormHolderx({
             /// AXIOS REQUEST FOR CHECK USERNAME
             if (UsernameCheckingTimer.current) {
               clearTimeout(UsernameCheckingTimer.current);
-              setErrorFormChecking({
-                ...errorFormChecking,
-                [name]: false,
-              });
+
               setErrorsSignupValues({ ...errorsSignupValues, [name]: 0 });
             }
-            setErrorFormChecking({ ...errorFormChecking, [name]: true });
+
+            if (errorFormChecking.inputedUsername) {
+            } else {
+              setErrorFormChecking({ ...errorFormChecking, [name]: true });
+            }
+
             setErrorsSignupValues({ ...errorsSignupValues, [name]: 2 });
             UsernameCheckingTimer.current = setTimeout(() => {
               if (value.length === 0) {
@@ -520,11 +622,15 @@ function FormHolderx({
         );
         if (EmailCheckingTimer.current) {
           clearTimeout(EmailCheckingTimer.current);
-          setErrorFormChecking({ ...errorFormChecking, [name]: false });
         }
         if (!checkEmailValidated) {
           setErrorsSignupValues({ ...errorsSignupValues, [name]: 1 });
-          setErrorFormChecking({ ...errorFormChecking, [name]: true });
+
+          if (errorFormChecking.inputedEmail) {
+          } else {
+            setErrorFormChecking({ ...errorFormChecking, [name]: true });
+          }
+
           EmailCheckingTimer.current = setTimeout(() => {
             setErrorFormChecking({ ...errorFormChecking, [name]: false });
             setErrorsSignupValues({ ...errorsSignupValues, [name]: 2 });
@@ -534,7 +640,6 @@ function FormHolderx({
         } else {
           if (EmailCheckingTimer.current) {
             clearTimeout(EmailCheckingTimer.current);
-            setErrorFormChecking({ ...errorFormChecking, [name]: false });
           }
           checkEmailClean
             ? setErrorsSignupValues({ ...errorsSignupValues, [name]: 3 })
@@ -547,11 +652,14 @@ function FormHolderx({
       } else {
         if (PasswordCheckingTimer.current) {
           clearTimeout(PasswordCheckingTimer.current);
-          setErrorFormChecking({ ...errorFormChecking, [name]: false });
         }
         setErrorsSignupValues({ ...errorsSignupValues, [name]: 2 });
 
-        setErrorFormChecking({ ...errorFormChecking, [name]: true });
+        if (errorFormChecking.inputedPassword) {
+        } else {
+          setErrorFormChecking({ ...errorFormChecking, [name]: true });
+        }
+
         PasswordCheckingTimer.current = setTimeout(() => {
           setErrorFormChecking({ ...errorFormChecking, [name]: false });
           setErrorsSignupValues({ ...errorsSignupValues, [name]: 1 });
@@ -570,100 +678,196 @@ function FormHolderx({
         setCleanSignupValues({ ...cleanSignupValues, [name]: value });
       }
     },
-    [cleanSignupValues, rawSignupValues, errorsSignupValues, errorFormChecking]
+    [
+      cleanSignupValues,
+      rawSignupValues,
+      errorsSignupValues,
+      errorFormChecking,
+      REACT_APP_SUPERSTARZ_URL,
+    ]
   );
   ///
   ///
   ///
   /// SENDING SIGN UP  DATA TO SERVER SIDE
-  const signmeup = () => {
-    if (
-      cleanSignupValues.inputedEmail &&
-      cleanSignupValues.inputedUsername &&
-      cleanSignupValues.inputedPassword &&
-      errorsSignupValues.inputedPassword === 0
-    ) {
-      if (errorsSignupValues.inputedEmail === 0) {
-        Axios.post(`http://${REACT_APP_SUPERSTARZ_URL}/registration`, {
-          values: cleanSignupValues,
-        })
-          .then((response) => {
-            if (response.data.message === "username not unique") {
-              setServerErrorData("username is taken");
-              setServerErrorDisplay(1);
-              setserverEmojiplain(true);
-            } else if (response.data.message === "Registration Successful") {
-              console.log(response.status);
-              alert("REGISTRATION COMPLETE");
-            } else {
-              setServerErrorData("something went wrong");
-              setServerErrorDisplay(1);
-              setserverEmojiplain(true);
-            }
-          })
-          .catch(function (error) {
-            if (error.response) {
-              // Request made and server responded
-              //express typo can activate this
-              let textFieldParam = error.response.data.error.errors[0].param;
-              let affectedTextField = " ";
 
-              if (textFieldParam === "values.inputedPassword") {
-                affectedTextField = "password must be at least 8 characters";
-              } else if (textFieldParam === "values.inputedEmail") {
-                affectedTextField = "email address is not valid";
+  const signmeup = useCallback(
+    (checkSignupPasswordinputed: any = " ") => {
+      if (
+        cleanSignupValues.inputedEmail &&
+        cleanSignupValues.inputedUsername &&
+        cleanSignupValues.inputedPassword
+      ) {
+        if (errorsSignupValues.inputedPassword === 0) {
+          if (errorsSignupValues.inputedEmail === 0) {
+            if (errorsSignupValues.inputedUsername === 3) {
+              if (checkSignupPasswordACTIVATE) {
+                if (
+                  checkSignupPasswordinputed ===
+                  cleanSignupValues.inputedPassword
+                ) {
+                  dispatch(ActivateLoaderAction());
+
+                  Axios.post(
+                    `http://${REACT_APP_SUPERSTARZ_URL}/registration`,
+                    {
+                      values: cleanSignupValues,
+                    }
+                  )
+                    .then((response) => {
+                      if (response.data.message === "username not unique") {
+                        setServerErrorData("username is taken");
+                        setServerErrorDisplay(1);
+                        setserverEmojiplain(true);
+                        dispatch(HideLoaderAction());
+                      } else if (response.data.payload) {
+                        /*  history.push({
+                pathname: "/supercheck",
+                state: { userdata: response.data.payload },
+              });*/
+                        ///console.log(response.data.payload);
+                        /// alert(loggedIn);
+                        dispatch(HideLoaderAction());
+                        dispatch(UserdataAction(response.data.payload));
+                        dispatch(IsLoggedAction());
+                      } else {
+                        setServerErrorData("something went wrong");
+                        setServerErrorDisplay(1);
+                        setserverEmojiplain(true);
+                        dispatch(HideLoaderAction());
+                      }
+                    })
+                    .catch(function (error) {
+                      if (error.response) {
+                        // Request made and server responded
+                        //express typo can activate this
+                        let textFieldParam =
+                          error.response.data.error.errors[0].param;
+                        let affectedTextField = " ";
+
+                        if (textFieldParam === "values.inputedPassword") {
+                          affectedTextField =
+                            "password must be at least 8 characters";
+                        } else if (textFieldParam === "values.inputedEmail") {
+                          affectedTextField = "email address is not valid";
+                        } else {
+                          affectedTextField =
+                            "usernames use letters, numbers, underscores and periods";
+                        }
+                        let dynamicError = `${affectedTextField}.  ${error.response.data.error.errors[0].msg} `;
+                        setServerErrorData(dynamicError);
+                        setServerErrorDisplay(1);
+                        setserverEmojiplain(true);
+                        dispatch(HideLoaderAction());
+                      } else if (error.request) {
+                        // The request was made but no response was received Or request not made
+                        // Axios.post("http://localhost:3003/reg" can activate this error
+                        setServerErrorData(
+                          "error connecting to server, check your connection"
+                        );
+                        setServerErrorDisplay(1);
+                        setserverEmojiplain(true);
+                        dispatch(HideLoaderAction());
+                      } else {
+                        // Something happened in setting up the request that triggered an Error
+                        setServerErrorData(
+                          "request setup failed , pls try again"
+                        );
+                        setServerErrorDisplay(1);
+                        setserverEmojiplain(true);
+                        dispatch(HideLoaderAction());
+                      }
+                    });
+                } else {
+                  setresponseErrorConfirmPassword(true);
+                  setTimeout(function () {
+                    setresponseErrorConfirmPassword(false);
+                  }, 2500);
+                  ////////////////RESPONSE ERROR CONFIRM PASSWORD
+                }
               } else {
-                affectedTextField =
-                  "usernames use letters, numbers, underscores and periods";
+                setcheckSignupPasswordACTIVATE(true);
               }
-              let dynamicError = `${affectedTextField}.  ${error.response.data.error.errors[0].msg} `;
-              setServerErrorData(dynamicError);
-              setServerErrorDisplay(1);
-              setserverEmojiplain(true);
-            } else if (error.request) {
-              // The request was made but no response was received Or request not made
-              // Axios.post("http://localhost:3003/reg" can activate this error
-              setServerErrorData(
-                "error connecting to server, check your connection"
-              );
-              setServerErrorDisplay(1);
-              setserverEmojiplain(true);
             } else {
-              // Something happened in setting up the request that triggered an Error
-              setServerErrorData("request setup failed , pls try again");
-              setServerErrorDisplay(1);
-              setserverEmojiplain(true);
+              setbopUsername(true);
+              setTimeout(() => {
+                setbopUsername(false);
+              }, 2500);
             }
-          });
+          } else {
+            setbopEmail(true);
+            setTimeout(() => {
+              setbopEmail(false);
+            }, 2500);
+          }
+        } else {
+          setbopPassword(true);
+          setTimeout(() => {
+            setbopPassword(false);
+          }, 2500);
+        }
       } else {
-        setCantPassBadEmail(true);
-        setTimeout(() => {
-          setCantPassBadEmail(false);
-        }, 3000);
-      }
-    } else {
-      let passwordErrorHolder = errorsSignupValues.inputedPassword;
-      let emailErrorHolder = errorsSignupValues.inputedEmail;
-      let usernameErrorHolder = errorsSignupValues.inputedUsername;
+        if (checkSignupPasswordACTIVATE) {
+          setcheckSignupPasswordACTIVATE(false);
+        }
 
-      if (!cleanSignupValues.inputedPassword) {
-        passwordErrorHolder = 4;
-      }
-      if (!cleanSignupValues.inputedEmail) {
-        emailErrorHolder = 4;
-      }
-      if (!cleanSignupValues.inputedUsername) {
-        usernameErrorHolder = 4;
-      }
+        let passwordErrorHolder = errorsSignupValues.inputedPassword;
+        let emailErrorHolder = errorsSignupValues.inputedEmail;
+        let usernameErrorHolder = errorsSignupValues.inputedUsername;
 
-      setErrorsSignupValues({
-        ...errorsSignupValues,
-        inputedPassword: passwordErrorHolder,
-        inputedEmail: emailErrorHolder,
-        inputedUsername: usernameErrorHolder,
-      });
-    }
-  };
+        if (!cleanSignupValues.inputedPassword) {
+          passwordErrorHolder = 4;
+        }
+        if (!cleanSignupValues.inputedEmail) {
+          emailErrorHolder = 4;
+        }
+        if (!cleanSignupValues.inputedUsername) {
+          usernameErrorHolder = 4;
+        }
+
+        setErrorsSignupValues({
+          ...errorsSignupValues,
+          inputedPassword: passwordErrorHolder,
+          inputedEmail: emailErrorHolder,
+          inputedUsername: usernameErrorHolder,
+        });
+      }
+    },
+    [
+      REACT_APP_SUPERSTARZ_URL,
+      cleanSignupValues,
+
+      errorsSignupValues,
+
+      checkSignupPasswordACTIVATE,
+      dispatch,
+      setServerErrorData,
+      setServerErrorDisplay,
+      setcheckSignupPasswordACTIVATE,
+      setserverEmojiplain,
+    ]
+  );
+
+  ///
+  ///
+  ///
+  ///ENTER KEY EMULATE FORM ACTION
+  const enterPress = useCallback(
+    (e) => {
+      if (e.key === "Enter" || e.key === "NumpadEnter") {
+        if (loginForm) {
+          logmein();
+        } else {
+          signmeup();
+        }
+      }
+    },
+    [signmeup, loginForm, logmein]
+  );
+  useEffect(() => {
+    document.addEventListener("keydown", enterPress);
+    return () => document.removeEventListener("keydown", enterPress);
+  }, [enterPress]);
 
   ///
   ///
@@ -675,22 +879,6 @@ function FormHolderx({
   ///
   ///
   ///
-
-  const logout = () => {
-    Axios.post(`http://${REACT_APP_SUPERSTARZ_URL}/logout`, {
-      withCredentials: true,
-    })
-      .then((response) => {
-        if (response.data.message === "cookie deleted") {
-          alert("logout  complete");
-        } else if (response.data.message === "cookie null") {
-          alert("logged out  already");
-        }
-      })
-      .catch(function (error) {
-        alert("logout fail");
-      });
-  };
 
   return (
     <>
@@ -706,29 +894,15 @@ function FormHolderx({
               src={SuperIcon}
               alt="SuperstarZ logo"
             />
-            <button
-              onClick={logout}
-              style={{
-                cursor: "pointer",
-                opacity: 0.1,
-                position: "fixed",
-                top: "0.5em",
-                borderRadius: "50%",
-              }}
-            >
-              {" "}
-              ....
-            </button>
+
             <ModalFormLoginError
               focus={focusUsername}
               device="pc"
               type={true}
               ErrorDisplay={errorsLoginValues.inputedUsername}
-              darkmode={darkmode}
               WidthHolder={WidthHolder}
             />
             <TextFieldLogin
-              darkmode={darkmode}
               focus={focusUsername}
               setFocus={setFocusUsername}
               updateLoginvalues={updateLoginvalues}
@@ -740,7 +914,6 @@ function FormHolderx({
               withHolder={WidthHolder}
             />
             <TextFieldLogin
-              darkmode={darkmode}
               focus={focusPassword}
               setFocus={setFocusPassword}
               updateLoginvalues={updateLoginvalues}
@@ -756,7 +929,6 @@ function FormHolderx({
               device="pc"
               type={false}
               ErrorDisplay={errorsLoginValues.inputedPassword}
-              darkmode={darkmode}
               WidthHolder={WidthHolder}
             />
             <Grid container style={{ marginTop: "70px", zIndex: 300 }}>
@@ -764,7 +936,15 @@ function FormHolderx({
               <Grid item className="buttonpad buttonshake" xs={4}>
                 <Button
                   onClick={logmein}
-                  style={loginstyle}
+                  style={{
+                    fontSize: buttonFont,
+                    transform: buttonTransform,
+                    padding: "11.5px",
+                    borderRadius: "52px",
+                    MozBoxShadow: MozBoxShadowReducerLogin,
+                    WebkitBoxShadow: WebkitBoxShadowReducerLogin,
+                    boxShadow: boxShadowReducerLogin,
+                  }}
                   fullWidth={true}
                   variant="outlined"
                   size="large"
@@ -774,7 +954,7 @@ function FormHolderx({
                 </Button>
               </Grid>{" "}
             </Grid>
-          </> /*PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC */
+          </> /*PC PC PC PC PC PC PC PC PC LOGIN  PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC */
         ) : (
           /*MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE*/
           <>
@@ -783,11 +963,9 @@ function FormHolderx({
               type={true}
               device={tabletMobile}
               ErrorDisplay={errorsLoginValues.inputedUsername}
-              darkmode={darkmode}
               WidthHolder={WidthHolder}
             />
             <TextFieldLogin
-              darkmode={darkmode}
               focus={focusUsername}
               setFocus={setFocusUsername}
               updateLoginvalues={updateLoginvalues}
@@ -799,7 +977,6 @@ function FormHolderx({
               withHolder={WidthHolder}
             />
             <TextFieldLogin
-              darkmode={darkmode}
               focus={focusPassword}
               setFocus={setFocusPassword}
               updateLoginvalues={updateLoginvalues}
@@ -815,7 +992,6 @@ function FormHolderx({
               type={false}
               ErrorDisplay={errorsLoginValues.inputedPassword}
               device={tabletMobile}
-              darkmode={darkmode}
               WidthHolder={WidthHolder}
             />
             <Grid container className="modal-hold-login">
@@ -823,7 +999,15 @@ function FormHolderx({
               <Grid item className="buttonpad buttonshake" xs={4} sm={2}>
                 <Button
                   onClick={logmein}
-                  style={loginstyle}
+                  style={{
+                    fontSize: buttonFont,
+                    transform: buttonTransform,
+                    padding: "11.5px",
+                    borderRadius: "52px",
+                    MozBoxShadow: MozBoxShadowReducerLogin,
+                    WebkitBoxShadow: WebkitBoxShadowReducerLogin,
+                    boxShadow: boxShadowReducerLogin,
+                  }}
                   fullWidth={true}
                   variant="outlined"
                   size="large"
@@ -833,9 +1017,9 @@ function FormHolderx({
                 </Button>
               </Grid>{" "}
             </Grid>
-          </> /*MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE*/
+          </> /*MOBILE  MOBILE  MOBILE  MOBILE  LOGIN   MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE*/
         )
-      ) : matchPc /*PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC */ ? (
+      ) : matchPc /*PC PC PC PC PC PC PC PC  SIGNUP  PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC */ ? (
         <>
           {" "}
           <img
@@ -846,7 +1030,7 @@ function FormHolderx({
             }
             src={SuperIcon}
             alt="SuperstarZ logo"
-          />
+          />{" "}
           <ModalFormSignupError
             focus={focusEmailSign}
             device="pc"
@@ -854,14 +1038,13 @@ function FormHolderx({
             textField="email"
             errorFormChecking={errorFormChecking.inputedEmail}
             WidthHolder={WidthHolder}
-            darkmode={darkmode}
             type={true}
-            cantPassBadEmail={cantPassBadEmail}
             ErrorDisplay={emailErrorDisplay}
             ErrorData={emailErrorData}
+            bop={bopEmail}
+            checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
           <TextFieldSignup
-            darkmode={darkmode}
             showFocusTextFieldByHidePadding={showFocusTextFieldByHidePadding}
             setShowFocusTextFieldByHidePadding={
               setShowFocusTextFieldByHidePadding
@@ -876,6 +1059,7 @@ function FormHolderx({
             emailType={true}
             passwordType={false}
             withHolder={WidthHolder}
+            checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
           <ModalFormSignupError
             focus={focusUsernameSign}
@@ -884,14 +1068,13 @@ function FormHolderx({
             textField="username"
             errorFormChecking={errorFormChecking.inputedUsername}
             WidthHolder={WidthHolder}
-            darkmode={darkmode}
             type={true}
-            cantPassBadEmail={cantPassBadEmail}
             ErrorDisplay={usernameErrorDisplay}
             ErrorData={usernameErrorData}
+            bop={bopUsername}
+            checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
           <TextFieldSignup
-            darkmode={darkmode}
             showFocusTextFieldByHidePadding={showFocusTextFieldByHidePadding}
             setShowFocusTextFieldByHidePadding={
               setShowFocusTextFieldByHidePadding
@@ -906,9 +1089,9 @@ function FormHolderx({
             emailType={false}
             passwordType={false}
             withHolder={WidthHolder}
+            checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
           <TextFieldSignup
-            darkmode={darkmode}
             showFocusTextFieldByHidePadding={showFocusTextFieldByHidePadding}
             setShowFocusTextFieldByHidePadding={
               setShowFocusTextFieldByHidePadding
@@ -923,6 +1106,7 @@ function FormHolderx({
             emailType={false}
             passwordType={true}
             withHolder={WidthHolder}
+            checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
           <ModalFormSignupError
             focus={focusPasswordSign}
@@ -930,18 +1114,36 @@ function FormHolderx({
             ErrorType={0}
             textField="password"
             errorFormChecking={errorFormChecking.inputedPassword}
-            darkmode={darkmode}
             WidthHolder={WidthHolder}
             type={false}
-            cantPassBadEmail={cantPassBadEmail}
             ErrorDisplay={passwordErrorDisplay}
             ErrorData={passwordErrorData}
+            bop={bopPassword}
+            checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
-          <Grid container className="modal-hold-signup">
+          <PasswordCheck
+            signmeup={signmeup}
+            widthHolder={WidthHolder}
+            checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
+            responseErrorConfirmPassword={responseErrorConfirmPassword}
+          />
+          <Grid
+            container
+            style={{ opacity: checkSignupPasswordACTIVATE ? 0 : 1 }}
+            className="modal-hold-signup"
+          >
             <Grid item xs={4}></Grid>
             <Grid item className="buttonpad buttonshake" xs={4}>
               <Button
-                style={signupstyle}
+                style={{
+                  fontSize: buttonFont,
+                  transform: buttonTransform,
+                  padding: pad,
+                  borderRadius: "50px",
+                  MozBoxShadow: MozBoxShadowReducerSign,
+                  WebkitBoxShadow: WebkitBoxShadowReducerSign,
+                  boxShadow: boxShadowReducerSign,
+                }}
                 onClick={signmeup}
                 fullWidth={true}
                 variant="contained"
@@ -952,7 +1154,7 @@ function FormHolderx({
               </Button>
             </Grid>{" "}
           </Grid>{" "}
-        </> /*PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC */
+        </> /*PC PC PC PC   SIGN UP PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC PC */
       ) : (
         /*MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE*/
         <>
@@ -964,14 +1166,13 @@ function FormHolderx({
             textField="email"
             errorFormChecking={errorFormChecking.inputedEmail}
             WidthHolder={WidthHolder}
-            darkmode={darkmode}
             type={true}
-            cantPassBadEmail={cantPassBadEmail}
             ErrorDisplay={emailErrorDisplay}
             ErrorData={emailErrorData}
+            bop={bopEmail}
+            checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
           <TextFieldSignup
-            darkmode={darkmode}
             showFocusTextFieldByHidePadding={showFocusTextFieldByHidePadding}
             setShowFocusTextFieldByHidePadding={
               setShowFocusTextFieldByHidePadding
@@ -986,6 +1187,7 @@ function FormHolderx({
             emailType={true}
             passwordType={false}
             withHolder={WidthHolder}
+            checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
           <ModalFormSignupError
             focus={focusUsernameSign}
@@ -994,14 +1196,13 @@ function FormHolderx({
             textField="username"
             errorFormChecking={errorFormChecking.inputedUsername}
             WidthHolder={WidthHolder}
-            darkmode={darkmode}
             type={true}
-            cantPassBadEmail={cantPassBadEmail}
             ErrorDisplay={usernameErrorDisplay}
             ErrorData={usernameErrorData}
+            bop={bopUsername}
+            checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
           <TextFieldSignup
-            darkmode={darkmode}
             showFocusTextFieldByHidePadding={showFocusTextFieldByHidePadding}
             setShowFocusTextFieldByHidePadding={
               setShowFocusTextFieldByHidePadding
@@ -1016,9 +1217,9 @@ function FormHolderx({
             emailType={false}
             passwordType={false}
             withHolder={WidthHolder}
+            checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
           <TextFieldSignup
-            darkmode={darkmode}
             showFocusTextFieldByHidePadding={showFocusTextFieldByHidePadding}
             setShowFocusTextFieldByHidePadding={
               setShowFocusTextFieldByHidePadding
@@ -1033,6 +1234,7 @@ function FormHolderx({
             emailType={false}
             passwordType={true}
             withHolder={WidthHolder}
+            checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
           <ModalFormSignupError
             focus={focusPasswordSign}
@@ -1040,18 +1242,36 @@ function FormHolderx({
             ErrorType={0}
             textField="password"
             errorFormChecking={errorFormChecking.inputedPassword}
-            darkmode={darkmode}
             WidthHolder={WidthHolder}
             type={false}
-            cantPassBadEmail={cantPassBadEmail}
             ErrorDisplay={passwordErrorDisplay}
             ErrorData={passwordErrorData}
+            bop={bopPassword}
+            checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
-          <Grid container className="modal-hold-signup">
+          <PasswordCheck
+            signmeup={signmeup}
+            widthHolder={WidthHolder}
+            checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
+            responseErrorConfirmPassword={responseErrorConfirmPassword}
+          />
+          <Grid
+            container
+            style={{ opacity: checkSignupPasswordACTIVATE ? 0 : 1 }}
+            className="modal-hold-signup"
+          >
             <Grid item xs={4} sm={5}></Grid>
             <Grid item className="buttonpad buttonshake" xs={4} sm={2}>
               <Button
-                style={signupstyle}
+                style={{
+                  fontSize: buttonFont,
+                  transform: buttonTransform,
+                  padding: pad,
+                  borderRadius: "50px",
+                  MozBoxShadow: MozBoxShadowReducerSign,
+                  WebkitBoxShadow: WebkitBoxShadowReducerSign,
+                  boxShadow: boxShadowReducerSign,
+                }}
                 onClick={signmeup}
                 fullWidth={true}
                 variant="contained"
@@ -1065,7 +1285,7 @@ function FormHolderx({
         </>
       )}
     </>
-    /*MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE*/
+    /*MOBILE  MOBILE  MOBILE  MOBILE  SIGNUP MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILEMOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE  MOBILE*/
   );
 }
 

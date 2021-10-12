@@ -16,7 +16,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 const bcrypt = require("bcrypt");
-const { createTokens, validateToken } = require("./jwt");
+const { createTokens, validateToken, createTokensUpdate } = require("./jwt");
 import { Request, Response, Application } from "express";
 import { body, validationResult } from "express-validator";
 import { strict } from "node:assert";
@@ -27,10 +27,108 @@ const CONNECTION_CONFIG = {
   password: "password",
   database: "superdata",
 };
-
-const register = `INSERT INTO members (username,password,email,color,status,notification,tutorial,date) VALUES (?,?,?,?,?,?,?,?)`;
-const login = `SELECT username,id,password,color,profile_image FROM members WHERE username =?`;
+///
+///reg
+const register = `INSERT INTO members (username,password,email,color,status,notification,tutorial,date,reg) VALUES (?,?,?,?,?,?,?,?,?)`;
+///
+///login
+const login = `SELECT username,id,password,color,profile_image,first_name,sur_name,quote,reg,billboard1,billboard2 FROM members WHERE username =?`;
+///
+///checkIsLogged
+const loginId = `SELECT username,id,password,color,profile_image,first_name,sur_name,quote,reg,billboard1,billboard2  FROM members WHERE id =?`;
+///
+///usernamecheck
 const checkpassword = `SELECT id FROM members WHERE  username =?`;
+
+app.post(
+  "/keepmeloggedin",
+  validateToken,
+  async (req: Request, res: Response) => {
+    if (req.cookies.accesst) {
+      const { values } = req.body;
+      const userSessionData: any = jwt_decode(req.cookies.accesst);
+      const accessToken = createTokensUpdate(userSessionData);
+      if (values === "session") {
+        return res
+          .cookie("accesst", accessToken, {
+            sameSite: "strict",
+            httpOnly: true,
+            //secure: true,
+          })
+          .send({ message: "session_Cookie_Activated" });
+      } else {
+        const days30inseconds = 60 * 60 * 24 * 30 * 1000;
+        const CurrentTimePlusSecs = new Date(
+          new Date().getTime() + 60 * 60 * 24 * 30 * 1000
+        );
+
+        const userSessionData: any = jwt_decode(req.cookies.accesst);
+        const accessToken = createTokensUpdate(userSessionData);
+
+        return res
+          .cookie("accesst", accessToken, {
+            sameSite: "strict",
+            expires: CurrentTimePlusSecs,
+            maxAge: days30inseconds,
+            httpOnly: true,
+            //secure: true,
+          })
+          .send({ message: "forever_Cookie_Activated" });
+      }
+    } else {
+      return res.send({ message: "cookie null" });
+    }
+  }
+);
+
+app.post("/logout", async (req: Request, res: Response) => {
+  if (req.cookies.accesst) {
+    return res.clearCookie("accesst").send({ message: "cookie deleted" });
+  } else {
+    return res.send({ message: "cookie null" });
+  }
+});
+
+app.post(
+  "/checkIsLogged",
+  validateToken,
+  async (req: Request, res: Response) => {
+    if (req.cookies.accesst) {
+      const userSessionData: any = jwt_decode(req.cookies.accesst);
+
+      const connection = mysql.createConnection(CONNECTION_CONFIG);
+      const loginQuery = util.promisify(connection.query.bind(connection));
+      try {
+        const logindata = await loginQuery(loginId, [userSessionData.id]);
+
+        const payloadValue = {
+          id: logindata[0].id,
+          username: logindata[0].username,
+          userimage: logindata[0].profile_image,
+          usercolor: logindata[0].color,
+          userfirstname: logindata[0].first_name,
+          usersurname: logindata[0].sur_name,
+          userquote: logindata[0].quote,
+          userreg: logindata[0].reg,
+          userbillboard1: logindata[0].billboard1,
+          userbillboard2: logindata[0].billboard2,
+        };
+
+        return res.send({
+          ///gettingcookie: userSessionData,
+          message: "logged in",
+          payload: payloadValue,
+        });
+      } catch {
+        return res.send({ message: "Wrong id" });
+      }
+    } else {
+      return res.send({
+        message: "logged out",
+      });
+    }
+  }
+);
 
 app.post("/logout", async (req: Request, res: Response) => {
   if (req.cookies.accesst) {
@@ -101,9 +199,16 @@ app.post(
           return res.send({ message: "Wrong Password" });
         } else {
           const payloadValue = {
+            id: logindata[0].id,
             username: logindata[0].username,
             userimage: logindata[0].profile_image,
             usercolor: logindata[0].color,
+            userfirstname: logindata[0].first_name,
+            usersurname: logindata[0].sur_name,
+            userquote: logindata[0].quote,
+            userreg: logindata[0].reg,
+            userbillboard1: logindata[0].billboard1,
+            userbillboard2: logindata[0].billboard2,
           };
 
           const days30inseconds = 60 * 60 * 24 * 30 * 1000;
@@ -159,7 +264,7 @@ app.post(
       const execQuery = util.promisify(connection.query.bind(connection));
       bcrypt.hash(values.inputedPassword, 10).then(async (hash: string) => {
         try {
-          await execQuery(register, [
+          const signupData = await execQuery(register, [
             values.inputedUsername,
             hash,
             values.inputedEmail,
@@ -168,10 +273,41 @@ app.post(
             0,
             1,
             currentTime,
+            1,
           ]);
           //console.log("success");
-          return res.send({ message: "Registration Successful" });
-        } catch (err) {
+
+          const payloadValue = {
+            id: signupData.insertId,
+            username: values.inputedUsername,
+            userimage: "",
+            usercolor: color,
+            userfirstname: "",
+            usersurname: "",
+            userquote: " ",
+            userbillboard1: "",
+            userbillboard2: "",
+          };
+
+          const days30inseconds = 60 * 60 * 24 * 30 * 1000;
+          const CurrentTimePlusSecs = new Date(
+            new Date().getTime() + 60 * 60 * 24 * 30 * 1000
+          );
+          const accessToken = createTokensUpdate(payloadValue);
+          //res.clearCookie("accesst");
+          //const tokenxx = req.cookies.accesst;
+          //const user = jwt_decode(tokenxx);
+          ///setting the cookie
+          return res
+            .cookie("accesst", accessToken, {
+              sameSite: "strict",
+              expires: CurrentTimePlusSecs,
+              maxAge: days30inseconds,
+              httpOnly: true,
+              //secure: true,
+            })
+            .send({ payload: payloadValue });
+        } catch (err: any) {
           console.error(err.code);
           if (err.code === "ER_DUP_ENTRY" || err.errno === 1062) {
             return res.send({ message: "username not unique" });

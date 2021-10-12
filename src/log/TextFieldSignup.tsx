@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import { IconButton, InputAdornment, TextField } from "@material-ui/core";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import { ItextfIeldSignup } from "./log-Interfaces";
-import { DialogContent, Button, Paper, Grid } from "@material-ui/core";
+import { DialogContent } from "@material-ui/core";
+import { useSelector } from "react-redux";
+
 function TextFieldSignupx({
   updateSignvalues,
   rawSignupValues,
@@ -18,7 +20,7 @@ function TextFieldSignupx({
   setFocus,
   showFocusTextFieldByHidePadding,
   setShowFocusTextFieldByHidePadding,
-  darkmode,
+  checkSignupPasswordACTIVATE,
 }: ItextfIeldSignup): JSX.Element {
   var width = " ";
   var sizex: "small" | "medium" | undefined = undefined;
@@ -32,41 +34,56 @@ function TextFieldSignupx({
   var zindexBackPlateE = 0;
   var displayBackPlateE = "none";
 
+  var transform = "";
+  var paddingBottomE = "";
+  var paddingBottomP = "";
+  var paddingBottomU = "";
+  var font1 = "";
+  var font2 = "";
+
+  ///
+  ///
+  ///
+  ///CONDITIONAL STATEMENT FOR DEVICE TYPE
   switch (size) {
     case "small":
       sizex = "small";
       width = "100%";
-      var transform = "scale(0.95)";
-      var paddingBottomE = "48px";
-      var paddingBottomP = "65px";
-      var paddingBottomU = "67px";
+      transform = "scale(0.94)";
+      paddingBottomE = "65px";
+      paddingBottomP = "65px";
+      paddingBottomU = "75px";
       zIndex = 1;
-      var font1 = "";
-      var font2 = "";
+      font1 = "";
+      font2 = "";
       break;
     case "smallTablet":
       sizex = "small";
       width = "62%";
-      var transform = "scale(1)";
-      var paddingBottomE = "70px";
-      var paddingBottomP = "65px";
-      var paddingBottomU = "70px";
+      transform = "scale(1)";
+      paddingBottomE = "82px";
+      paddingBottomP = "65px";
+      paddingBottomU = "78px";
       zIndex = 1;
-      var font1 = "2.6vh";
-      var font2 = "2vh";
+      font1 = "2.6vh";
+      font2 = "2vh";
       break;
     default:
-      var width = withHolder;
-      var transform = "scale(1)";
-      var paddingBottomE = "34px";
-      var paddingBottomP = "30px";
-      var paddingBottomU = "50px";
+      width = withHolder;
+      transform = "scale(1)";
+      paddingBottomE = "45px";
+      paddingBottomP = "27px";
+      paddingBottomU = "55px";
       zIndex = 1;
-      var font1 = "2.7vh";
-      var font2 = "1.9vh";
+      font1 = "2.7vh";
+      font2 = "1.9vh";
   }
 
-  if (size == "small" || size === "smallTablet") {
+  ///
+  ///
+  ///
+  ///FOCUS TEXFIELD VARIABLES MOBILE/TAB
+  if (size === "small" || size === "smallTablet") {
     if (emailType) {
       if (focus) {
         zindexE = 15;
@@ -100,8 +117,27 @@ function TextFieldSignupx({
     }
   }
 
+  ///
+  ///
+  ///
+  /// GET DARKMODE FROM REDUX STORE
+  interface RootStateGlobalReducer {
+    GlobalReducer: {
+      darkmode: boolean;
+    };
+  }
+  const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
+    ...state.GlobalReducer,
+  }));
+
+  const darkmodeReducer = darkmode;
+
+  ///
+  ///
+  ///
+  ///TEXTFIELD BACK DROP ON FOCUS CLICK (MOBILE)
   const focusTextfield = (a: number) => {
-    if (size == "small" || size === "smallTablet") {
+    if (size === "small" || size === "smallTablet") {
       if (a === 1) {
         setFocus(true);
         setShowFocusTextFieldByHidePadding(true);
@@ -111,6 +147,26 @@ function TextFieldSignupx({
       }
     }
   };
+
+  ///
+  ///
+  ///
+  ///TEXTFIELD BACK DROP ON FOCUS VARIABLES
+  var TextFieldOpacity = "1";
+
+  if (checkSignupPasswordACTIVATE) {
+    TextFieldOpacity = "0";
+  } else {
+    if (darkmodeReducer) {
+      if (focus) {
+        TextFieldOpacity = "1";
+      } else {
+        TextFieldOpacity = "0.8";
+      }
+    } else {
+      TextFieldOpacity = "1";
+    }
+  }
   return (
     <>
       {emailType ? (
@@ -118,9 +174,9 @@ function TextFieldSignupx({
           {" "}
           <DialogContent
             className={
-              darkmode
-                ? "mobileTextfield-backplate dontallowhighlighting  modal-containerDark"
-                : "mobileTextfield-backplate dontallowhighlighting  modal-containerLight"
+              darkmodeReducer
+                ? "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorDark"
+                : "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorLight "
             }
             style={{ zIndex: zindexBackPlateE, display: displayBackPlateE }}
           ></DialogContent>
@@ -137,6 +193,7 @@ function TextFieldSignupx({
                 ? "0px"
                 : paddingBottomE,
               zIndex: zindexE,
+              opacity: TextFieldOpacity,
             }}
             label="Email"
             type="email"
@@ -151,9 +208,9 @@ function TextFieldSignupx({
           {" "}
           <DialogContent
             className={
-              darkmode
-                ? "mobileTextfield-backplate dontallowhighlighting  modal-containerDark"
-                : "mobileTextfield-backplate dontallowhighlighting  modal-containerLight"
+              darkmodeReducer
+                ? "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorDark"
+                : "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorLight"
             }
             style={{ zIndex: zindexBackPlateP, display: displayBackPlateP }}
           ></DialogContent>
@@ -170,6 +227,7 @@ function TextFieldSignupx({
                 ? "0px"
                 : paddingBottomP,
               zIndex: zIndex,
+              opacity: TextFieldOpacity,
             }}
             label="Password"
             type={signupShowPassword ? "text" : "password"}
@@ -200,9 +258,9 @@ function TextFieldSignupx({
           {" "}
           <DialogContent
             className={
-              darkmode
-                ? "mobileTextfield-backplate dontallowhighlighting  modal-containerDark"
-                : "mobileTextfield-backplate dontallowhighlighting  modal-containerLight"
+              darkmodeReducer
+                ? "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorDark"
+                : "mobileTextfield-backplate dontallowhighlighting   mobileTextfield-backplateColorLight"
             }
             style={{ zIndex: zindexBackPlateU, display: displayBackPlateU }}
           ></DialogContent>
@@ -219,6 +277,7 @@ function TextFieldSignupx({
                 ? "0px"
                 : paddingBottomU,
               zIndex: zindexU,
+              opacity: TextFieldOpacity,
             }}
             label="Username"
             type="text"

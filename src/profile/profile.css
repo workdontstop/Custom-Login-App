@@ -1,0 +1,81 @@
+.usernamePc {
+  padding: 10px;
+  border-radius: 7px;
+  font-weight: bolder;
+  font-size: 2.1vw;
+}
+
+.usernameMobile {
+  padding: 7px;
+  border-radius: 4.5px;
+  font-weight: bolder;
+  font-size: 2.7vh;
+}
+
+.usernameTablet {
+  padding: 12px;
+  border-radius: 9px;
+  font-weight: bolder;
+
+  font-size: 3.6vh;
+}
+
+.namePc {
+  padding: 5px;
+  border-radius: 4px;
+  font-weight: bolder;
+  color: #000000;
+  font-size: 1.2vw;
+}
+
+.nameMobile {
+  padding: 6px;
+  border-radius: 4.2px;
+  font-weight: bolder;
+  color: #000000;
+  font-size: 1.77vh;
+}
+
+.nameTablet {
+  padding: 8px;
+  border-radius: 6px;
+  font-weight: bolder;
+  color: #000000;
+  font-size: 2.1vh;
+}
+
+.favPc {
+  border-radius: 4px;
+  color: #ffffff;
+}
+
+.favMobile {
+  border-radius: 4.2px;
+
+  color: #ffffff;
+}
+
+.favTablet {
+  border-radius: 6px;
+
+  color: #ffffff;
+  font-size: 2.1vh;
+}
+
+.fanPc {
+  margin-left: -20vw;
+  border-radius: 4px;
+  color: #ffffff;
+}
+
+.fanMobile {
+  margin-left: -38vw;
+  border-radius: 4.2px;
+  color: #ffffff;
+}
+
+.fanTablet {
+  margin-left: -31vw;
+  border-radius: 4px;
+  color: #ffffff;
+}

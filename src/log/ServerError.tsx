@@ -2,6 +2,7 @@ import React from "react";
 import { animated, useSpring } from "react-spring";
 import { Grid, DialogContent } from "@material-ui/core";
 import { IServerError } from "./log-Interfaces";
+import { useSelector } from "react-redux";
 import "./logCss.css";
 function ServerErrorx({
   device,
@@ -9,12 +10,26 @@ function ServerErrorx({
   setServerErrorData,
   serverErrorDisplay,
   serverErrorData,
-  darkmode,
 }: IServerError) {
-  //
-  //
-  //
-  //USE SLIDE DOWN ANIMATION FROM REACT SPRING SERVER ERROR
+  ///
+  ///
+  ///
+  /// GET DARKMODE FROM REDUX STORE
+  interface RootStateGlobalReducer {
+    GlobalReducer: {
+      darkmode: boolean;
+    };
+  }
+  const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
+    ...state.GlobalReducer,
+  }));
+
+  const darkmodeReducer = darkmode;
+
+  ///
+  ///
+  ///
+  ///USE SLIDE DOWN ANIMATION FROM REACT SPRING SERVER ERROR
   const serverErrorAnimation = useSpring({
     config: {
       duration: 500,
@@ -24,7 +39,6 @@ function ServerErrorx({
   });
 
   var ErrorColor = "";
-  var ErrorTextColor = "";
 
   var Backtype = "";
   var textback = "";
@@ -44,17 +58,15 @@ function ServerErrorx({
   } else {
   }
 
-  if (darkmode) {
+  if (darkmodeReducer) {
     ErrorColor = "rgb(34, 34, 34, 0.05)";
-
     textback = "caption-dark";
   } else {
     ErrorColor = "rgb(238, 238, 238 0.09)";
-
     textback = "caption-light";
   }
 
-  darkmode
+  darkmodeReducer
     ? (Backtype = "error-background-dark")
     : (Backtype = "error-background-light");
 
@@ -76,22 +88,25 @@ function ServerErrorx({
               backgroundColor: ErrorColor,
             }}
           >
-            <Grid
-              item
-              xs={12}
-              className="server-error-inner"
-              style={{
-                color: ErrorTextColor,
-              }}
-            >
+            <Grid item xs={12} className="server-error-inner">
               <Grid
                 item
                 className="sever-error-data"
-                style={{ fontSize: severerrorData, paddingLeft: "1px" }}
+                style={{
+                  fontSize: severerrorData,
+                  paddingLeft: "1px",
+                }}
                 xs={11}
                 sm={10}
               >
-                <span className={textback}>{serverErrorData}</span>
+                <span
+                  style={{
+                    color: darkmodeReducer ? "#ffffff" : "#0b1728",
+                  }}
+                  className={textback}
+                >
+                  {serverErrorData}
+                </span>
               </Grid>
               <Grid
                 item

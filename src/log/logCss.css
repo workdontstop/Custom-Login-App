@@ -404,6 +404,29 @@
     rgb(219, 219, 219, 0.99)
   );
 }
+
+.mobileTextfield-backplateColorDark {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(37, 39, 44, 0.975),
+    rgb(37, 39, 44, 0.98),
+    rgb(37, 39, 44, 0.985),
+    rgb(37, 39, 44, 0.99),
+    rgb(37, 39, 44, 0.99)
+  );
+}
+
+.mobileTextfield-backplateColorLight {
+  background-image: linear-gradient(
+    to bottom,
+    rgb(219, 219, 219, 0.945),
+    rgb(219, 219, 219, 0.95),
+    rgb(219, 219, 219, 0.985),
+    rgb(219, 219, 219, 0.99),
+    rgb(219, 219, 219, 0.99)
+  );
+}
+
 /*  M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M      */
 
 /*  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  O  */
@@ -437,7 +460,7 @@
   padding: 0px;
   position: fixed;
   top: 0em;
-  z-index: 2;
+  z-index: 5000;
   height: 100%;
   width: 100%;
 }
@@ -495,22 +518,21 @@
 }
 
 .text-superstarz-dark-colorB {
-  color: #f7f7f7;
+  color: #ffffff;
 }
 
 .text-superstarz-light-colorA {
-  color: #0b1728;
+  color: #0b1728d5;
 }
 
 .text-superstarz-light-colorB {
-  color: #0c1829;
+  color: #160d36;
 }
 .theme-more-container {
-  padding-top: 2.1rem;
   top: 1em;
   display: flex;
+  margin: auto;
   align-items: center;
-
   font-weight: bold;
 }
 

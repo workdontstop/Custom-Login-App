@@ -1,26 +1,14 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
-import { useHistory } from "react-router-dom";
-import Axios from "axios";
-
 import { useSpring, animated } from "react-spring";
-import { DialogContent, Button, Paper, Grid } from "@material-ui/core";
-import { isBrowser, isTablet } from "react-device-detect";
+import { DialogContent, Paper, Grid } from "@material-ui/core";
+import { matchPc, matchTablet } from "../DetectDevice";
 import { Scrollbars } from "react-custom-scrollbars";
-
 import "./logCss.css";
-import {
-  ImodalLog,
-  IGrid,
-  Ispinnerinterface,
-  IFormHolder,
-} from "./log-Interfaces";
-import { TextFieldLogin } from "./TextFieldLogin";
-import { TextFieldSignup } from "./TextFieldSignup";
+import { ImodalLog, IGrid } from "./log-Interfaces";
 import { ServerError } from "./ServerError";
-import { ModalFormSignupError } from "./ModalFormSignupError";
-import { ModalFormLoginError } from "./ModalFormLoginError";
 import { FormHolder } from "./FormHolder";
-
+import { RootStateOrAny, useSelector } from "react-redux";
+import { SuperLoader } from "../SuperLoader";
 import image1 from "./images/modalpic1.jpg";
 import image2 from "./images/modalpic2.jpg";
 import image3 from "./images/modalpic3.png";
@@ -30,21 +18,68 @@ import image6 from "./images/modalpic6.jpg";
 import SuperstarzIconLight from "./../images/ssmall.png";
 import SuperstarzIconDark from "./../images/sdsmall.png";
 
-require("dotenv").config();
-Axios.defaults.withCredentials = true;
-
 function ModalLogx({
-  screenHeight,
   formtype,
   CloseModalForm,
   showModalForm,
-  PaperStyle,
-  signupstyle,
-  loginstyle,
-  darkmode,
 }: ImodalLog): JSX.Element {
-  const matchPc = isBrowser;
-  const matchTablet = isTablet;
+  ///
+  ///
+  ///
+  /// SHOW/HIDES REPEAT PASSWORD UI STATE FOR SIGN UP
+  const [checkSignupPasswordACTIVATE, setcheckSignupPasswordACTIVATE] =
+    useState<boolean>(false);
+
+  ///
+  ///
+  ///
+  /// INTERFACE/TYPES FOR SCREENHEIGHT AND DARKMODE
+  interface RootStateGlobalReducer {
+    GlobalReducer: {
+      darkmode: boolean;
+      screenHeight: number;
+    };
+  }
+
+  ///
+  ///
+  ///
+  /// GET DARKMODE FROM REDUX STORE
+  const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
+    ...state.GlobalReducer,
+  }));
+  const darkmodeReducer = darkmode;
+
+  ///
+  ///
+  ///
+  /// GET SCREENHEIGHT FROM REDUX STORE
+  const { screenHeight } = useSelector((state: RootStateGlobalReducer) => ({
+    ...state.GlobalReducer,
+  }));
+  const screenHeightReducer = screenHeight;
+
+  ///
+  ///
+  ///
+  /// MUI PAPER STYLES FROM REDUX
+  const { PaperStyleLight, PaperStyleDark } = useSelector(
+    (state: RootStateOrAny) => ({
+      ...state.PaperReducerLightnDark,
+    })
+  );
+
+  var PaperStyleReducer = " ";
+
+  ///
+  ///
+  ///
+  ///CONDITIONAL STATEMENT FOR DARKMODE
+  if (darkmodeReducer) {
+    PaperStyleReducer = PaperStyleDark;
+  } else {
+    PaperStyleReducer = PaperStyleLight;
+  }
 
   ///
   ///
@@ -56,21 +91,20 @@ function ModalLogx({
 
   ///
   ///
+  ///
   ///SUPERSTARZ ICON SELECT
   var SuperIcon = "";
-  darkmode
+  darkmodeReducer
     ? (SuperIcon = SuperstarzIconDark)
     : (SuperIcon = SuperstarzIconLight);
 
   ///
   ///
-  ///MODAL ZOOMED STATE
+  ///
+  ///MODAL ZOOMED STATE PC LOCALSTORAGE
   const [zoomedModal, setZoomedModal] = useState<boolean>(false);
   const [mobileZoom, setMobileZoom] = useState<boolean>(false);
   useEffect(() => {
-    //toggleDarkMode = !darkmode;
-    //localStorage.setItem("PcZoom", toggleDarkMode.toString());
-    //localStorage.setItem("mobileZoom", toggleDarkMode.toString());
     let localPcZoomData = JSON.parse(localStorage.getItem("PcZoom")!);
     if (localPcZoomData !== null) {
       setZoomedModal(localPcZoomData);
@@ -79,17 +113,25 @@ function ModalLogx({
 
   ///
   ///
+  ///
   ///HIDE LOGO Modal
   const [showlogo, setShowlogo] = useState<boolean>(true);
   const iconTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const iconTimerxx = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hideLogo = () => {
-    setShowlogo(true);
+    setShowlogo(false);
     if (iconTimer.current) {
       clearTimeout(iconTimer.current);
     }
+    if (iconTimerxx.current) {
+      clearTimeout(iconTimerxx.current);
+    }
     iconTimer.current = setTimeout(function () {
+      setShowlogo(true);
+    }, 2000);
+    iconTimerxx.current = setTimeout(function () {
       setShowlogo(false);
-    }, 5000);
+    }, 4000);
   };
 
   ///
@@ -124,25 +166,25 @@ function ModalLogx({
     opacity: mobileZoom ? 1 : 0.98,
     height: mobileZoom ? "100%" : matchTablet ? "23vh" : "15vh",
   });
+
+  //////////////   CONDITIONAL STATEMENT FOR DEVICE TYPES
   var formHolder = "";
-  var fieldSize = "";
-  var tabletMobile = "";
+
   var MobileTabZoom = "";
   var MobileTab = "";
 
   if (matchTablet) {
     formHolder = "formholderTablet";
-    fieldSize = "smallTablet";
-    tabletMobile = "Tablet";
+
     MobileTabZoom = "log-logoTabletZoom";
     MobileTab = "log-logoTablet";
   } else {
     formHolder = "formholder";
-    fieldSize = "small";
-    tabletMobile = "Mobile";
+
     MobileTabZoom = "log-logoMobileZoom";
     MobileTab = "log-logoMobile";
   }
+  //////////////   CONDITIONAL STATEMENT FOR DEVICE TYPES
 
   ///CLOSE MODAL FORM ON SMALL ICON PRESS
   const iconclicked = () => {
@@ -156,58 +198,63 @@ function ModalLogx({
   const contentScrollRef = useRef<any>(null);
   const imagescrollRef = useRef<any>(null);
 
-  const autoScrollWindowNImage: any = (limiter: number) => {
-    if (limiter === 1) {
-      imagescrollRef.current.scrollTo(0, 0);
-      contentScrollRef.current.scrollTo(0, 20);
-    } else {
-      setTimeout(function () {
-        if (imagescrollRef.current && contentScrollRef.current) {
-          imagescrollRef.current.scrollTo(0, 0);
-          contentScrollRef.current.scrollTo(0, 50);
+  const autoScrollWindowNImage: any = useCallback(
+    (limiter: number) => {
+      if (limiter === 1) {
+        imagescrollRef.current.scrollTo(0, 0);
+        if (formtype) {
+          contentScrollRef.current.scrollTo(0, 45);
+        } else {
+          contentScrollRef.current.scrollTo(0, 20);
         }
-      }, 970);
-    }
-  };
-
+      } else {
+        setTimeout(function () {
+          if (imagescrollRef.current && contentScrollRef.current) {
+            imagescrollRef.current.scrollTo(0, 0);
+            contentScrollRef.current.scrollTo(0, 30);
+          }
+        }, 970);
+      }
+    },
+    [formtype]
+  );
   ///
   ///
   ///
   /// SHOW A  ZOOMED/LOCKED MODAL VIEW PC
   const zoomlogmodal = () => {
-    let toggleZoomedModal = !zoomedModal;
-    setZoomedModal(!zoomedModal);
-    hideLogo();
-    //LOCALSTORAGE ZOOMED STATES  FOR PC
-    localStorage.setItem("PcZoom", toggleZoomedModal.toString());
+    if (checkSignupPasswordACTIVATE) {
+      setcheckSignupPasswordACTIVATE(false);
+    } else {
+      let toggleZoomedModal = !zoomedModal;
+      setZoomedModal(!zoomedModal);
+      hideLogo();
+      //LOCALSTORAGE ZOOMED STATES  FOR PC
+      localStorage.setItem("PcZoom", toggleZoomedModal.toString());
+    }
   };
 
-  ///
-  ///
-  ///LOCALSTORAGE ZOOMED STATES  FOR MOBILE
-  const localMobileZoomed = () => {
-    let toggleMobileZoom = !mobileZoom;
-    setMobileZoom(!mobileZoom);
-    hideLogo();
-    localStorage.setItem("mobileZoom", toggleMobileZoom.toString());
-  };
   ///
   ///
   ///
   /// SHOW A  ZOOMED/LOCKED  MODAL VIEW  MOBILE(CHANGE MOBILEZOOM WITH A CLICK)
   const clickMobileZoom = () => {
-    if (mobileZoom) {
-      setCallMobileZoomLimiter(false);
-      setMobileZoom(false);
-      hideLogo();
+    if (checkSignupPasswordACTIVATE) {
+      setcheckSignupPasswordACTIVATE(false);
     } else {
-      setCallMobileZoomLimiter(true);
-      setMobileZoom(true);
-      hideLogo();
-    }
-    //setMobileZoom(!mobileZoom);
-    if (contentScrollRef.current && contentScrollRef) {
-      autoScrollWindowNImage(0);
+      if (mobileZoom) {
+        setCallMobileZoomLimiter(false);
+        setMobileZoom(false);
+        hideLogo();
+      } else {
+        setCallMobileZoomLimiter(true);
+        setMobileZoom(true);
+        hideLogo();
+      }
+      //setMobileZoom(!mobileZoom);
+      if (contentScrollRef.current && contentScrollRef) {
+        autoScrollWindowNImage(0);
+      }
     }
   };
 
@@ -215,18 +262,27 @@ function ModalLogx({
   ///
   ///
   ///CHANGE MOBILEZOOM WITH A SCROLL(SCROLL CHANGE LAYOUT)
-
   const [callMobileZoomLimiter, setCallMobileZoomLimiter] =
     useState<boolean>(false);
+  const slideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const slide = useCallback(
     (e) => {
       if (contentScrollRef.current.scrollTop <= 0) {
         if (!callMobileZoomLimiter) {
-          setMobileZoom(true);
-          hideLogo();
-          setCallMobileZoomLimiter(true);
+          if (slideTimer.current) {
+            clearTimeout(slideTimer.current);
+          }
+          //slidertimmer makes zoom  wait for some seconds before running
+          slideTimer.current = setTimeout(function () {
+            setMobileZoom(true);
+            hideLogo();
+            setCallMobileZoomLimiter(true);
+          }, 720);
         }
       } else if (contentScrollRef.current.scrollTop >= 2) {
+        if (slideTimer.current) {
+          clearTimeout(slideTimer.current);
+        }
         if (callMobileZoomLimiter) {
           autoScrollWindowNImage(0);
           setMobileZoom(false);
@@ -236,7 +292,7 @@ function ModalLogx({
       } else {
       }
     },
-    [mobileZoom, callMobileZoomLimiter, contentScrollRef]
+    [callMobileZoomLimiter, contentScrollRef, autoScrollWindowNImage]
   );
 
   ///
@@ -249,11 +305,6 @@ function ModalLogx({
       autoScrollWindowNImage(1);
     }
   };
-
-  ///
-  ///
-  ///
-  /// LOGOUT
 
   ///
   ///
@@ -327,7 +378,10 @@ function ModalLogx({
         const imageHeight = ModalSlidingImageRef.current.clientHeight;
         const imageWidth = ModalSlidingImageRef.current.clientWidth;
 
-        if (imageHeight + (imageWidth / imageHeight) * 3 > screenHeight) {
+        if (
+          imageHeight + (imageWidth / imageHeight) * 3 >
+          screenHeightReducer
+        ) {
           setImageHeightoverflow(true);
         }
 
@@ -336,18 +390,13 @@ function ModalLogx({
         }
       }
     },
-    [imageHeightoverflow, wideImage, screenHeight]
+    [screenHeightReducer]
   );
 
-  ///
-  ///
-  ///
   /// DYNAMIC MODAL LAYOUT VARIABLES
-
   ///
   ///
   ///
-  /// DYNAMIC MODAL LAYOUT VARIABLES
   const wideImageControlTrue: string = "75vw";
   const wideImageControlfalse: string = "70vw";
   const zoomImageControl: string = "100vw";
@@ -429,7 +478,6 @@ function ModalLogx({
   ///
   ///
   /// DYNAMIC MODAL LAYOUT VARIABLES
-  /// DYNAMIC MODAL LAYOUT VARIABLES
 
   ///
   ///
@@ -444,7 +492,6 @@ function ModalLogx({
     }, 1600);
   }
 
-  console.log("modallog");
   return (
     <>
       <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -457,6 +504,16 @@ function ModalLogx({
               zIndex: 100,
             }}
           >
+            <SuperLoader />
+
+            <ServerError
+              device="pc"
+              serverEmojiplain={serverEmojiplain}
+              setServerErrorData={setServerErrorData}
+              serverErrorDisplay={serverErrorDisplay}
+              serverErrorData={serverErrorData}
+            />
+
             <DialogContent
               className={`${fadeSlidingimage} modalImageCustomSlider FormDialog-containerx dontallowhighlighting`}
               onClick={onBackgroundFocus}
@@ -472,12 +529,7 @@ function ModalLogx({
               ref={ModalBackgroundRef}
             >
               {" "}
-              <Scrollbars
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
+              <Scrollbars>
                 <animated.div style={modalanimationTwo}>
                   <img
                     ref={ModalSlidingImageRef}
@@ -496,7 +548,7 @@ function ModalLogx({
 
             <DialogContent
               className={
-                darkmode
+                darkmodeReducer
                   ? "fadermodal FormDialog-container modal-containerDark dontallowhighlighting"
                   : "fadermodal FormDialog-container modal-containerLight dontallowhighlighting"
               }
@@ -504,19 +556,10 @@ function ModalLogx({
               style={{ overflow: "hidden", cursor: "pointer" }}
               ref={ModalBackgroundRef}
             >
-              <ServerError
-                device="pc"
-                serverEmojiplain={serverEmojiplain}
-                setServerErrorData={setServerErrorData}
-                serverErrorDisplay={serverErrorDisplay}
-                serverErrorData={serverErrorData}
-                darkmode={darkmode}
-              />
-
               <animated.div style={modalanimation}>
                 <Paper
                   style={{
-                    backgroundImage: PaperStyle,
+                    backgroundImage: PaperStyleReducer,
                     borderRadius: borderGrid,
                     cursor: "default",
                   }}
@@ -566,21 +609,21 @@ function ModalLogx({
                             item
                             xs={12}
                             className="center-content-vertically"
-                            style={{ marginTop: "-5px" }}
+                            style={{ marginTop: "10px", padding: "0px" }}
                           >
                             <FormHolder
                               setServerErrorDisplay={setServerErrorDisplay}
                               setserverEmojiplain={setserverEmojiplain}
-                              serverEmojiplain={serverEmojiplain}
                               setServerErrorData={setServerErrorData}
-                              serverErrorDisplay={serverErrorDisplay}
-                              serverErrorData={serverErrorData}
                               loginForm={true}
-                              darkmode={darkmode}
                               zoomedModal={zoomedModal}
                               WidthHolder={WidthHolder}
-                              loginstyle={loginstyle}
-                              signupstyle={signupstyle}
+                              checkSignupPasswordACTIVATE={
+                                checkSignupPasswordACTIVATE
+                              }
+                              setcheckSignupPasswordACTIVATE={
+                                setcheckSignupPasswordACTIVATE
+                              }
                             />
                           </Grid>
                         </Grid>
@@ -591,22 +634,22 @@ function ModalLogx({
                           item
                           xs={12}
                           className="center-content-vertically"
-                          style={{ padding: "0px" }}
+                          style={{ marginTop: "3px", padding: "0px" }}
                         >
                           {" "}
                           <FormHolder
                             setServerErrorDisplay={setServerErrorDisplay}
                             setserverEmojiplain={setserverEmojiplain}
-                            serverEmojiplain={serverEmojiplain}
                             setServerErrorData={setServerErrorData}
-                            serverErrorDisplay={serverErrorDisplay}
-                            serverErrorData={serverErrorData}
                             loginForm={false}
-                            darkmode={darkmode}
                             zoomedModal={zoomedModal}
                             WidthHolder={WidthHolder}
-                            loginstyle={loginstyle}
-                            signupstyle={signupstyle}
+                            checkSignupPasswordACTIVATE={
+                              checkSignupPasswordACTIVATE
+                            }
+                            setcheckSignupPasswordACTIVATE={
+                              setcheckSignupPasswordACTIVATE
+                            }
                           />
                         </Grid>
                       </Grid>
@@ -627,16 +670,17 @@ function ModalLogx({
               cursor: "pointer",
               padding: "0px",
               zIndex: 100,
-              backgroundImage: PaperStyle,
+              backgroundImage: PaperStyleReducer,
             }}
           >
+            <SuperLoader />
+
             <ServerError
               device="mobile"
               serverEmojiplain={serverEmojiplain}
               setServerErrorData={setServerErrorData}
               serverErrorDisplay={serverErrorDisplay}
               serverErrorData={serverErrorData}
-              darkmode={darkmode}
             />
             <animated.div style={modalanimation}>
               <Paper
@@ -707,16 +751,16 @@ function ModalLogx({
                             <FormHolder
                               setServerErrorDisplay={setServerErrorDisplay}
                               setserverEmojiplain={setserverEmojiplain}
-                              serverEmojiplain={serverEmojiplain}
                               setServerErrorData={setServerErrorData}
-                              serverErrorDisplay={serverErrorDisplay}
-                              serverErrorData={serverErrorData}
                               loginForm={true}
-                              darkmode={darkmode}
                               zoomedModal={zoomedModal}
                               WidthHolder={WidthHolder}
-                              loginstyle={loginstyle}
-                              signupstyle={signupstyle}
+                              checkSignupPasswordACTIVATE={
+                                checkSignupPasswordACTIVATE
+                              }
+                              setcheckSignupPasswordACTIVATE={
+                                setcheckSignupPasswordACTIVATE
+                              }
                             />
                           </Grid>
                         ) : (
@@ -730,16 +774,16 @@ function ModalLogx({
                             <FormHolder
                               setServerErrorDisplay={setServerErrorDisplay}
                               setserverEmojiplain={setserverEmojiplain}
-                              serverEmojiplain={serverEmojiplain}
                               setServerErrorData={setServerErrorData}
-                              serverErrorDisplay={serverErrorDisplay}
-                              serverErrorData={serverErrorData}
                               loginForm={false}
-                              darkmode={darkmode}
                               zoomedModal={zoomedModal}
                               WidthHolder={WidthHolder}
-                              loginstyle={loginstyle}
-                              signupstyle={signupstyle}
+                              checkSignupPasswordACTIVATE={
+                                checkSignupPasswordACTIVATE
+                              }
+                              setcheckSignupPasswordACTIVATE={
+                                setcheckSignupPasswordACTIVATE
+                              }
                             />
                           </Grid>
                         )}

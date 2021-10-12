@@ -5,21 +5,37 @@ import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import { ImodalFormSignupError } from "./log-Interfaces";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import { useSelector } from "react-redux";
 
 function ModalFormSignupErrorx({
   ErrorType,
   textField,
   errorFormChecking,
   type,
-  cantPassBadEmail,
   ErrorDisplay,
   ErrorData,
-  darkmode,
   WidthHolder,
   device,
   focus,
+  bop,
+  checkSignupPasswordACTIVATE,
 }: ImodalFormSignupError) {
+  const cantPassBadEmail: boolean = false;
+  ///
+  ///
+  ///
+  /// GET DARKMODE FROM REDUX STORE
+  interface RootStateGlobalReducer {
+    GlobalReducer: {
+      darkmode: boolean;
+    };
+  }
+  const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
+    ...state.GlobalReducer,
+  }));
+
+  const darkmodeReducer = darkmode;
+
   var ErrorColor = "";
   var ErrorTextColor = "";
   var ErrorIconColor = "";
@@ -35,54 +51,56 @@ function ModalFormSignupErrorx({
   var spinnermarg = "";
   var texttrans = "";
   var marginRight = "";
-  var dotColor = "";
+
+  var focusPasswordMarginWithDevice = "";
 
   if (device === "pc") {
     marginTop = "-64px";
     errorwidth = WidthHolder;
     iconfont = "1vw";
     textfont = "0.95vw";
-    emojiFont = "1.3vw";
+    emojiFont = "1.8vw";
     emojiLeft = "0px";
-    spinnersize = 16;
+    spinnersize = 13;
     spinnermarg = "-10px";
     texttrans = "scale(1)";
     marginRight = "-15px";
+    focusPasswordMarginWithDevice = "-5vh";
   } else if (device === "Tablet") {
     marginTop = "-98px";
     iconfont = "1vw";
-    errorwidth = "69%";
+    errorwidth = "66%";
     textfont = "1.9vh";
-    emojiFont = "1.3vw";
+    emojiFont = "2.9vw";
     emojiLeft = "13px";
     spinnersize = 18;
     spinnermarg = "5px";
     texttrans = "scale(0.8)";
     marginRight = "-35px";
+    focusPasswordMarginWithDevice = "-2.7vh";
   } else {
     marginTop = "-98px";
     errorwidth = "100%";
     iconfont = "1vw";
     textfont = "";
-    emojiFont = "";
+    emojiFont = "3.6vh";
     emojiLeft = "13px";
-    spinnersize = 18;
+    spinnersize = 14;
     spinnermarg = "5px";
     texttrans = "scale(0.8)";
     marginRight = "-35px";
+    focusPasswordMarginWithDevice = "-5vh";
     if (textField === "email") {
       radi = "10px";
     }
   }
 
-  if (darkmode) {
-    dotColor = "#00ccff";
+  if (darkmodeReducer) {
     ErrorColor =
       "linear-gradient(0deg,  rgba(17, 17, 17, 0.0025), rgba(17, 17, 17, 0.0041),rgba(17, 17, 17, 0.0041),rgba(17, 17, 17, 0.005),rgba(17, 17, 17, 0.0104),rgba(17, 17, 17, 0.025),rgba(17, 17, 17, 0.026),rgba(17, 17, 17, 0.028),rgba(17, 17, 17, 0.031),rgba(17, 17, 17, 0.035))";
     ErrorTextColor = "#dddddd";
     ErrorIconColor = "#aaaaaa";
   } else {
-    dotColor = "red";
     ErrorColor =
       "linear-gradient(0deg,  rgba(221, 221, 221, 0.0041), rgba(221, 221, 221, 0.0083),rgba(221, 221, 221, 0.0166),rgba(221, 221, 221, 0.0166),rgba(221, 221, 221, 0.0416),rgba(221, 221, 221, 0.05),rgba(221, 221, 221, 0.058),rgba(221, 221, 221, 0.066),rgba(221, 221, 221, 0.0733),rgba(221, 221, 221, 0.08)";
 
@@ -117,12 +135,12 @@ function ModalFormSignupErrorx({
   }
 
   if (
-    ErrorData === "Username is taken" ||
-    ErrorData === "Username is available"
+    ErrorData === "username is taken" ||
+    ErrorData === "username is available"
   ) {
     opacityxx = "0.8";
   } else {
-    opacityxx = "0.5";
+    focus ? (opacityxx = "0.7") : (opacityxx = "0.35");
   }
 
   ///
@@ -149,7 +167,7 @@ function ModalFormSignupErrorx({
     opacity: ErrorDisplay,
     position: "relative" as "relative",
     zIndex: focus ? 15 : 0,
-    marginTop: focus ? "-5vh" : marginTop,
+    marginTop: focus ? focusPasswordMarginWithDevice : marginTop,
 
     transform: ErrorData ? `translateY(100%)` : `translateY(0%)`,
   });
@@ -197,6 +215,7 @@ function ModalFormSignupErrorx({
               marginBottom: "6.5px",
               display: "flex",
               padding: "0px",
+              opacity: checkSignupPasswordACTIVATE ? 0 : 1,
             }}
           >
             <Grid
@@ -245,7 +264,7 @@ function ModalFormSignupErrorx({
                     marginTop: "-3px",
                   }}
                 >
-                  &#128308;
+                  &#128554;
                 </span>
                 <span
                   style={{
@@ -257,7 +276,7 @@ function ModalFormSignupErrorx({
                     marginTop: "-3px",
                   }}
                 >
-                  &#128309;
+                  &#128536;
                 </span>
               </Grid>
               <Grid
@@ -268,17 +287,10 @@ function ModalFormSignupErrorx({
                   transform: texttrans,
                 }}
                 xs={10}
+                className={bop ? "element-bop" : ""}
               >
                 <span style={{ textAlign: "right", marginRight: marginRight }}>
                   <span style={{ verticalAlign: "middle" }}>{ErrorData} </span>
-
-                  <FiberManualRecordIcon
-                    style={{
-                      color: dotColor,
-                      verticalAlign: "middle",
-                      fontSize: "0.6rem",
-                    }}
-                  />
                 </span>
               </Grid>
             </Grid>
@@ -299,13 +311,12 @@ function ModalFormSignupErrorx({
               }}
             >
               {" "}
-              <div className={classes.root} style={{ opacity: "0.15" }}>
+              <div className={classes.root} style={{ opacity: "0.1" }}>
                 <CircularProgress
                   variant="determinate"
                   className={classes.bottom}
                   size={spinnersize}
                   thickness={4}
-                  {...ErrorData}
                   value={100}
                 />
                 <CircularProgress
@@ -317,7 +328,6 @@ function ModalFormSignupErrorx({
                   }}
                   size={spinnersize}
                   thickness={4}
-                  {...ErrorData}
                 />
               </div>{" "}
             </Grid>
@@ -334,6 +344,7 @@ function ModalFormSignupErrorx({
               margin: "auto",
               borderRadius: "0px",
               display: "flex",
+              opacity: checkSignupPasswordACTIVATE ? 0 : 1,
             }}
           >
             {" "}
@@ -371,20 +382,14 @@ function ModalFormSignupErrorx({
                 item
                 xs={11}
                 style={{
-                  opacity: 0.5,
+                  opacity: focus ? 0.7 : 0.35,
                   fontSize: textfont,
                   transform: texttrans,
                 }}
+                className={bop ? "element-bopflip" : ""}
               >
                 <span style={{ textAlign: "right", marginRight: marginRight }}>
                   <span style={{ verticalAlign: "middle" }}>{ErrorData} </span>
-                  <FiberManualRecordIcon
-                    style={{
-                      color: dotColor,
-                      verticalAlign: "middle",
-                      fontSize: "0.6rem",
-                    }}
-                  />
                 </span>
               </Grid>
             </Grid>
@@ -405,13 +410,12 @@ function ModalFormSignupErrorx({
               }}
             >
               {" "}
-              <div className={classes.root} style={{ opacity: "0.15" }}>
+              <div className={classes.root} style={{ opacity: "0.1" }}>
                 <CircularProgress
                   variant="determinate"
                   className={classes.bottom}
                   size={spinnersize}
                   thickness={4}
-                  {...ErrorData}
                   value={100}
                 />
                 <CircularProgress
@@ -423,7 +427,6 @@ function ModalFormSignupErrorx({
                   }}
                   size={spinnersize}
                   thickness={4}
-                  {...ErrorData}
                 />
               </div>{" "}
             </Grid>

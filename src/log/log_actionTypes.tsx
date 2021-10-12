@@ -1,3 +1,7 @@
-export const hh = "ss";
+export const SIGN_IN = "SIGN_IN";
 
-export const isLog = "SIGN_IN";
+export const REQUEST_USERDATA = "REQUEST_USERDATA";
+
+export const REQUEST_USERDATA_ONLOAD = "REQUEST_USERDATA_ONLOAD";
+
+export const LOGIN_ISLOGGED = "LOGIN_ISLOGGED";

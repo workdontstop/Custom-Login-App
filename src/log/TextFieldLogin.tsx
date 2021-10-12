@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-
+import React from "react";
 import { IconButton, InputAdornment, TextField } from "@material-ui/core";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import { ItextfIeldLogin } from "./log-Interfaces";
-import { isTablet } from "react-device-detect";
-import { DialogContent, Button, Paper, Grid } from "@material-ui/core";
+import { DialogContent } from "@material-ui/core";
+import { useSelector } from "react-redux";
 
 function TextFieldLoginx({
   updateLoginvalues,
@@ -17,7 +16,6 @@ function TextFieldLoginx({
   withHolder,
   focus,
   setFocus,
-  darkmode,
 }: ItextfIeldLogin): JSX.Element {
   var width = " ";
   var sizex: "small" | "medium" | undefined = undefined;
@@ -29,37 +27,50 @@ function TextFieldLoginx({
   var zindexBackPlateP = 0;
   var displayBackPlateP = "none";
 
+  var transform = "";
+  var font1 = "";
+  var font2 = "";
+  var paddingbutU = "";
+
+  ///
+  ///
+  ///
+  ///CONDITIONAL STATEMENT FOR DEVICE TYPE
   switch (size) {
     case "small":
       sizex = "small";
       width = "100%";
-      var transform = "scale(0.95)";
+      transform = "scale(0.94)";
       zIndex = 0;
-      var font1 = "";
-      var font2 = "";
-      var paddingbutU = "69px";
+      font1 = "";
+      font2 = "";
+      paddingbutU = "80px";
 
       break;
     case "smallTablet":
       sizex = "small";
       width = "62%";
-      var transform = "scale(1)";
+      transform = "scale(1)";
       zIndex = 0;
-      var font1 = "2.6vh";
-      var font2 = "2vh";
-      var paddingbutU = "100px";
+      font1 = "2.6vh";
+      font2 = "2vh";
+      paddingbutU = "100px";
       break;
     default:
       sizex = "medium";
       width = withHolder;
-      var transform = "scale(1)";
+      transform = "scale(1)";
       zIndex = 1;
-      var font1 = "2.7vh";
-      var font2 = "1.9vh";
-      var paddingbutU = "70px";
+      font1 = "2.7vh";
+      font2 = "1.9vh";
+      paddingbutU = "70px";
   }
 
-  if (size == "small" || size === "smallTablet") {
+  ///
+  ///
+  ///
+  ///FOCUS TEXFIELD VARIABLES MOBILE/TAB
+  if (size === "small" || size === "smallTablet") {
     if (passwordType) {
       if (focus) {
         zIndex = 15;
@@ -83,6 +94,50 @@ function TextFieldLoginx({
     }
   }
 
+  ///
+  ///
+  ///
+  /// GET DARKMODE FROM REDUX STORE
+  interface RootStateGlobalReducer {
+    GlobalReducer: {
+      darkmode: boolean;
+    };
+  }
+  const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
+    ...state.GlobalReducer,
+  }));
+
+  const darkmodeReducer = darkmode;
+
+  ///
+  ///
+  ///
+  ///TEXTFIELD BACK DROP ON FOCUS CLICK(MOBILE)
+  const focusTextfield = (a: number) => {
+    if (size === "small" || size === "smallTablet") {
+      if (a === 1) {
+        setFocus(true);
+      } else {
+        setFocus(false);
+      }
+    }
+  };
+
+  ///
+  ///
+  ///
+  ///TEXTFIELD BACK DROP ON FOCUS VARIABLES
+  var TextFieldOpacity = "1";
+  if (darkmodeReducer) {
+    if (focus) {
+      TextFieldOpacity = "1";
+    } else {
+      TextFieldOpacity = "0.75";
+    }
+  } else {
+    TextFieldOpacity = "1";
+  }
+
   return (
     <>
       {passwordType ? (
@@ -90,15 +145,15 @@ function TextFieldLoginx({
           {" "}
           <DialogContent
             className={
-              darkmode
-                ? "mobileTextfield-backplate dontallowhighlighting  modal-containerDark"
-                : "mobileTextfield-backplate dontallowhighlighting  modal-containerLight"
+              darkmodeReducer
+                ? "mobileTextfield-backplate dontallowhighlighting mobileTextfield-backplateColorDark"
+                : "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorLight"
             }
             style={{ zIndex: zindexBackPlateP, display: displayBackPlateP }}
           ></DialogContent>
           <TextField
-            onFocus={() => setFocus(true)}
-            onBlur={() => setFocus(false)}
+            onFocus={() => focusTextfield(1)}
+            onBlur={() => focusTextfield(0)}
             size={sizex}
             inputProps={{ style: { fontSize: font1 } }}
             InputLabelProps={{ style: { fontSize: font2 } }}
@@ -107,6 +162,7 @@ function TextFieldLoginx({
               width: width,
               paddingBottom: "40px",
               zIndex: zIndex,
+              opacity: TextFieldOpacity,
             }}
             label="Password"
             onChange={updateLoginvalues}
@@ -136,15 +192,15 @@ function TextFieldLoginx({
         <>
           <DialogContent
             className={
-              darkmode
-                ? "mobileTextfield-backplate dontallowhighlighting  modal-containerDark"
-                : "mobileTextfield-backplate dontallowhighlighting  modal-containerLight"
+              darkmodeReducer
+                ? "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorDark"
+                : "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorLight"
             }
             style={{ zIndex: zindexBackPlateU, display: displayBackPlateU }}
           ></DialogContent>
           <TextField
-            onFocus={() => setFocus(true)}
-            onBlur={() => setFocus(false)}
+            onFocus={() => focusTextfield(1)}
+            onBlur={() => focusTextfield(0)}
             size={sizex}
             inputProps={{ style: { fontSize: font1 } }}
             InputLabelProps={{ style: { fontSize: font2 } }}
@@ -153,6 +209,7 @@ function TextFieldLoginx({
               width: width,
               paddingBottom: paddingbutU,
               zIndex: zindexU,
+              opacity: TextFieldOpacity,
             }}
             label="Username"
             margin="normal"
