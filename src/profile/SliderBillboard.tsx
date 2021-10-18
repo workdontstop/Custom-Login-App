@@ -215,7 +215,7 @@ function SliderBillboardx({
     }
     autoPlayTimer.current = setInterval(function () {
       setSliderIndex((state) => (state + 1) % slides.length);
-    }, 8000);
+    }, 10000);
 
     if (cancelAutoBillboardTimer.current) {
       clearTimeout(cancelAutoBillboardTimer.current);
@@ -224,7 +224,7 @@ function SliderBillboardx({
       if (autoPlayTimer.current) {
         clearInterval(autoPlayTimer.current);
       }
-    }, 72000);
+    }, 102000);
   };
 
   ///
@@ -233,7 +233,7 @@ function SliderBillboardx({
   useEffect(() => {
     SliderAutoPlay();
     changeBillboardAutoSlideDurationTimer.current = setTimeout(function () {
-      setsliderDuration(5500);
+      setsliderDuration(7000);
       callNewAutoBillboard();
     }, 5200);
   }, []);
@@ -259,7 +259,7 @@ function SliderBillboardx({
   ///  CHANGE [showBillboard == close]  EXTEND SLIDER DURATION(ON VIEW) AND  START AUTOPLAY
   const ClickBillboardCloseStart = () => {
     ClickBillboardClose();
-    setsliderDuration(5500);
+    setsliderDuration(7000);
     if (allowAutoPlay) {
     } else {
       callNewAutoBillboard();

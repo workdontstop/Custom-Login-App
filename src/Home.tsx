@@ -54,10 +54,10 @@ function Home(): JSX.Element {
     shade2num: "1.1",
     shade2nump: "1.8",
     logoimage: SuperstarzIconDark,
-    secondarymaincolor: "#ccccccff",
-    maincolor: "#ccccccff",
+    secondarymaincolor: "#dddddd",
+    maincolor: "#dddddd",
     shade2nump22: "5.5",
-    littleTextColor: "#ccccccff",
+    littleTextColor: "#dddddd",
   };
 
   var appVariablesLIGHT: IappVariables = {
