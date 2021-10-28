@@ -123,22 +123,43 @@ function App(): JSX.Element {
     color4 = "#00ff00ff";
   }
 
+  var colorboy = {
+    color1: "",
+    color2: "",
+  };
+
   useEffect(() => {
     let emojicontrol: number[] = [1, 2, 3, 4];
     var randomemoji =
       emojicontrol[Math.floor(Math.random() * emojicontrol.length)];
 
     if (randomemoji === 1) {
-      dispatch(UpdateColorAction(color1));
+      colorboy = {
+        color1: color1,
+        color2: color1,
+      };
+      dispatch(UpdateColorAction(colorboy));
     } else if (randomemoji === 2) {
-      dispatch(UpdateColorAction(color2));
+      colorboy = {
+        color1: color2,
+        color2: color2,
+      };
+      dispatch(UpdateColorAction(colorboy));
     } else if (randomemoji === 3) {
-      dispatch(UpdateColorAction(color3));
+      colorboy = {
+        color1: color3,
+        color2: color3,
+      };
+      dispatch(UpdateColorAction(colorboy));
     } else {
-      dispatch(UpdateColorAction(color4));
+      colorboy = {
+        color1: color4,
+        color2: color4,
+      };
+      dispatch(UpdateColorAction(colorboy));
     }
   }, [color1, color2, color3, color4, dispatch]);
-
+  //  <ProfileOutter />
   return (
     <>
       {loggedInReducer ? (

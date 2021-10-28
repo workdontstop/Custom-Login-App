@@ -68,10 +68,12 @@ export interface IServerError {
   serverEmojiplain: boolean;
 }
 
-export interface ImodalLog {
+export interface ICommentTemplate {
   formtype: number;
   CloseModalForm: (DeviceBackButtonClicked: number) => void;
   showModalForm: boolean;
+  aboutTemp: boolean;
+  commentTemp: boolean;
 }
 
 export interface Ispinnerinterface {

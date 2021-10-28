@@ -1,5 +1,6 @@
 import React from "react";
 import { Grid } from "@material-ui/core";
+import { matchPc } from "../DetectDevice";
 
 function DotsBillboardx({
   GotoDots,
@@ -12,11 +13,12 @@ function DotsBillboardx({
       container
       style={{
         position: "absolute",
-        bottom: "1.1vh",
+        bottom: matchPc ? "3vh" : "1.6vh",
         width: "100%",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+
         zIndex: 2,
       }}
     >
@@ -29,8 +31,9 @@ function DotsBillboardx({
           }}
           style={{
             backgroundColor: "rgba(255,255,255,0.8)",
-            opacity: activeSlide === i ? 0.85 : 0.4,
-            padding: "5px",
+            opacity: activeSlide === i ? 0.85 : 0.5,
+            padding: activeSlide === i ? "5px" : "3px",
+            marginTop: activeSlide === i ? "0px" : "0.5px",
             marginRight: "5px",
             cursor: "pointer",
             borderRadius: "50%",

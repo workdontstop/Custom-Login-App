@@ -15,6 +15,7 @@ const initialState = {
   reg: 0,
   billboard1: "",
   billboard2: "",
+  biography: " ",
   ////For example const initialState = { person: null as Person };
 };
 type MyUserdataReducer = typeof initialState;
@@ -38,6 +39,7 @@ export const UserdataReducer = (
         reg: action.payload.userreg,
         billboard1: action.payload.userbillboard1,
         billboard2: action.payload.userbillboard2,
+        biography: action.payload.biography,
       };
     case REQUEST_USERDATA_ONLOAD:
       return {
@@ -52,6 +54,7 @@ export const UserdataReducer = (
         reg: action.payload.userreg,
         billboard1: action.payload.userbillboard1,
         billboard2: action.payload.userbillboard2,
+        biography: action.payload.biography,
       };
     default:
       return state;

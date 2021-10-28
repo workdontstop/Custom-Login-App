@@ -158,6 +158,7 @@ export const GlobalReducerKeepMeLoggedIn = (
 //////GLOBAL COLOR  DATA
 const initialStateColorDark = {
   color: "#cccccc",
+  colordark: "#cccccc",
 };
 
 export const GlobalReducerColor = (
@@ -166,7 +167,12 @@ export const GlobalReducerColor = (
 ): any => {
   switch (action.type) {
     case UPDATE_GLOBAL_COLOR:
-      return { ...state, color: action.payload };
+      return {
+        ...state,
+        color: action.payload.color1,
+        colordark: action.payload.color2,
+      };
+
     default:
       return state;
   }

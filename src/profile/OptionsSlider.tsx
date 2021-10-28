@@ -2,14 +2,15 @@ import React, { useRef, useState } from "react";
 import { Grid } from "@material-ui/core";
 import { matchPc, matchTablet } from "../DetectDevice";
 import { useSpring, animated } from "react-spring";
-import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import CircleIcon from "@mui/icons-material/Circle";
 
 function OptionsSliderx({ getSliderWidth }: any) {
   var getSliderWidthNew = matchPc
-    ? getSliderWidth / 1.53
+    ? getSliderWidth / 1.5
     : matchTablet
-    ? getSliderWidth / 1
-    : getSliderWidth / 0.8;
+    ? getSliderWidth / 1.02
+    : getSliderWidth / 0.77;
 
   var optionsClickType: number = matchPc ? 1 : 0;
 
@@ -40,13 +41,16 @@ function OptionsSliderx({ getSliderWidth }: any) {
       darkmode: boolean;
     };
   }
-
   const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
     ...state.GlobalReducer,
   }));
 
   const darkmodeReducer = darkmode;
 
+  ///
+  ///
+  ///
+  ///OPTIONS SLIDER VARIABLES DISCRIBING ITEMS
   var optionsNameData = [
     "filter feeds",
     "albums",
@@ -57,14 +61,15 @@ function OptionsSliderx({ getSliderWidth }: any) {
   ];
 
   ///
-  ///CREATE A SLIDE UP ANIMATION WITH  REACT SPRING
+  ///
+  ///
+  ///CREATE OPTIONS SLIDER ANIMATION WITH  REACT SPRING
   const modalanimation = useSpring({
     config: {
       mass: 1,
       tension: 120,
       friction: 14,
     },
-
     transform: `translateX(${ShowHideNegativeValue}${translate}px)`,
     transition: transitionFast ? "0s" : "0.15s",
     height: "auto",
@@ -76,7 +81,7 @@ function OptionsSliderx({ getSliderWidth }: any) {
   ///
   ///
   ///
-  /// PROVIDES DYNAMIC HEIGHT FOR SLIDER CONTENT FROM IMAGE
+  /// ACTIVATES SLIDER ITEM TO BE VIEWED ON CLICK
   const clickOptions = (i: number, type: number) => {
     if (type === 1) {
       setTranslate(stalestate + i);
@@ -94,46 +99,67 @@ function OptionsSliderx({ getSliderWidth }: any) {
   interface RootStateReducerColor {
     GlobalReducerColor: {
       color: string;
+      colordark: string;
     };
   }
-  const { color } = useSelector((state: RootStateReducerColor) => ({
+  const { color, colordark } = useSelector((state: RootStateReducerColor) => ({
     ...state.GlobalReducerColor,
   }));
   const colorReducer = color;
+  const colorDarkReducer = colordark;
 
   ///
   ///
   ///
-  /// HANDLE TOUCH START EVENT
-  const handleTouchStartOptions = (e: any) => {
-    ////onMouseDown onMouseMove
-    ////touchDown = e.clientX
-    const touchDown = e.touches[0].clientX;
-    setTouchPosition(touchDown);
-  };
-
+  ///PUSH OPTIONS SLIDE A LITTLE BIT ON LAST SLIDE ITEM
   const TouchJoltOnLastNEXT = () => {
     setShowHideNegativeValue("-");
     var i = ActiveSlide;
+    var colorPaddingAllowance = 1.67 + i / 10;
     var getSliderWidthNewx = getSliderWidthNew / 2;
     setTranslate(getSliderWidthNew * i + getSliderWidthNewx);
     nextJoltTimer.current = setTimeout(function () {
-      setTranslate(getSliderWidthNew * 0 + 1.5 * 0);
+      setTranslate(getSliderWidthNew * 0 + colorPaddingAllowance * 0);
       setActiveSlide((ActiveSlide) => 0);
     }, 200);
   };
 
+  ///
+  ///
+  ///
+  ///PUSH OPTIONS SLIDE A LITTLE BIT ON FIRST SLIDE ITEM
   const TouchJoltOnLastPREV = () => {
     setShowHideNegativeValue("");
     var i = ActiveSlide;
+    var colorPaddingAllowance = 1.67 + i / 10;
     var ix = optionsImages.length - 1;
     var getSliderWidthNewx = getSliderWidthNew / 2;
     setTranslate(getSliderWidthNewx);
     prevJoltTimer.current = setTimeout(function () {
       setShowHideNegativeValue("-");
-      setTranslate(getSliderWidthNew * ix + 1.5 * ix);
+      setTranslate(getSliderWidthNew * ix + colorPaddingAllowance * ix);
       setActiveSlide((ActiveSlide) => ix);
     }, 200);
+  };
+
+  ///
+  ///
+  ///
+  /// NEXT SLIDE  FOR PC
+  const nextSlidePc = () => {
+    var i = ActiveSlide + 1;
+    var colorPaddingAllowance = 1.67 + i / 10;
+    setShowHideNegativeValue("-");
+    ///set((state) => (state + 1) % slides.length)
+    if (ActiveSlide === optionsImages.length - 1) {
+      settransitionFast(true);
+      setTranslate(0);
+      setActiveSlide(0);
+    } else {
+      settransitionFast(false);
+      setTranslate(stalestate + i);
+      setActiveSlide(i);
+    }
   };
 
   ///
@@ -142,6 +168,7 @@ function OptionsSliderx({ getSliderWidth }: any) {
   /// NEXT SLIDE
   const nextSlide = () => {
     var i = ActiveSlide + 1;
+    var colorPaddingAllowance = 1.67 + i / 10;
     ///set((state) => (state + 1) % slides.length)
     if (ActiveSlide === optionsImages.length - 1) {
       settransitionFast(true);
@@ -152,7 +179,7 @@ function OptionsSliderx({ getSliderWidth }: any) {
       }
       setShowHideNegativeValue("-");
       settransitionFast(false);
-      setTranslate(getSliderWidthNew * i + 1.5 * i);
+      setTranslate(getSliderWidthNew * i + colorPaddingAllowance * i);
       setActiveSlide((ActiveSlide) => ActiveSlide + 1);
     }
   };
@@ -160,10 +187,11 @@ function OptionsSliderx({ getSliderWidth }: any) {
   ///
   ///
   ///
-  /// NEXT SLIDE
+  /// PREV SLIDE
   const prevSlide = () => {
     ///set((state) => (state + 1) % slides.length)
     var i = ActiveSlide - 1;
+    var colorPaddingAllowance = 1.67 + i / 10;
     if (ActiveSlide === 0) {
       settransitionFast(true);
       TouchJoltOnLastPREV();
@@ -173,9 +201,20 @@ function OptionsSliderx({ getSliderWidth }: any) {
       }
       setShowHideNegativeValue("-");
       settransitionFast(false);
-      setTranslate(getSliderWidthNew * i + 1.5 * i);
+      setTranslate(getSliderWidthNew * i + colorPaddingAllowance * i);
       setActiveSlide((ActiveSlide) => ActiveSlide - 1);
     }
+  };
+
+  ///
+  ///
+  ///
+  /// HANDLE TOUCH START EVENT
+  const handleTouchStartOptions = (e: any) => {
+    ////onMouseDown onMouseMove
+    ////touchDown = e.clientX
+    const touchDown = e.touches[0].clientX;
+    setTouchPosition(touchDown);
   };
 
   ///
@@ -196,9 +235,9 @@ function OptionsSliderx({ getSliderWidth }: any) {
       const currentTouch = e.touches[0].clientX;
       const diff = touchDown - currentTouch;
 
-      if (diff > 1) {
+      if (diff > 18) {
         nextSlide();
-      } else if (diff < -1) {
+      } else if (diff < -18) {
         prevSlide();
       } else {
       }
@@ -225,6 +264,29 @@ function OptionsSliderx({ getSliderWidth }: any) {
         }}
       >
         <animated.div ref={optionsCollectImageRef} style={modalanimation}>
+          <Grid
+            item
+            style={{
+              margin: "auto",
+              textAlign: "center",
+              position: "relative",
+              bottom: "0.2em",
+              left: "-4px",
+            }}
+          >
+            <CircleIcon
+              onClick={() => {
+                nextSlidePc();
+              }}
+              className="buttonshake"
+              style={{
+                fontSize: "1.3vw",
+                cursor: "pointer",
+                color: darkmodeReducer ? "#444444" : "#cccccc",
+                display: matchPc ? "block" : "none",
+              }}
+            />
+          </Grid>
           {optionsImages.map((im: any, i: any) => (
             <>
               <Grid item xs={12}>
@@ -232,8 +294,8 @@ function OptionsSliderx({ getSliderWidth }: any) {
                   onClick={() => {
                     clickOptions(i, optionsClickType);
                   }}
-                  className="turprofileLight"
                   style={{
+                    cursor: ActiveSlide === i ? "pointer" : "alias",
                     width: `${getSliderWidthNew}px`,
                     height: `${getSliderWidthNew}px`,
                     borderRadius: "50%",
@@ -241,12 +303,18 @@ function OptionsSliderx({ getSliderWidth }: any) {
                     objectFit: "cover",
                     marginLeft: "2px",
                     marginTop: "14px",
-                    boxShadow: `0 0 3px ${colorReducer}`,
+                    boxShadow: darkmodeReducer
+                      ? ActiveSlide === i
+                        ? `0 0 4.3px ${colorDarkReducer}`
+                        : ""
+                      : ActiveSlide === i
+                      ? `0 0 2.2px ${colorReducer}`
+                      : "",
+
                     marginBottom: "2.2px",
                   }}
                   src={`./images/options/${im}`}
                 />
-
                 <Grid
                   item
                   xs={12}
@@ -261,7 +329,7 @@ function OptionsSliderx({ getSliderWidth }: any) {
                     item
                     xs={12}
                     style={{
-                      fontSize: matchPc ? "1vw" : "1.74vh",
+                      fontSize: matchPc ? "1vw" : "2.1vh",
                       fontWeight: "bolder",
                       fontFamily: "Arial, Helvetica, sans-serif",
                       display: ActiveSlide === i ? "block" : "none",

@@ -18,8 +18,8 @@ function Optionx(): JSX.Element {
   var HorizIconfontData: CSS.Properties;
 
   const fontDataPc: CSS.Properties = { fontSize: "2.4vw" };
-  const fontDataTablet: CSS.Properties = { fontSize: "3.5vh" };
-  const fontDataMobile: CSS.Properties = { fontSize: "4vh" };
+  const fontDataTablet: CSS.Properties = { fontSize: "3.7vh" };
+  const fontDataMobile: CSS.Properties = { fontSize: "4.2vh" };
 
   ///
   ///
@@ -118,7 +118,7 @@ function Optionx(): JSX.Element {
             <MoreHorizIcon
               onClick={Openmodal}
               className={
-                darkmode
+                darkmodeReducer
                   ? "make-small-icons-clickable-dark dontallowhighlighting  "
                   : "make-small-icons-clickable-light  dontallowhighlighting  "
               }

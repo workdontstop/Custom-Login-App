@@ -1,6 +1,5 @@
-import React, { useState, useCallback, useRef, useEffect } from "react";
-import profilePic from "./images/filC2592017-08-17-12-31-0029820170419090518full_size_20170419012414.jpg";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import React, { useState, useRef } from "react";
+
 import { matchPc, matchTablet } from "./DetectDevice";
 import Axios from "axios";
 import { SuperCheckFeedBack } from "./SuperCheckFeedBack";
@@ -11,16 +10,27 @@ import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
 import { IsLoggedProfileAction } from "./log/actions/IsLoggedAction";
 import RestoreIcon from "@material-ui/icons/Restore";
 import { rememberMeAction } from "./GlobalActions";
-import { usePalette } from "react-palette";
+///import { usePalette } from "react-palette";
+////const { data, loading, error } = usePalette(profilePic);
+////setHoldcolorData(data.darkVibrant);
 
 function Supercheck() {
   const dispatch = useDispatch();
-  const { data, loading, error } = usePalette(profilePic);
 
   ///
   ///
   ///
-  ///GTO PROFILE PAGE FINALLY
+  ///DOT ENV FILE
+  const { REACT_APP_SUPERSTARZ_URL } = process.env;
+
+  const [Feedbackshow, setFeedbackshow] = useState<boolean>(false);
+  const [rememberMeButtonshow, setRememberMeButtonshow] =
+    useState<boolean>(false);
+
+  ///
+  ///
+  ///
+  ///GOTO PROFILE PAGE FINALLY
   const Gotoprofile = () => {
     dispatch(IsLoggedProfileAction());
   };
@@ -34,7 +44,6 @@ function Supercheck() {
       darkmode: boolean;
     };
   }
-
   const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
     ...state.GlobalReducer,
   }));
@@ -83,37 +92,6 @@ function Supercheck() {
     ...state.UserdataReducer,
   }));
   const imageReducer = image;
-
-  const [Feedbackshow, setFeedbackshow] = useState<boolean>(false);
-  const [rememberMeButtonshow, setRememberMeButtonshow] =
-    useState<boolean>(false);
-  const [holdcolorData, setHoldcolorData] = useState<any>(colorReducer);
-
-  ///
-  ///
-  ///
-  ///DOT ENV FILE
-  const { REACT_APP_SUPERSTARZ_URL } = process.env;
-
-  ///
-  ///
-  ///
-  ///LOGOUT
-  const logout = () => {
-    Axios.post(`http://${REACT_APP_SUPERSTARZ_URL}/logout`, {
-      withCredentials: true,
-    })
-      .then((response) => {
-        if (response.data.message === "cookie deleted") {
-          alert("logout  complete");
-        } else if (response.data.message === "cookie null") {
-          alert("logged out  already");
-        }
-      })
-      .catch(function (error) {
-        alert("Connection failure ");
-      });
-  };
 
   ///
   ///
@@ -171,6 +149,23 @@ function Supercheck() {
   ///
   ///DETETCT DEVICE TYPE VARIABLES
 
+  var superFont = "";
+
+  ///
+  ///
+  ///
+  ///CONDITIONAL STATEMENT FOR DEVICE TYPE
+  if (matchPc) {
+    superFont = "super-starz-text-Pc";
+
+    ///
+  } else if (matchTablet) {
+    superFont = "super-starz-text-Tablet";
+
+    ///
+  } else {
+    superFont = "super-starz-text-Mobile";
+  }
   var imageWidth = "";
   var optionsClass = "";
   var iconSize = "";
@@ -179,34 +174,42 @@ function Supercheck() {
   var padR = "";
   var margintopp = "";
   var justifyContentt = "";
+  var leftSupertext = "";
+  var bottomSupertext = "";
 
   if (matchPc) {
     imageWidth = "26%";
     iconSize = "4.7%";
-    optionsClass = "supercheck-optionsPc";
-    fontOptions = "3.8rem";
+    optionsClass = "supercheck-optionsImagePc";
+    fontOptions = "2.4vw";
     pad = "33px";
     padR = "20px";
     margintopp = "-2vh";
     justifyContentt = "flex-start";
+    leftSupertext = "45%";
+    bottomSupertext = "3em";
   } else if (matchTablet) {
     imageWidth = "45%";
     iconSize = "11%";
-    optionsClass = "supercheck-optionsTablet";
-    fontOptions = "4rem";
+    optionsClass = "supercheck-optionsImageTablet";
+    fontOptions = "5rem";
     pad = "33px";
     padR = "20px";
     margintopp = "0.8vh";
     justifyContentt = "flex-start";
+    leftSupertext = "41%";
+    bottomSupertext = "7em";
   } else {
     imageWidth = "60%";
     iconSize = "18%";
-    optionsClass = "supercheck-optionsMobile";
+    optionsClass = "supercheck-optionsImageMobile";
     fontOptions = "2rem";
     pad = "10px";
     padR = "2.5px";
     margintopp = "-0.1vh";
     justifyContentt = "flex-start";
+    leftSupertext = "36%";
+    bottomSupertext = "2.5em";
   }
   ///DETETCT DEVICE TYPE VARIABLES
   ///
@@ -220,23 +223,18 @@ function Supercheck() {
   var opacityrememberout = "";
   var colorremember = "";
 
-  ///
-  ///
-  ///
-  ///SHOW HIDDEN REMEMBER ME BUTTON AFTER SOME SECONDS
-  useEffect(() => {
-    setTimeout(function () {
-      setRememberMeButtonshow(true);
-    }, 500);
-  }, []);
-
-  ///
-  ///
-  ///
-  ///UPDATE IMAGE DOMINANT COLOR FOR REG USER
-  useEffect(() => {
-    setHoldcolorData(data.darkVibrant);
-  }, [data.darkVibrant]);
+  const setHoldcolorDat = () => {
+    ///
+    ///
+    ///
+    ///UPDATE IMAGE DOMINANT COLOR FOR REG USER
+    ////setHoldcolorData(data.darkVibrant);
+    ///
+    ///
+    ///
+    ///SHOW HIDDEN REMEMBER ME BUTTON AFTER SOME SECONDS
+    ////setRememberMeButtonshow(true);
+  };
 
   ///
   ///
@@ -246,7 +244,7 @@ function Supercheck() {
     opacityrememberout = "1";
     colorremember = "#ffffff";
     opacityremember = "1";
-    rememberColor = holdcolorData;
+    rememberColor = colorReducer;
     rememberMeType = "session";
     FeedBackData = "user will stay logged in on browser close";
   } else {
@@ -295,7 +293,7 @@ function Supercheck() {
         alert("Connection failure ");
       });
   };
-
+  ///
   ///
   ///
   ///TYPES FOR ISLOGGEDIN
@@ -307,11 +305,32 @@ function Supercheck() {
 
   ///
   ///
+  ///
   ///LOGGED IN DATA FROM REDUX
   const { loggedIn } = useSelector((state: RootStateIsLogged) => ({
     ...state.IsLoggedReducer,
   }));
   const loggedInReducer = loggedIn;
+
+  ///
+  ///
+  ///
+  ///LOGOUT
+  const logout = () => {
+    Axios.post(`http://${REACT_APP_SUPERSTARZ_URL}/logout`, {
+      withCredentials: true,
+    })
+      .then((response) => {
+        if (response.data.message === "cookie deleted") {
+          alert("logout  complete");
+        } else if (response.data.message === "cookie null") {
+          alert("logged out  already");
+        }
+      })
+      .catch(function (error) {
+        alert("Connection failure ");
+      });
+  };
 
   return loggedInReducer ? (
     <>
@@ -349,16 +368,16 @@ function Supercheck() {
                 margin: "auto",
                 display: "grid",
                 position: "relative",
-                marginTop: matchPc ? "-4.3vh" : matchTablet ? "-4vh" : "-4.2vh",
+                marginTop: matchPc ? "-4.3vh" : matchTablet ? "-4vh" : "-1vh",
               }}
             >
               <Grid
                 onClick={rememberUser}
                 className={`${superCheckVariables.moreoptions}   ${optionsClass}  buttonshakelogoption `}
                 style={{
-                  zIndex: 1,
+                  zIndex: 2,
                   backgroundColor: rememberColor,
-                  opacity: rememberMeButtonshow ? opacityrememberout : 0,
+                  opacity: rememberMeButtonshow ? opacityrememberout : 0.7,
                 }}
               >
                 <RestoreIcon
@@ -385,12 +404,48 @@ function Supercheck() {
                   width: imageWidth,
                   borderRadius: "200px",
                   margin: "auto",
+                  zIndex: 1,
                 }}
                 src={`./images/profile/${imageReducer}`}
                 alt="SuperstarZ logo"
               />
             </Grid>
           </Grid>
+
+          <Grid
+            item
+            xs={12}
+            style={{
+              bottom: bottomSupertext,
+              textAlign: "center",
+              position: "fixed",
+              left: leftSupertext,
+            }}
+          >
+            <span className={superFont}>
+              <span
+                className={
+                  darkmodeReducer
+                    ? "text-superstarz-dark   text-superstarz-dark-colorA  "
+                    : "text-superstarz-light  text-superstarz-light-colorA  "
+                }
+              >
+                Super
+              </span>
+              <span
+                style={{ opacity: darkmodeReducer ? "0.73" : "0.7" }}
+                className={
+                  darkmodeReducer
+                    ? "text-superstarz-dark     text-superstarz-dark-colorB  "
+                    : "text-superstarz-light   text-superstarz-light-colorB   "
+                }
+              >
+                starZ
+              </span>
+            </span>
+          </Grid>
+
+          <Grid item xs={6} className="text-align-right"></Grid>
         </Grid>
       </Paper>
     </>

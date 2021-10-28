@@ -1,23 +1,63 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { Paper, Grid, Box } from "@material-ui/core";
 import { matchPc, matchTablet } from "../DetectDevice";
-import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
+import { RootStateOrAny, useSelector } from "react-redux";
 import "./profile.css";
 import { Billboard } from "./Billboard";
 import { OptionsSlider } from "./OptionsSlider";
-import { useSpring, animated } from "react-spring";
+import { CommentTemplate } from "../CommentTemplate";
 
 function Profilex() {
-  const optionsImages = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg"];
-
   const getSliderWidthRef = useRef<HTMLDivElement>(null);
+
+  const [formtype, setFormtype] = useState<number>(1);
+  const [showModalForm, setShowModalForm] = useState<boolean>(false);
 
   const [getSliderWidth, setgetSliderWidth] = useState(0);
 
+  const [aboutTemplateGo, setAboutTemplateGo] = useState<boolean>(true);
+  const [commentTemplateGo, setCommentTemplateGo] = useState<boolean>(false);
+
   ///
   ///
   ///
-  ///SHOW HIDDEN REMEMBER ME BUTTON AFTER SOME SECONDS
+  ///CLOSE LOG MODAL
+  const [OpenModalFormOnce, setOpenModalFormOnce] = useState<boolean>(false);
+  const CloseModalForm = useCallback((DeviceBackButtonClicked: number) => {
+    ///onpopstate fires when back and forward buttons used
+    if (DeviceBackButtonClicked === 1) {
+      window.onpopstate = () => {
+        setShowModalForm(false);
+        setOpenModalFormOnce(false);
+      };
+    } else {
+      setShowModalForm(false);
+      setOpenModalFormOnce(false);
+      ///Replace modal history state with previous history state
+      window.history.back();
+    }
+  }, []);
+
+  const OpenModalForm = useCallback(
+    (formtypedata: number) => {
+      setShowModalForm(true);
+      ///Replace current history state (since opening a modal Level 2 grid)...
+      /// if this was a level 1 grid (profile-info page use Pushstate to create new history state)
+      let modalName = "Biography";
+
+      if (!OpenModalFormOnce) {
+        window.history.pushState(null, "", modalName);
+        setOpenModalFormOnce(true);
+        CloseModalForm(1);
+      }
+    },
+    [OpenModalFormOnce, CloseModalForm]
+  );
+
+  ///
+  ///
+  ///
+  ///GET OPTIONS SLIDER IMAGE WIDTH FROM MATERIAL UI GRID
   useEffect(() => {
     if (getSliderWidthRef.current && getSliderWidthRef.current.clientWidth) {
       setgetSliderWidth(getSliderWidthRef.current.clientWidth);
@@ -48,7 +88,6 @@ function Profilex() {
       ...state.PaperReducerLightnDark,
     })
   );
-
   var PaperStyleReducer = "";
 
   if (darkmodeReducer) {
@@ -72,7 +111,7 @@ function Profilex() {
         }}
       >
         {" "}
-        <Billboard />
+        <Billboard OpenModalForm={OpenModalForm} />
         <Grid container className="dontallowhighlighting">
           <Grid
             item
@@ -95,13 +134,20 @@ function Profilex() {
             md={4}
             style={{
               height: "150px",
-              paddingLeft: matchTablet ? "42px" : "20px",
+              paddingLeft: matchPc ? "20px" : matchTablet ? "42px" : "24px",
               marginTop: "-4px",
             }}
           >
             <OptionsSlider getSliderWidth={getSliderWidth} />
           </Grid>
         </Grid>
+        <CommentTemplate
+          formtype={formtype}
+          showModalForm={showModalForm}
+          CloseModalForm={CloseModalForm}
+          aboutTemp={aboutTemplateGo}
+          commentTemp={commentTemplateGo}
+        />
       </Paper>
     </>
   );

@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
 import { Grid, Box } from "@material-ui/core";
 import { DarkmodeToggleAction } from ".././GlobalActions";
 import { matchPc, matchTablet } from "../DetectDevice";
 import { SliderBillboard } from "./SliderBillboard";
+import AddIcon from "@mui/icons-material/Add";
+import { usePalette } from "react-palette";
+import { UpdateColorAction } from ".././GlobalActions";
 
-function Billboardx(): JSX.Element {
-  const [ShowBillboard, setShowBillboard] = useState<boolean>(false);
-
+function Billboardx({ OpenModalForm }: any): JSX.Element {
   ///
   ///
   ///
@@ -34,6 +35,22 @@ function Billboardx(): JSX.Element {
 
   const billboardImages = [billboard1Reducer, billboard2Reducer];
 
+  ////  const { data, loading, error } = usePalette(`./images/profile/${imageReducer}`);
+
+  const { data, loading, error } = usePalette(
+    `./images/profile/${imageReducer}`
+  );
+  const [ShowBillboard, setShowBillboard] = useState<boolean>(false);
+
+  useEffect(() => {
+    var colorboy = {
+      color1: data.darkVibrant,
+      color2: data.lightVibrant,
+    };
+
+    dispatch(UpdateColorAction(colorboy));
+  }, [data]);
+
   ///
   ///
   ///
@@ -51,7 +68,7 @@ function Billboardx(): JSX.Element {
 
   //////////////////////////////////BILLBOARD VARIABLES FOR DEVICE TYPES
   var widthh = matchPc ? "65vw" : "98.5vw";
-  var topp = matchPc ? "3.8vh" : matchTablet ? "3.2em" : "1.15em";
+  var topp = matchPc ? "3.8vh" : matchTablet ? "4.3em" : "1.55em";
   var usernameClass = matchPc
     ? "usernamePc"
     : matchTablet
@@ -59,11 +76,11 @@ function Billboardx(): JSX.Element {
     : "usernameMobile";
 
   var widthName = matchPc ? "65vw" : "98.5vw";
-  var topName = matchPc ? "11.4vh" : matchTablet ? "10.6em" : "3.3em";
+  var topName = matchPc ? "11.4vh" : matchTablet ? "11.9em" : "3.8em";
   var name = matchPc ? "namePc" : matchTablet ? "nameTablet" : "nameMobile";
 
   var widthConnect = matchPc ? "65vw" : "98.5vw";
-  var bottomConnect = matchPc ? "58vh" : matchTablet ? "34vh" : "21.9vh";
+  var bottomConnect = matchPc ? "58vh" : matchTablet ? "34vh" : "26vh";
   var favclass = matchPc ? "favPc" : matchTablet ? "favTablet" : "favMobile";
   var fanclass = matchPc ? "fanPc" : matchTablet ? "fanTablet" : "fanMobile";
 
@@ -71,10 +88,24 @@ function Billboardx(): JSX.Element {
   var fontConnectnum = matchPc ? "1.75vw" : matchTablet ? "3.9vw" : "2.4vh";
 
   var widthProfilePic = matchPc ? "18%" : matchTablet ? "42%" : "44vw";
-  var topProfilePic = matchPc ? "36em" : matchTablet ? "29em" : "8.4em";
+  var topProfilePic = matchPc ? "36em" : matchTablet ? "31em" : "10.2em";
   var leftProfilePic = matchPc ? "1vw" : matchTablet ? "3vw" : "2.6vw";
 
-  var billboardDynamicHeight = matchPc ? "70vh" : matchTablet ? "56vw" : "30vh";
+  var billboardDynamicHeight = matchPc ? "70vh" : matchTablet ? "57vw" : "34vh";
+
+  var optionsClass = "";
+  var fontOptions = "";
+
+  if (matchPc) {
+    optionsClass = "profile-optionsImagePc";
+    fontOptions = "3.6rem";
+  } else if (matchTablet) {
+    optionsClass = "profile-optionsImageTablet";
+    fontOptions = "5rem";
+  } else {
+    optionsClass = "profile-optionsImageMobile";
+    fontOptions = "1.9rem";
+  }
 
   //////////////////////////////////BILLBOARD VARIABLES FOR DEVICE TYPES
 
@@ -138,6 +169,23 @@ function Billboardx(): JSX.Element {
   const ClickBillboardClose = (e: any) => {
     setShowBillboard(false);
   };
+
+  ///
+  ///
+  ///
+  /// GET COLOR FROM REDUX STORE
+  interface RootStateReducerColor {
+    GlobalReducerColor: {
+      color: string;
+    };
+  }
+  const { color } = useSelector((state: RootStateReducerColor) => ({
+    ...state.GlobalReducerColor,
+  }));
+  const colorReducer = color;
+
+  ///hoverOverImageRef.current.style.background = "red";
+
   return (
     <>
       <>
@@ -151,6 +199,7 @@ function Billboardx(): JSX.Element {
               width: "100%",
             }}
           >
+            {/*///////////////////////////////////////////////////////////////////////////BACKPAD BILLBOARD CURSOR ALIAS LAYOUT*/}
             <Grid
               item
               component={Box}
@@ -163,14 +212,44 @@ function Billboardx(): JSX.Element {
               md={8}
               onClick={ClickBillboard}
               style={{
-                display: ShowBillboard ? "none" : "block",
+                visibility: ShowBillboard ? "hidden" : "visible",
                 cursor: "alias",
                 zIndex: 2,
-
+                position: "relative",
                 height: billboardDynamicHeight,
                 backgroundColor: darkmodeReducer
-                  ? "rgba(005, 005, 005, 0.18)"
-                  : "rgba(250, 250, 250, 0.15)",
+                  ? "rgba(005, 005, 005, 0.29)"
+                  : "rgba(250, 250, 250, 0.27)",
+                borderRadius: "0px",
+                borderBottomLeftRadius: matchPc ? "7px" : "0em",
+                borderBottomRightRadius: matchPc ? "7px" : "0em",
+              }}
+            ></Grid>
+            <Grid
+              item
+              component={Box}
+              display={{ xs: "none", md: "block" }}
+              md={2}
+            ></Grid>
+            {/*///////////////////////////////////////////////////////////////////////////BACKPAD BILLBOARD CURSOR ALIAS LAYOUT*/}
+
+            <Grid item md={12}></Grid>
+
+            {/*///////////////////////////////////////////////////////////////////////////BACKPAD BILLBOARD CONTROL DISPLAY ON DOUBLE CLICK*/}
+
+            <Grid
+              item
+              component={Box}
+              display={{ xs: "none", md: "block" }}
+              md={2}
+            ></Grid>
+            <Grid
+              item
+              xs={12}
+              md={8}
+              onClick={ClickBillboard}
+              style={{
+                visibility: ShowBillboard ? "hidden" : "visible",
               }}
             >
               {/*///////////////////////////////////////////////////////////////////////////USERNAME*/}
@@ -183,6 +262,7 @@ function Billboardx(): JSX.Element {
                   top: topp,
                   textAlign: "right",
                   zIndex: 3,
+                  height: "0px",
                 }}
               >
                 <span
@@ -194,7 +274,7 @@ function Billboardx(): JSX.Element {
                   }
                   style={{
                     cursor: "pointer",
-                    color: darkmodeReducer ? "#ffffff" : "#000000",
+                    color: darkmodeReducer ? "#dddddd" : "#0b111b",
                     backgroundColor: darkmodeReducer
                       ? "rgba(005, 005, 005, 0.42)"
                       : "rgba(250, 250, 250, 0.75)",
@@ -211,16 +291,16 @@ function Billboardx(): JSX.Element {
                 style={{
                   position: "absolute",
                   width: widthName,
-                  height: "auto",
                   top: topName,
                   textAlign: "right",
                   zIndex: 3,
+                  height: "0px",
                 }}
               >
                 <span
                   style={{
                     cursor: "pointer",
-                    color: darkmodeReducer ? "#ffffff" : "#000000",
+                    color: darkmodeReducer ? "#dddddd" : "#0b111b",
                     backgroundColor: darkmodeReducer
                       ? "rgba(005, 005, 005, 0.42)"
                       : "rgba(250, 250, 250, 0.75)",
@@ -234,7 +314,7 @@ function Billboardx(): JSX.Element {
                   {quoteReducer}
                 </span>
               </Grid>
-              {/*/////////i love the summers so much//////////////////////////////////////////////////////////////////FULLNAME OR QUOTES*/}
+              {/*///////////////////////////////////////////////////////////////////////////FULLNAME OR QUOTES*/}
               {/*///////////////////////////////////////////////////////////////////////////FAVS*/}
               <Grid
                 item
@@ -242,14 +322,14 @@ function Billboardx(): JSX.Element {
                 style={{
                   position: "absolute",
                   width: widthConnect,
-                  height: "auto",
+                  height: "0px",
                   top: bottomConnect,
                   display: "flex",
                   justifyContent: "flex-end",
                   zIndex: 4,
                 }}
               >
-                <Grid item style={{ textAlign: "center" }}>
+                <Grid item style={{ textAlign: "center", height: "0px" }}>
                   {" "}
                   <span
                     style={{
@@ -260,7 +340,7 @@ function Billboardx(): JSX.Element {
                         ? "rgba(005, 005, 005, 0.29)"
                         : "rgba(145, 95, 95, 0.35)",
                       padding: "1px  ",
-                      opacity: "0.7",
+                      opacity: "0.75",
                     }}
                     className={
                       darkmodeReducer
@@ -286,7 +366,7 @@ function Billboardx(): JSX.Element {
                     147
                   </span>{" "}
                 </Grid>
-                <Grid item style={{ textAlign: "center" }}>
+                <Grid item style={{ textAlign: "center", height: "0px" }}>
                   {" "}
                   <span
                     style={{
@@ -298,7 +378,7 @@ function Billboardx(): JSX.Element {
                         : "rgba(255, 255, 255, 0.35)",
 
                       padding: "1px  ",
-                      opacity: "0.7",
+                      opacity: "0.75",
                     }}
                     className={
                       darkmodeReducer
@@ -341,14 +421,53 @@ function Billboardx(): JSX.Element {
                   zIndex: 3,
                 }}
               >
+                <Grid
+                  className={`  ${optionsClass}   `}
+                  style={{
+                    zIndex: 2,
+                    backgroundColor: colorReducer,
+                    opacity: 0.7,
+                  }}
+                >
+                  <AddIcon
+                    style={{
+                      fontSize: fontOptions,
+                      color: "#ffffff",
+                    }}
+                    className="zuperkinginfo"
+                  />
+                </Grid>
                 <img
+                  onClick={OpenModalForm}
                   className={
-                    darkmodeReducer ? `turprofileDark` : ` turprofileLight`
+                    darkmodeReducer
+                      ? `turprofileDark image-zoom-on-click`
+                      : ` turprofileLight image-zoom-on-click`
                   }
                   style={{
-                    cursor: "alias",
-                    position: "relative",
+                    cursor: "pointer",
+                    position: "absolute",
                     zIndex: 0,
+                    objectFit: "contain",
+                    width: "100%",
+                    borderRadius: "50%",
+                    margin: "auto",
+                    filter: "blur(1.3px)",
+                  }}
+                  src={`./images/profilethumb/${imageReducer}`}
+                  alt="Superstarz Billboard "
+                />{" "}
+                <img
+                  onClick={OpenModalForm}
+                  className={
+                    darkmodeReducer
+                      ? `turprofileDark image-gray-on-click`
+                      : ` turprofileLight image-gray-on-click`
+                  }
+                  style={{
+                    cursor: "pointer",
+                    position: "relative",
+                    zIndex: 1,
                     objectFit: "contain",
                     width: "100%",
                     borderRadius: "50%",
@@ -356,10 +475,11 @@ function Billboardx(): JSX.Element {
                   }}
                   src={`./images/profile/${imageReducer}`}
                   alt="Superstarz Billboard "
-                />{" "}
+                />
               </Grid>
               {/*///////////////////////////////////////////////////////////////////////////PROFILE PIC*/}
             </Grid>
+            {/*///////////////////////////////////////////////////////////////////////////BACKPAD BILLBOARD CONTROL DISPLAY ON DOUBLE CLICK*/}
           </Grid>
           {/*///////////////////////////////////////////////////////////////////////////BACKPAD BILLBOARD LIGHTINING/DARKEN*/}
           <Grid style={{ position: "absolute", zIndex: 0 }} container>

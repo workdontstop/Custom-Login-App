@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useCallback } from "react";
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
+import ControlPointDuplicateIcon from "@mui/icons-material/ControlPointDuplicate";
 import { Grid, Switch, DialogContent } from "@material-ui/core";
 import { matchPc, matchTablet } from "../DetectDevice";
 import { useSpring, animated } from "react-spring";
@@ -20,8 +21,8 @@ function OptionInnerModalx({
   var marginData: CSS.Properties;
   var fontData: CSS.Properties;
   const fontDataPc: CSS.Properties = { fontSize: "2.4vw" };
-  const fontDataTablet: CSS.Properties = { fontSize: "3.9vh" };
-  const fontDataMobile: CSS.Properties = { fontSize: "4.1vh" };
+  const fontDataTablet: CSS.Properties = { fontSize: "3.7vh" };
+  const fontDataMobile: CSS.Properties = { fontSize: "4.2vh" };
   const marginDataPc: CSS.Properties = { marginLeft: "-35px" };
   const marginDataMobile: CSS.Properties = { marginLeft: "-15.5px" };
   var paddingttop = "";
@@ -171,7 +172,7 @@ function OptionInnerModalx({
                 sm={2}
                 md={1}
               >
-                <AddRoundedIcon
+                <ControlPointDuplicateIcon
                   className={
                     darkmodeReducer
                       ? "make-small-icons-clickable-dark  dontallowhighlighting  "

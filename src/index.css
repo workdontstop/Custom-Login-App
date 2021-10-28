@@ -14,3 +14,54 @@
 body::-webkit-scrollbar {
   display: none;
 }
+
+.track-vertical {
+  top: 2px;
+  bottom: 2px;
+  right: 2px;
+  border-radius: 3px;
+}
+.track-vertical .thumb-verticalLIGHT {
+  position: relative;
+  display: block;
+  width: 100%;
+  cursor: default;
+  border-radius: inherit;
+  background-color: rgba(005, 005, 005, 0.19);
+}
+
+.track-vertical .thumb-verticalDARK {
+  position: relative;
+  display: block;
+  width: 100%;
+  cursor: default;
+  border-radius: inherit;
+  background-color: rgba(200, 200, 200, 0.1);
+}
+
+.track-horizontal {
+  position: absolute;
+  height: 6px;
+  right: 2px;
+  bottom: 2px;
+  left: 2px;
+  border-radius: 3px;
+}
+.track-horizontal .thumb-horizontal {
+  position: relative;
+  display: block;
+  height: 100%;
+  cursor: pointer;
+  border-radius: inherit;
+}
+
+.view {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  overflow: scroll;
+  margin-right: -15px;
+  margin-bottom: -17px !important;
+}

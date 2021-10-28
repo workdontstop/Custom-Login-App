@@ -21,6 +21,21 @@ function ProfileOutter() {
   }));
   const loggedInReducer = loggedIn;
 
+  ///
+  ///
+  ///
+  /// GET DARKMODE FROM REDUX STORE
+  interface RootStateGlobalReducer {
+    GlobalReducer: {
+      darkmode: boolean;
+    };
+  }
+  const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
+    ...state.GlobalReducer,
+  }));
+
+  const darkmodeReducer = darkmode;
+
   return loggedInReducer ? (
     matchPc ? (
       <Scrollbars
@@ -28,6 +43,24 @@ function ProfileOutter() {
         autoHideDuration={1000}
         autoHideTimeout={6000}
         style={{ height: "100vh" }}
+        renderTrackHorizontal={(props) => (
+          <div {...props} className="track-horizontal" />
+        )}
+        renderThumbHorizontal={(props) => (
+          <div {...props} className="thumb-horizontal" />
+        )}
+        renderTrackVertical={(props) => (
+          <div {...props} className="track-vertical" />
+        )}
+        renderThumbVertical={(props) => (
+          <div
+            {...props}
+            className={
+              darkmodeReducer ? "thumb-verticalDARK" : "thumb-verticalLIGHT"
+            }
+          />
+        )}
+        renderView={(props) => <div {...props} className="view" />}
       >
         <Profile />
       </Scrollbars>

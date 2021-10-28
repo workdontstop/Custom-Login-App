@@ -50,7 +50,7 @@ function TextFieldSignupx({
       sizex = "small";
       width = "100%";
       transform = "scale(0.94)";
-      paddingBottomE = "65px";
+      paddingBottomE = "48px";
       paddingBottomP = "65px";
       paddingBottomU = "75px";
       zIndex = 1;
@@ -71,7 +71,7 @@ function TextFieldSignupx({
     default:
       width = withHolder;
       transform = "scale(1)";
-      paddingBottomE = "45px";
+      paddingBottomE = "40px";
       paddingBottomP = "27px";
       paddingBottomU = "55px";
       zIndex = 1;

@@ -16,8 +16,8 @@ function SliderBillboardx({
 
   const [allowAutoPlay, setAllowAutoPlay] = useState(true);
 
-  const [sliderDuration, setsliderDuration] = useState(2500);
-  const [autoSlideDuration, setautoSlideDuration] = useState(2600);
+  const [sliderDuration, setsliderDuration] = useState(2000);
+  const [autoSlideDuration, setautoSlideDuration] = useState(2500);
 
   /// const getWidth = () => window.innerWidth;
   ///var newGetWidth = getWidth() * slides.length;
@@ -215,7 +215,7 @@ function SliderBillboardx({
     }
     autoPlayTimer.current = setInterval(function () {
       setSliderIndex((state) => (state + 1) % slides.length);
-    }, 10000);
+    }, 16000);
 
     if (cancelAutoBillboardTimer.current) {
       clearTimeout(cancelAutoBillboardTimer.current);
@@ -224,7 +224,7 @@ function SliderBillboardx({
       if (autoPlayTimer.current) {
         clearInterval(autoPlayTimer.current);
       }
-    }, 102000);
+    }, 192000);
   };
 
   ///
@@ -233,9 +233,9 @@ function SliderBillboardx({
   useEffect(() => {
     SliderAutoPlay();
     changeBillboardAutoSlideDurationTimer.current = setTimeout(function () {
-      setsliderDuration(7000);
+      setsliderDuration(2000);
       callNewAutoBillboard();
-    }, 5200);
+    }, 6000);
   }, []);
 
   ///
@@ -259,7 +259,7 @@ function SliderBillboardx({
   ///  CHANGE [showBillboard == close]  EXTEND SLIDER DURATION(ON VIEW) AND  START AUTOPLAY
   const ClickBillboardCloseStart = () => {
     ClickBillboardClose();
-    setsliderDuration(7000);
+    setsliderDuration(2000);
     if (allowAutoPlay) {
     } else {
       callNewAutoBillboard();
@@ -303,7 +303,9 @@ function SliderBillboardx({
             onLoad={() => {
               sliderFirstImageOnLoadthumb(i);
             }}
-            className="turlightbillboard"
+            className={
+              darkmodeReducer ? "turdarkbillboard" : "turlightbillboard"
+            }
             style={{
               ...style,
               width: "100%",

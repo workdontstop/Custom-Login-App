@@ -7,12 +7,13 @@ import {
   Paper,
   Grid,
   Typography,
-  createMuiTheme,
+  createTheme,
   MuiThemeProvider,
 } from "@material-ui/core";
 import { Option } from "./log/Option";
 import { LoginButtons } from "./log/LogButtons";
-import { ModalLog } from "./log/ModalLog";
+
+import { CommentTemplate } from "./CommentTemplate";
 import { matchPc, matchTablet } from "./DetectDevice";
 import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
 import { DarkmodeAction, screenHeightAction } from "./GlobalActions";
@@ -23,6 +24,9 @@ function Home(): JSX.Element {
   const [showModalForm, setShowModalForm] = useState<boolean>(false);
 
   const RefAppContainer = useRef<HTMLDivElement>(null);
+
+  const [aboutTemplateGo, setAboutTemplateGo] = useState<boolean>(false);
+  const [commentTemplateGo, setCommentTemplateGo] = useState<boolean>(false);
 
   interface IappVariables {
     shade: string;
@@ -139,7 +143,7 @@ function Home(): JSX.Element {
   ///
   ///
   ///MATERIAL UI  THEME CUSTOMIZATAION
-  let themeGeneralSettings = createMuiTheme({
+  let themeGeneralSettings = createTheme({
     palette: {
       primary: {
         main: `${appVariables.maincolor}`,
@@ -362,10 +366,12 @@ function Home(): JSX.Element {
 
             <LoginButtons OpenModalForm={OpenModalForm} />
 
-            <ModalLog
+            <CommentTemplate
               formtype={formtype}
               showModalForm={showModalForm}
               CloseModalForm={CloseModalForm}
+              aboutTemp={aboutTemplateGo}
+              commentTemp={commentTemplateGo}
             />
           </Grid>
         </Grid>

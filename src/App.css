@@ -141,6 +141,24 @@
   padding: 0px;
 }
 
+.captionAbout-dark {
+  text-shadow: 1.5px 3px 2.5px #111111;
+  height: auto;
+  background-color: rgba(27, 27, 27, 0.8);
+  -moz-box-shadow: 0 0 3.5px#222222;
+  -webkit-box-shadow: 0 0 3.5px#222222;
+  box-shadow: 0 0 3.5px#222222;
+}
+
+.captionAbout-light {
+  text-shadow: 0.3px 0.5px 1px rgba(11, 23, 40, 0.52);
+  height: auto;
+  background-color: rgba(255, 255, 255, 0.7);
+  -moz-box-shadow: 0 0 5px#cccccc;
+  -webkit-box-shadow: 0 0 5px#cccccc;
+  box-shadow: 0 0 5px#cccccc;
+}
+
 .caption-dark {
   text-shadow: 1.5px 3px 2.5px #222222;
   height: auto;
@@ -330,6 +348,22 @@
 /*  H  H  H    H  H  H   H  H  H   H  H  H   H  H  H   H  H  H   H  H  H   H  H  H   H  H  H   H  H  H     */
 
 /*  I  I  I   I  I  I I  I  I I  I  I I  I  I I  I  I I  I  I I  I  I I  I  I I  I  I I  I  I I  I  I I  I  I */
+
+.image-out-on-click {
+  object-fit: contain;
+  width: 60%;
+  transition: 0.5s transform ease-in;
+  cursor: pointer;
+}
+
+.image-out-on-click:active {
+  transition: 100ms transform ease-in;
+  transform: scale(0.8);
+}
+
+.image-gray-on-click:active {
+  filter: grayscale(100%);
+}
 
 .iconPc {
   object-fit: contain;
@@ -547,6 +581,49 @@
 
 /*  M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M      */
 
+/* P P P P P P P P PP  P P*/
+.profile-optionsImagePc {
+  position: absolute;
+  margin: auto;
+  left: -0.5vw;
+  top: 0.9vh;
+  height: 68px;
+  width: 68px;
+  border-radius: 50%;
+  text-align: center;
+  align-items: center;
+  display: grid;
+  justify-content: center;
+}
+
+.profile-optionsImageTablet {
+  position: absolute;
+  margin: auto;
+  left: -1.8vw;
+  top: 1vh;
+  height: 98px;
+  width: 98px;
+  border-radius: 50%;
+  text-align: center;
+  align-items: center;
+  display: grid;
+  justify-content: center;
+}
+
+.profile-optionsImageMobile {
+  position: absolute;
+  margin: auto;
+  left: -1.8vw;
+  top: -1vh;
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  text-align: center;
+  align-items: center;
+  display: grid;
+  justify-content: center;
+}
+/* P P P P P P P P PP  P P*/
 /*   S S S    S S S   S S S   S S S   S S S   S S S   S S S   S S S   S S S   S S S   S S S    */
 
 .slider-arrow-backpad-rightMobile:active {
@@ -838,7 +915,7 @@ zuperxyinfo {
   }
 }
 
-.supercheck-optionsPc {
+.supercheck-optionsImagePc {
   position: relative;
   margin: auto;
   left: -10vw;
@@ -852,13 +929,13 @@ zuperxyinfo {
   justify-content: center;
 }
 
-.supercheck-optionsTablet {
+.supercheck-optionsImageTablet {
   position: relative;
   margin: auto;
-  left: -18.65vw;
+  left: -18vw;
   top: 11vh;
-  height: 78px;
-  width: 78px;
+  height: 98px;
+  width: 98px;
   border-radius: 50%;
   text-align: center;
   align-items: center;
@@ -866,13 +943,13 @@ zuperxyinfo {
   justify-content: center;
 }
 
-.supercheck-optionsMobile {
+.supercheck-optionsImageMobile {
   position: relative;
   margin: auto;
-  left: -25vw;
-  top: 12vh;
-  height: 78px;
-  width: 78px;
+  left: -20vw;
+  top: 10vh;
+  height: 76px;
+  width: 76px;
   border-radius: 50%;
   text-align: center;
   align-items: center;
@@ -915,32 +992,28 @@ zuperxyinfo {
 .turlightbillboard {
   height: auto;
 
-  -moz-box-shadow: 0 0 10px#777777;
-  -webkit-box-shadow: 0 0 10px#777777;
-  box-shadow: 0 0 10px#777777;
+  -moz-box-shadow: 0 0 2.8px#999999;
+  -webkit-box-shadow: 0 0 2.8px#999999;
+  box-shadow: 0 0 2.8px#999999;
 }
 .turdarkbillboard {
   height: auto;
 
-  -moz-box-shadow: 0 0 4px#dddddd;
-  -webkit-box-shadow: 0 0 4px#dddddd;
-  box-shadow: 0 0 4px#dddddd;
+  -moz-box-shadow: 0 0 0.7px#bbbbbb;
+  -webkit-box-shadow: 0 0 0.7px#bbbbbb;
+  box-shadow: 0 0 0.7px#bbbbbb;
 }
 
 .turprofileDark {
-  height: auto;
-
-  -moz-box-shadow: 0 0 4.7px#dddddd;
-  -webkit-box-shadow: 0 0 4.7px#dddddd;
-  box-shadow: 0 0 4.7px#dddddd;
+  -moz-box-shadow: 0 0 3px#aaaaaa;
+  -webkit-box-shadow: 0 0 3px#aaaaaa;
+  box-shadow: 0 0 3px#aaaaaa;
 }
 
 .turprofileLight {
-  height: auto;
-
-  -moz-box-shadow: 0 0 3.5px#444444;
-  -webkit-box-shadow: 0 0 3.5px#444444;
-  box-shadow: 0 0 3.5px#444444;
+  -moz-box-shadow: 0 0 2.5px#999999;
+  -webkit-box-shadow: 0 0 2.5px#999999;
+  box-shadow: 0 0 2.5px#999999;
 }
 
 .turlight {
@@ -992,7 +1065,6 @@ zuperxyinfo {
   -webkit-filter: drop-shadow(1.9px 1.1px 3.3px rgba(0, 0, 0, 0.5));
   filter: drop-shadow(1.9px 1.1px 3.3px rgba(0, 0, 0, 0.5));
   color: #ffffff;
- 
 }
 
 .zuperkinginfo {

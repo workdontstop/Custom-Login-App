@@ -32,10 +32,10 @@ const CONNECTION_CONFIG = {
 const register = `INSERT INTO members (username,password,email,color,status,notification,tutorial,date,reg) VALUES (?,?,?,?,?,?,?,?,?)`;
 ///
 ///login
-const login = `SELECT username,id,password,color,profile_image,first_name,sur_name,quote,reg,billboard1,billboard2 FROM members WHERE username =?`;
+const login = `SELECT username,id,password,color,profile_image,first_name,sur_name,quote,reg,billboard1,billboard2,biography FROM members WHERE username =?`;
 ///
 ///checkIsLogged
-const loginId = `SELECT username,id,password,color,profile_image,first_name,sur_name,quote,reg,billboard1,billboard2  FROM members WHERE id =?`;
+const loginId = `SELECT username,id,password,color,profile_image,first_name,sur_name,quote,reg,billboard1,billboard2,biography  FROM members WHERE id =?`;
 ///
 ///usernamecheck
 const checkpassword = `SELECT id FROM members WHERE  username =?`;
@@ -112,6 +112,7 @@ app.post(
           userreg: logindata[0].reg,
           userbillboard1: logindata[0].billboard1,
           userbillboard2: logindata[0].billboard2,
+          biography: logindata[0].biography,
         };
 
         return res.send({
@@ -209,6 +210,7 @@ app.post(
             userreg: logindata[0].reg,
             userbillboard1: logindata[0].billboard1,
             userbillboard2: logindata[0].billboard2,
+            biography: logindata[0].biography,
           };
 
           const days30inseconds = 60 * 60 * 24 * 30 * 1000;
@@ -287,6 +289,7 @@ app.post(
             userquote: " ",
             userbillboard1: "",
             userbillboard2: "",
+            biography: "",
           };
 
           const days30inseconds = 60 * 60 * 24 * 30 * 1000;
