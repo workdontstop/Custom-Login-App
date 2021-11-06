@@ -81,10 +81,12 @@ function App(): JSX.Element {
           dispatch(IsLoggedProfileAction());
           dispatch(UserdataActionOnLoad(response.data.payload));
         } else if (response.data.message === "logged out") {
-          alert("Connection malfunction");
+          alert("app.tsx checkislogged logged out");
         }
       })
-      .catch(function (error) {});
+      .catch(function (error) {
+        alert("app.tsx checkislogged error");
+      });
   }, [REACT_APP_SUPERSTARZ_URL, dispatch]);
 
   ///
@@ -123,12 +125,12 @@ function App(): JSX.Element {
     color4 = "#00ff00ff";
   }
 
-  var colorboy = {
-    color1: "",
-    color2: "",
-  };
-
   useEffect(() => {
+    var colorboy = {
+      color1: "",
+      color2: "",
+    };
+
     let emojicontrol: number[] = [1, 2, 3, 4];
     var randomemoji =
       emojicontrol[Math.floor(Math.random() * emojicontrol.length)];

@@ -6,8 +6,7 @@ import { matchPc, matchTablet, matchMobile } from "../DetectDevice";
 import { Scrollbars } from "react-custom-scrollbars";
 
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
-import SuperstarzIconLight from "./../images/ssmall.png";
-import SuperstarzIconDark from "./../images/sdsmall.png";
+
 import { RootStateOrAny, useSelector } from "react-redux";
 import "./../log/logCss.css";
 
@@ -50,7 +49,7 @@ function ModalAboutLayoutx({
 
   ///
   ///
-  ///START AUTOPLAY ON PAGE LOAD
+  ///FORCE ABOUT PAGE INITIAL ZOOME STATE BASED ON DEVICE TYPE
   useEffect(() => {
     setMobileZoom(true);
     setZoomedModal(false);
@@ -58,7 +57,7 @@ function ModalAboutLayoutx({
 
   ///
   ///
-  ///START AUTOPLAY ON PAGE LOAD
+  ///CALL THIS ON MOBILE ZOOM CHANGE
   useEffect(() => {
     if (mobileZoom) {
       setshowlogo(false);
@@ -128,28 +127,8 @@ function ModalAboutLayoutx({
     textback = "captionAbout-light";
   }
 
-  ///
-  ///
-  ///
-  ///CLOSE MODAL FORM ON SMALL ICON PRESS
-  const iconclicked = () => {
-    alert("Home");
-  };
-
-  ///
-  ///
-  ///
-  ///SUPERSTARZ ICON SELECT
-  var SuperIcon = "";
-  darkmodeReducer
-    ? (SuperIcon = SuperstarzIconDark)
-    : (SuperIcon = SuperstarzIconLight);
-
   //////////////   CONDITIONAL STATEMENT FOR DEVICE TYPES
   var formHolder = "";
-
-  var MobileTabZoom = "";
-  var MobileTab = "";
 
   var EditIconTop = "";
   var EditIconRight = "";
@@ -158,16 +137,13 @@ function ModalAboutLayoutx({
 
   if (matchTablet) {
     formHolder = "formholderTablet";
-    MobileTabZoom = "log-logoTabletZoom";
-    MobileTab = "log-logoTablet";
+
     EditIconTop = "4vh";
     EditIconLeft = "4vw";
     EditIconRight = "";
     aboutInfoFont = "3.5vh";
   } else {
     formHolder = "formholder";
-    MobileTabZoom = "log-logoMobileZoom";
-    MobileTab = "log-logoMobile";
 
     if (matchMobile) {
       EditIconTop = "8vh";

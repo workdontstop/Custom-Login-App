@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useCallback } from "react";
-import AddRoundedIcon from "@material-ui/icons/AddRounded";
 import ControlPointDuplicateIcon from "@mui/icons-material/ControlPointDuplicate";
 import { Grid, Switch, DialogContent } from "@material-ui/core";
 import { matchPc, matchTablet } from "../DetectDevice";

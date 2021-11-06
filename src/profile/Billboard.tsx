@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Grid, Box } from "@material-ui/core";
 import { DarkmodeToggleAction } from ".././GlobalActions";
 import { matchPc, matchTablet } from "../DetectDevice";
@@ -9,6 +9,12 @@ import { usePalette } from "react-palette";
 import { UpdateColorAction } from ".././GlobalActions";
 
 function Billboardx({ OpenModalForm }: any): JSX.Element {
+  ///
+  ///
+  ///
+  /// USE DISPATCH
+  const dispatch = useDispatch();
+
   ///
   ///
   ///
@@ -35,21 +41,21 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
 
   const billboardImages = [billboard1Reducer, billboard2Reducer];
 
-  ////  const { data, loading, error } = usePalette(`./images/profile/${imageReducer}`);
-
-  const { data, loading, error } = usePalette(
-    `./images/profile/${imageReducer}`
-  );
   const [ShowBillboard, setShowBillboard] = useState<boolean>(false);
 
+  ///
+  ///
+  ///
+  /// REACT PALLETTE (VIBRANTCOLOR DETECTION)
+  ////  const { data, loading, error } = usePalette(`./images/profile/${imageReducer}`);
+  const { data } = usePalette(`./images/profile/${imageReducer}`);
   useEffect(() => {
     var colorboy = {
-      color1: data.darkVibrant,
-      color2: data.lightVibrant,
+      color1: data.lightVibrant,
+      color2: data.darkVibrant,
     };
-
     dispatch(UpdateColorAction(colorboy));
-  }, [data]);
+  }, [data, dispatch]);
 
   ///
   ///
@@ -114,7 +120,7 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
   ///
   /// TOGGLEDARKMODE ON USERNAME CLICK
   var toggleDarkMode = false;
-  const dispatch = useDispatch();
+
   const switchThemes = () => {
     if (darkmodeReducer) {
       toggleDarkMode = false;
@@ -129,25 +135,7 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
   ///
   ///
   ///
-  ///MUI PAPER STYLES FROM REDUX
-  const { PaperStyleLight, PaperStyleDark } = useSelector(
-    (state: RootStateOrAny) => ({
-      ...state.PaperReducerLightnDark,
-    })
-  );
-
-  var PaperStyleReducer = "";
-
-  if (darkmodeReducer) {
-    PaperStyleReducer = PaperStyleDark;
-  } else {
-    PaperStyleReducer = PaperStyleLight;
-  }
-
-  ///
-  ///
-  ///
-  /// CLICK BILLBOARD OPEN
+  /// CLICK BILLBOARD OPEN ON DOUBLE CLICK
   const ClickBillboard = (e: any) => {
     switch (e.detail) {
       case 2:
@@ -172,18 +160,18 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
 
   ///
   ///
-  ///
   /// GET COLOR FROM REDUX STORE
   interface RootStateReducerColor {
     GlobalReducerColor: {
       color: string;
+      colordark: string;
     };
   }
-  const { color } = useSelector((state: RootStateReducerColor) => ({
+  const { color, colordark } = useSelector((state: RootStateReducerColor) => ({
     ...state.GlobalReducerColor,
   }));
   const colorReducer = color;
-
+  const colorReducerdark = colordark;
   ///hoverOverImageRef.current.style.background = "red";
 
   return (
@@ -425,7 +413,9 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
                   className={`  ${optionsClass}   `}
                   style={{
                     zIndex: 2,
-                    backgroundColor: colorReducer,
+                    backgroundColor: darkmodeReducer
+                      ? colorReducerdark
+                      : colorReducer,
                     opacity: 0.7,
                   }}
                 >

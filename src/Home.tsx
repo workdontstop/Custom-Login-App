@@ -25,8 +25,8 @@ function Home(): JSX.Element {
 
   const RefAppContainer = useRef<HTMLDivElement>(null);
 
-  const [aboutTemplateGo, setAboutTemplateGo] = useState<boolean>(false);
-  const [commentTemplateGo, setCommentTemplateGo] = useState<boolean>(false);
+  const [aboutTemplateGo] = useState<boolean>(false);
+  const [commentTemplateGo] = useState<boolean>(false);
 
   interface IappVariables {
     shade: string;

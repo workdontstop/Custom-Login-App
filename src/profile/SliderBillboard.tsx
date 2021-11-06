@@ -17,7 +17,7 @@ function SliderBillboardx({
   const [allowAutoPlay, setAllowAutoPlay] = useState(true);
 
   const [sliderDuration, setsliderDuration] = useState(2000);
-  const [autoSlideDuration, setautoSlideDuration] = useState(2500);
+  const [autoSlideDuration] = useState(2500);
 
   /// const getWidth = () => window.innerWidth;
   ///var newGetWidth = getWidth() * slides.length;
@@ -83,7 +83,7 @@ function SliderBillboardx({
   ///
   ///
   ///
-  /// PROVIDES DYNAMIC HEIGHT FOR SLIDER CONTENT FROM THUMBS IF IMAGE DOES NOT LOAD
+  /// PROVIDES DYNAMIC HEIGHT FOR SLIDER CONTENT FROM IMAGE THUMBS IF IMAGE DOES NOT LOAD
   const sliderFirstImageOnLoadthumb = (item: number) => {
     if (item === 0 && imageHeight === 0) {
       if (

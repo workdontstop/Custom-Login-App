@@ -17,7 +17,7 @@ function OptionsSliderx({ getSliderWidth }: any) {
   const optionsCollectImageRef = useRef<HTMLDivElement>(null);
   const optionsImages = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg"];
   const [translate, setTranslate] = useState(0);
-  const [stalestate, setstalestate] = useState(1);
+  const [stalestate] = useState(1);
 
   const [ActiveSlide, setActiveSlide] = useState(0);
   const [ShowHideNegativeValue, setShowHideNegativeValue] = useState("-");
@@ -31,6 +31,8 @@ function OptionsSliderx({ getSliderWidth }: any) {
 
   const prevJoltTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const nextJoltTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [optionsShow, setoptionsShow] = useState<boolean>(true);
 
   ///
   ///
@@ -148,7 +150,6 @@ function OptionsSliderx({ getSliderWidth }: any) {
   /// NEXT SLIDE  FOR PC
   const nextSlidePc = () => {
     var i = ActiveSlide + 1;
-    var colorPaddingAllowance = 1.67 + i / 10;
     setShowHideNegativeValue("-");
     ///set((state) => (state + 1) % slides.length)
     if (ActiveSlide === optionsImages.length - 1) {
@@ -249,102 +250,148 @@ function OptionsSliderx({ getSliderWidth }: any) {
     return false;
   };
 
+  const optionsItem1Loaded = (i: number) => {
+    if (i === 1) {
+      setInterval(function () {
+        setoptionsShow(false);
+      }, 5000);
+    }
+  };
+
   return (
     <>
-      <Grid
-        container
-        onTouchStart={handleTouchStartOptions}
-        onTouchMove={handleTouchMoveOptions}
-        style={{
-          position: "relative",
-          margin: "0 auto",
-          overflow: "hidden",
-          left: "0px",
-          paddingBottom: "19px",
-        }}
-      >
-        <animated.div ref={optionsCollectImageRef} style={modalanimation}>
+      {optionsShow ? (
+        <>
+          {" "}
           <Grid
-            item
+            container
+            onTouchStart={handleTouchStartOptions}
+            onTouchMove={handleTouchMoveOptions}
             style={{
-              margin: "auto",
-              textAlign: "center",
               position: "relative",
-              bottom: "0.2em",
-              left: "-4px",
+              margin: "0 auto",
+              overflow: "hidden",
+              left: "0px",
+              paddingBottom: "19px",
             }}
           >
-            <CircleIcon
-              onClick={() => {
-                nextSlidePc();
-              }}
-              className="buttonshake"
-              style={{
-                fontSize: "1.3vw",
-                cursor: "pointer",
-                color: darkmodeReducer ? "#444444" : "#cccccc",
-                display: matchPc ? "block" : "none",
-              }}
-            />
-          </Grid>
-          {optionsImages.map((im: any, i: any) => (
-            <>
-              <Grid item xs={12}>
-                <img
+            <animated.div ref={optionsCollectImageRef} style={modalanimation}>
+              <Grid
+                item
+                style={{
+                  margin: "auto",
+                  textAlign: "center",
+                  position: "relative",
+                  bottom: "0.2em",
+                  left: "-4px",
+                }}
+              >
+                <CircleIcon
                   onClick={() => {
-                    clickOptions(i, optionsClickType);
+                    nextSlidePc();
                   }}
+                  className="buttonshake"
                   style={{
-                    cursor: ActiveSlide === i ? "pointer" : "alias",
-                    width: `${getSliderWidthNew}px`,
-                    height: `${getSliderWidthNew}px`,
-                    borderRadius: "50%",
-                    padding: "0px",
-                    objectFit: "cover",
-                    marginLeft: "2px",
-                    marginTop: "14px",
-                    boxShadow: darkmodeReducer
-                      ? ActiveSlide === i
-                        ? `0 0 4.3px ${colorDarkReducer}`
-                        : ""
-                      : ActiveSlide === i
-                      ? `0 0 2.2px ${colorReducer}`
-                      : "",
-
-                    marginBottom: "2.2px",
+                    fontSize: "1.2vw",
+                    cursor: "pointer",
+                    color: darkmodeReducer
+                      ? "rgba(200, 200, 200, 0.1)"
+                      : "rgba(005, 005, 005, 0.2)",
+                    display: matchPc ? "block" : "none",
                   }}
-                  src={`./images/options/${im}`}
                 />
-                <Grid
-                  item
-                  xs={12}
-                  style={{
-                    margin: "auto",
-                    textAlign: "center",
-                    position: "relative",
-                    bottom: "0.2em",
-                  }}
-                >
+              </Grid>
+              {optionsImages.map((im: any, i: any) => (
+                <Grid key={i} item xs={12}>
+                  <img
+                    onLoad={() => {
+                      optionsItem1Loaded(i);
+                    }}
+                    alt={` ${optionsNameData[i]}  option`}
+                    onClick={() => {
+                      clickOptions(i, optionsClickType);
+                    }}
+                    style={{
+                      cursor: ActiveSlide === i ? "pointer" : "alias",
+                      width: `${getSliderWidthNew}px`,
+                      height: `${getSliderWidthNew}px`,
+                      borderRadius: "50%",
+                      padding: "0px",
+                      objectFit: "cover",
+                      marginLeft: "2px",
+                      marginTop: "14px",
+                      boxShadow: darkmodeReducer
+                        ? ActiveSlide === i
+                          ? `0 0 4.4px ${colorDarkReducer}`
+                          : ""
+                        : ActiveSlide === i
+                        ? `0 0 2.5px ${colorReducer}`
+                        : "",
+
+                      marginBottom: "2.2px",
+                    }}
+                    src={`./images/options/${im}`}
+                  />
                   <Grid
                     item
                     xs={12}
                     style={{
-                      fontSize: matchPc ? "1vw" : "2.1vh",
-                      fontWeight: "bolder",
-                      fontFamily: "Arial, Helvetica, sans-serif",
-                      display: ActiveSlide === i ? "block" : "none",
-                      color: darkmodeReducer ? "#dddddd" : "#0b111b",
+                      margin: "auto",
+                      textAlign: "center",
+                      position: "relative",
+                      bottom: "0.2em",
                     }}
                   >
-                    {" "}
-                    {optionsNameData[i]}
+                    <Grid
+                      item
+                      xs={12}
+                      style={{
+                        fontSize: matchPc ? "1vw" : "2.1vh",
+                        fontWeight: "bolder",
+                        fontFamily: "Arial, Helvetica, sans-serif",
+                        display: ActiveSlide === i ? "block" : "none",
+                        color: darkmodeReducer ? "#dddddd" : "#0b111b",
+                      }}
+                    >
+                      {" "}
+                      {optionsNameData[i]}
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            </>
-          ))}
-        </animated.div>
-      </Grid>{" "}
+              ))}
+            </animated.div>
+          </Grid>
+        </>
+      ) : (
+        <>
+          <Grid container>
+            <Grid
+              item
+              xs={9}
+              style={{
+                textAlign: "right",
+                marginTop: matchPc ? "6.4vh" : matchTablet ? "8.8vh" : "8.3vh",
+              }}
+            >
+              <span style={{ padding: "16px", cursor: "pointer" }}>
+                <CircleIcon
+                  className="circleshowoptions"
+                  style={{
+                    fontSize: matchPc
+                      ? "1.2vw"
+                      : matchTablet
+                      ? "2.5vh"
+                      : "2.3vh",
+                    color: darkmodeReducer
+                      ? "rgba(200, 200, 200, 0.1)"
+                      : "rgba(005, 005, 005, 0.2)",
+                  }}
+                />
+              </span>
+            </Grid>
+          </Grid>
+        </>
+      )}
     </>
   );
 }

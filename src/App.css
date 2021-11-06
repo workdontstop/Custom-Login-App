@@ -199,6 +199,16 @@
   transform: translateY(-50%);
 }
 
+.circleshowoptions:hover {
+  transition: 50ms transform ease-in;
+  transform: scale(1.9);
+}
+
+.circleshowoptions:active {
+  transition: 50ms transform ease-in;
+  transform: scale(1.5);
+}
+
 /*  C  C  C   C  C  C C  C  C C  C  C C  C  C C  C  C C  C  C C  C  C C  C  C C  C  C C  C  C C  C  C C  C  C C  C  C C  C  C*/
 
 /*    D D  D    D D  D  D D  D  D D  D  D D  D  D D  D  D D  D  D D  D  D D  D  D D  D  D D  D  D D  D  D D  D  D D   */
@@ -473,8 +483,8 @@
 }
 
 .make-small-icons-clickable-light {
-  -webkit-filter: drop-shadow(1px 0.1px 1px rgba(11, 23, 40, 0.35));
-  filter: drop-shadow(1px 0.1px 1px rgba(11, 23, 40, 0.35));
+  -webkit-filter: drop-shadow(1.2px 0.1px 1.92px (41, 53, 70, 8.35));
+  filter: drop-shadow(1.2px 0.1px 1.92px rgba(41, 53, 70, 8.35));
   color: #000000;
   cursor: pointer;
   padding: 5px;
@@ -582,6 +592,101 @@
 /*  M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M   M M M      */
 
 /* P P P P P P P P PP  P P*/
+
+.post-background-dark {
+  background-image: linear-gradient(
+    to top,
+    rgb(000, 000, 000, 0.93),
+    rgb(000, 000, 000, 0.92),
+    rgb(000, 000, 000, 0.91),
+    rgb(000, 000, 000, 0.9),
+    rgb(000, 000, 000, 0.89),
+    rgb(000, 000, 000, 0.88),
+    rgb(000, 000, 000, 0.87),
+    rgb(000, 000, 000, 0.86),
+    rgb(000, 000, 000, 0.85),
+    rgb(000, 000, 000, 0.84),
+    rgb(000, 000, 000, 0.83),
+    rgb(000, 000, 000, 0.82),
+    rgb(000, 000, 000, 0.81),
+    rgb(000, 000, 000, 0.8),
+    rgb(000, 000, 000, 0.79),
+    rgb(000, 000, 000, 0.78),
+    rgb(000, 000, 000, 0.76),
+    rgb(000, 000, 000, 0.73),
+    rgb(000, 000, 000, 0.7),
+    rgb(000, 000, 000, 0.66),
+    rgb(000, 000, 000, 0.61),
+    rgb(000, 000, 000, 0.56),
+    rgba(000, 000, 000, 0.5),
+    rgb(000, 000, 000, 0.45),
+    rgb(000, 000, 000, 0.4),
+    rgb(000, 000, 000, 0.35),
+    rgb(000, 000, 000, 0.3),
+    rgb(000, 000, 000, 0.25),
+    rgb(000, 000, 000, 0.2),
+    rgb(000, 000, 000, 0.17),
+    rgb(000, 000, 000, 0.13),
+    rgb(000, 000, 000, 0.11),
+    rgb(000, 000, 000, 0.09),
+    rgb(000, 000, 000, 0.08),
+    rgb(000, 000, 000, 0.07),
+    rgb(000, 000, 000, 0.06),
+    rgb(000, 000, 000, 0.05),
+    rgb(000, 000, 000, 0.03),
+    rgb(000, 000, 000, 0.02),
+    rgb(000, 000, 000, 0.01),
+    rgb(000, 000, 000, 0)
+  );
+}
+
+.post-background-light {
+  background-image: linear-gradient(
+    to top,
+    rgb(210, 210, 210, 0.93),
+    rgb(210, 210, 210, 0.92),
+    rgb(210, 210, 210, 0.91),
+    rgb(210, 210, 210, 0.9),
+    rgb(210, 210, 210, 0.89),
+    rgb(210, 210, 210, 0.88),
+    rgb(210, 210, 210, 0.87),
+    rgb(210, 210, 210, 0.86),
+    rgb(210, 210, 210, 0.85),
+    rgb(210, 210, 210, 0.84),
+    rgb(210, 210, 210, 0.83),
+    rgb(210, 210, 210, 0.82),
+    rgb(210, 210, 210, 0.81),
+    rgb(210, 210, 210, 0.8),
+    rgb(210, 210, 210, 0.79),
+    rgb(210, 210, 210, 0.78),
+    rgb(210, 210, 210, 0.76),
+    rgb(210, 210, 210, 0.73),
+    rgb(210, 210, 210, 0.7),
+    rgb(210, 210, 210, 0.66),
+    rgb(210, 210, 210, 0.61),
+    rgb(210, 210, 210, 0.56),
+    rgba(210, 210, 210, 0.5),
+    rgb(210, 210, 210, 0.45),
+    rgb(210, 210, 210, 0.4),
+    rgb(210, 210, 210, 0.35),
+    rgb(210, 210, 210, 0.3),
+    rgb(210, 210, 210, 0.25),
+    rgb(210, 210, 210, 0.2),
+    rgb(210, 210, 210, 0.17),
+    rgb(210, 210, 210, 0.13),
+    rgb(210, 210, 210, 0.11),
+    rgb(210, 210, 210, 0.09),
+    rgb(210, 210, 210, 0.08),
+    rgb(210, 210, 210, 0.07),
+    rgb(210, 210, 210, 0.06),
+    rgb(210, 210, 210, 0.05),
+    rgb(210, 210, 210, 0.03),
+    rgb(210, 210, 210, 0.02),
+    rgb(210, 210, 210, 0.01),
+    rgb(210, 210, 210, 0)
+  );
+}
+
 .profile-optionsImagePc {
   position: absolute;
   margin: auto;
@@ -1014,6 +1119,18 @@ zuperxyinfo {
   -moz-box-shadow: 0 0 2.5px#999999;
   -webkit-box-shadow: 0 0 2.5px#999999;
   box-shadow: 0 0 2.5px#999999;
+}
+
+.turlightpostdark {
+  -moz-box-shadow: 0 0 0.34px#ffffff;
+  -webkit-box-shadow: 0 0 0.34px#ffffff;
+  box-shadow: 0 0 0.34px#ffffff;
+}
+
+.turlightpostlight {
+  -moz-box-shadow: 0 0 0.4px#000000;
+  -webkit-box-shadow: 0 0 0.4px#000000;
+  box-shadow: 0 0 0.4px#000000;
 }
 
 .turlight {

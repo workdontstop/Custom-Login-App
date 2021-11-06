@@ -24,8 +24,7 @@ function Supercheck() {
   const { REACT_APP_SUPERSTARZ_URL } = process.env;
 
   const [Feedbackshow, setFeedbackshow] = useState<boolean>(false);
-  const [rememberMeButtonshow, setRememberMeButtonshow] =
-    useState<boolean>(false);
+  const [rememberMeButtonshow] = useState<boolean>(false);
 
   ///
   ///
@@ -168,46 +167,34 @@ function Supercheck() {
   }
   var imageWidth = "";
   var optionsClass = "";
-  var iconSize = "";
+
   var fontOptions = "";
-  var pad = "";
-  var padR = "";
-  var margintopp = "";
-  var justifyContentt = "";
+
   var leftSupertext = "";
   var bottomSupertext = "";
 
   if (matchPc) {
     imageWidth = "26%";
-    iconSize = "4.7%";
+
     optionsClass = "supercheck-optionsImagePc";
     fontOptions = "2.4vw";
-    pad = "33px";
-    padR = "20px";
-    margintopp = "-2vh";
-    justifyContentt = "flex-start";
+
     leftSupertext = "45%";
     bottomSupertext = "3em";
   } else if (matchTablet) {
     imageWidth = "45%";
-    iconSize = "11%";
+
     optionsClass = "supercheck-optionsImageTablet";
     fontOptions = "5rem";
-    pad = "33px";
-    padR = "20px";
-    margintopp = "0.8vh";
-    justifyContentt = "flex-start";
+
     leftSupertext = "41%";
     bottomSupertext = "7em";
   } else {
     imageWidth = "60%";
-    iconSize = "18%";
+
     optionsClass = "supercheck-optionsImageMobile";
     fontOptions = "2rem";
-    pad = "10px";
-    padR = "2.5px";
-    margintopp = "-0.1vh";
-    justifyContentt = "flex-start";
+
     leftSupertext = "36%";
     bottomSupertext = "2.5em";
   }
@@ -222,19 +209,6 @@ function Supercheck() {
   var rememberColor: any = colorReducer;
   var opacityrememberout = "";
   var colorremember = "";
-
-  const setHoldcolorDat = () => {
-    ///
-    ///
-    ///
-    ///UPDATE IMAGE DOMINANT COLOR FOR REG USER
-    ////setHoldcolorData(data.darkVibrant);
-    ///
-    ///
-    ///
-    ///SHOW HIDDEN REMEMBER ME BUTTON AFTER SOME SECONDS
-    ////setRememberMeButtonshow(true);
-  };
 
   ///
   ///
@@ -311,26 +285,6 @@ function Supercheck() {
     ...state.IsLoggedReducer,
   }));
   const loggedInReducer = loggedIn;
-
-  ///
-  ///
-  ///
-  ///LOGOUT
-  const logout = () => {
-    Axios.post(`http://${REACT_APP_SUPERSTARZ_URL}/logout`, {
-      withCredentials: true,
-    })
-      .then((response) => {
-        if (response.data.message === "cookie deleted") {
-          alert("logout  complete");
-        } else if (response.data.message === "cookie null") {
-          alert("logged out  already");
-        }
-      })
-      .catch(function (error) {
-        alert("Connection failure ");
-      });
-  };
 
   return loggedInReducer ? (
     <>

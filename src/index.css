@@ -16,32 +16,29 @@ body::-webkit-scrollbar {
 }
 
 .track-vertical {
+  z-index: 2;
   top: 2px;
   bottom: 2px;
   right: 2px;
-  border-radius: 3px;
+  border-radius: 2.2px;
 }
 .track-vertical .thumb-verticalLIGHT {
   position: relative;
   display: block;
-  width: 100%;
   cursor: default;
   border-radius: inherit;
-  background-color: rgba(005, 005, 005, 0.19);
 }
 
 .track-vertical .thumb-verticalDARK {
   position: relative;
   display: block;
-  width: 100%;
   cursor: default;
   border-radius: inherit;
-  background-color: rgba(200, 200, 200, 0.1);
 }
 
 .track-horizontal {
   position: absolute;
-  height: 6px;
+
   right: 2px;
   bottom: 2px;
   left: 2px;
@@ -50,12 +47,13 @@ body::-webkit-scrollbar {
 .track-horizontal .thumb-horizontal {
   position: relative;
   display: block;
-  height: 100%;
+
   cursor: pointer;
   border-radius: inherit;
 }
 
 .view {
+  z-index: 2;
   position: absolute;
   top: 0px;
   left: 0px;
@@ -64,4 +62,20 @@ body::-webkit-scrollbar {
   overflow: scroll;
   margin-right: -15px;
   margin-bottom: -17px !important;
+}
+
+.gallery {
+  -webkit-column-count: 2;
+  -moz-column-count: 2;
+  column-count: 2;
+  -webkit-column-width: 100%;
+  -moz-column-width: 100%;
+  column-width: 100%;
+  gap: 0;
+}
+
+.gallery .pics {
+  -webkit-transition: all 350ms ease;
+  transition: all 350ms ease;
+  padding: 0 0.1px;
 }

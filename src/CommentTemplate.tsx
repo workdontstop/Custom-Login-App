@@ -1,12 +1,12 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useSpring } from "react-spring";
 
-import { matchTablet, matchMobile } from "./DetectDevice";
+import { matchTablet } from "./DetectDevice";
 
 import "./log/logCss.css";
 import { ICommentTemplate, IGrid } from "./log/log-Interfaces";
 
-import { RootStateOrAny, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import image1 from "./log/images/modalpic1.jpg";
 import image2 from "./log/images/modalpic2.jpg";
@@ -14,8 +14,6 @@ import image3 from "./log/images/modalpic3.png";
 import image4 from "./log/images/modalpic4.jpg";
 import image5 from "./log/images/modalpic5.jpg";
 import image6 from "./log/images/modalpic6.jpg";
-import SuperstarzIconLight from "./images/ssmall.png";
-import SuperstarzIconDark from "./images/sdsmall.png";
 import { ModalLogLayout } from "./log/ModalLogLayout";
 import { ModalAboutLayout } from "./profile/ModalAboutLayout";
 
@@ -47,59 +45,11 @@ function CommentTemplatex({
   ///
   ///
   ///
-  /// GET DARKMODE FROM REDUX STORE
-  const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
-    ...state.GlobalReducer,
-  }));
-  const darkmodeReducer = darkmode;
-
-  ///
-  ///
-  ///
   /// GET SCREENHEIGHT FROM REDUX STORE
   const { screenHeight } = useSelector((state: RootStateGlobalReducer) => ({
     ...state.GlobalReducer,
   }));
   const screenHeightReducer = screenHeight;
-
-  ///
-  ///
-  ///
-  /// MUI PAPER STYLES FROM REDUX
-  const { PaperStyleLight, PaperStyleDark } = useSelector(
-    (state: RootStateOrAny) => ({
-      ...state.PaperReducerLightnDark,
-    })
-  );
-
-  var PaperStyleReducer = " ";
-
-  ///
-  ///
-  ///
-  ///CONDITIONAL STATEMENT FOR DARKMODE
-  if (darkmodeReducer) {
-    PaperStyleReducer = PaperStyleDark;
-  } else {
-    PaperStyleReducer = PaperStyleLight;
-  }
-
-  ///
-  ///
-  ///
-  /// SENDING LOGIN  DATA TO SERVER SIDE
-  const [serverErrorData, setServerErrorData] = useState<string | null>(null);
-  const [serverErrorDisplay, setServerErrorDisplay] = useState<number>(0);
-  const [serverEmojiplain, setserverEmojiplain] = useState<boolean>(true);
-
-  ///
-  ///
-  ///
-  ///SUPERSTARZ ICON SELECT
-  var SuperIcon = "";
-  darkmodeReducer
-    ? (SuperIcon = SuperstarzIconDark)
-    : (SuperIcon = SuperstarzIconLight);
 
   ///
   ///
@@ -115,7 +65,7 @@ function CommentTemplatex({
         setZoomedModal(localPcZoomData);
       }
     }
-  }, [zoomedModal]);
+  }, [zoomedModal, aboutTemp]);
 
   ///
   ///
@@ -172,25 +122,6 @@ function CommentTemplatex({
     opacity: mobileZoom ? 1 : 0.98,
     height: mobileZoom ? "100%" : matchTablet ? "23vh" : "15vh",
   });
-
-  //////////////   CONDITIONAL STATEMENT FOR DEVICE TYPES
-  var formHolder = "";
-
-  var MobileTabZoom = "";
-  var MobileTab = "";
-
-  if (matchTablet) {
-    formHolder = "formholderTablet";
-
-    MobileTabZoom = "log-logoTabletZoom";
-    MobileTab = "log-logoTablet";
-  } else {
-    formHolder = "formholder";
-
-    MobileTabZoom = "log-logoMobileZoom";
-    MobileTab = "log-logoMobile";
-  }
-  //////////////   CONDITIONAL STATEMENT FOR DEVICE TYPES
 
   ///
   ///
@@ -493,19 +424,6 @@ function CommentTemplatex({
   ///
   ///
   /// DYNAMIC MODAL LAYOUT VARIABLES
-
-  ///
-  ///
-  ///FADE SLIDING IMAGE
-  var fadeSlidingimage = "fadermodal-imageslider";
-  if (opacitySlidingModalImage === "0") {
-    fadeSlidingimage = "";
-  } else {
-    fadeSlidingimage = "fadermodal-imageslider-zoomload";
-    setTimeout(function () {
-      fadeSlidingimage = "fadermodal-imageslider";
-    }, 1600);
-  }
 
   return (
     <>

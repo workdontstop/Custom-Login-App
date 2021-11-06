@@ -11,11 +11,12 @@ import { Button, Grid } from "@material-ui/core";
 import { matchPc, matchTablet } from "../DetectDevice";
 import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
 import { IsLoggedAction } from "./actions/IsLoggedAction";
-import { IsLoggedProfileAction } from "./actions/IsLoggedAction";
 import { UserdataAction } from "./actions/UserdataAction";
 import { ActivateLoaderAction, HideLoaderAction } from "../GlobalActions";
 //////import { useHistory } from "react-router-dom";
 import { PasswordCheck } from "./PasswordCheck";
+
+Axios.defaults.withCredentials = true;
 
 function FormHolderx({
   zoomedModal,
