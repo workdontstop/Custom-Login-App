@@ -93,25 +93,7 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
   var fontConnectText = matchPc ? "1.03vw" : matchTablet ? "2.5vw" : "1.73vh";
   var fontConnectnum = matchPc ? "1.75vw" : matchTablet ? "3.9vw" : "2.4vh";
 
-  var widthProfilePic = matchPc ? "18%" : matchTablet ? "42%" : "44vw";
-  var topProfilePic = matchPc ? "36em" : matchTablet ? "31em" : "10.2em";
-  var leftProfilePic = matchPc ? "1vw" : matchTablet ? "3vw" : "2.6vw";
-
   var billboardDynamicHeight = matchPc ? "70vh" : matchTablet ? "57vw" : "34vh";
-
-  var optionsClass = "";
-  var fontOptions = "";
-
-  if (matchPc) {
-    optionsClass = "profile-optionsImagePc";
-    fontOptions = "3.6rem";
-  } else if (matchTablet) {
-    optionsClass = "profile-optionsImageTablet";
-    fontOptions = "5rem";
-  } else {
-    optionsClass = "profile-optionsImageMobile";
-    fontOptions = "1.9rem";
-  }
 
   //////////////////////////////////BILLBOARD VARIABLES FOR DEVICE TYPES
 
@@ -158,26 +140,16 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
     setShowBillboard(false);
   };
 
-  ///
-  ///
-  /// GET COLOR FROM REDUX STORE
-  interface RootStateReducerColor {
-    GlobalReducerColor: {
-      color: string;
-      colordark: string;
-    };
-  }
-  const { color, colordark } = useSelector((state: RootStateReducerColor) => ({
-    ...state.GlobalReducerColor,
-  }));
-  const colorReducer = color;
-  const colorReducerdark = colordark;
   ///hoverOverImageRef.current.style.background = "red";
 
   return (
     <>
       <>
-        <Grid container className="dontallowhighlighting">
+        <Grid
+          container
+          className="dontallowhighlighting"
+          style={{ scrollSnapAlign: "start" }}
+        >
           {/*///////////////////////////////////////////////////////////////////////////BACKPAD BILLBOARD LIGHTINING/DARKEN*/}
           <Grid
             container
@@ -396,90 +368,29 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
                 </Grid>
               </Grid>
               {/*///////////////////////////////////////////////////////////////////////////FAVS*/}
-              {/*///////////////////////////////////////////////////////////////////////////PROFILE PIC*/}
-              <Grid
-                item
-                xs={12}
-                style={{
-                  position: "absolute",
-                  width: widthProfilePic,
-                  height: "auto",
-                  marginLeft: leftProfilePic,
-                  top: topProfilePic,
-                  zIndex: 3,
-                }}
-              >
-                <Grid
-                  className={`  ${optionsClass}   `}
-                  style={{
-                    zIndex: 2,
-                    backgroundColor: darkmodeReducer
-                      ? colorReducerdark
-                      : colorReducer,
-                    opacity: 0.7,
-                  }}
-                >
-                  <AddIcon
-                    style={{
-                      fontSize: fontOptions,
-                      color: "#ffffff",
-                    }}
-                    className="zuperkinginfo"
-                  />
-                </Grid>
-                <img
-                  onClick={OpenModalForm}
-                  className={
-                    darkmodeReducer
-                      ? `turprofileDark image-zoom-on-click`
-                      : ` turprofileLight image-zoom-on-click`
-                  }
-                  style={{
-                    cursor: "pointer",
-                    position: "absolute",
-                    zIndex: 0,
-                    objectFit: "contain",
-                    width: "100%",
-                    borderRadius: "50%",
-                    margin: "auto",
-                    filter: "blur(1.3px)",
-                  }}
-                  src={`./images/profilethumb/${imageReducer}`}
-                  alt="Superstarz Billboard "
-                />{" "}
-                <img
-                  onClick={OpenModalForm}
-                  className={
-                    darkmodeReducer
-                      ? `turprofileDark image-gray-on-click`
-                      : ` turprofileLight image-gray-on-click`
-                  }
-                  style={{
-                    cursor: "pointer",
-                    position: "relative",
-                    zIndex: 1,
-                    objectFit: "contain",
-                    width: "100%",
-                    borderRadius: "50%",
-                    margin: "auto",
-                  }}
-                  src={`./images/profile/${imageReducer}`}
-                  alt="Superstarz Billboard "
-                />
-              </Grid>
-              {/*///////////////////////////////////////////////////////////////////////////PROFILE PIC*/}
             </Grid>
             {/*///////////////////////////////////////////////////////////////////////////BACKPAD BILLBOARD CONTROL DISPLAY ON DOUBLE CLICK*/}
           </Grid>
           {/*///////////////////////////////////////////////////////////////////////////BACKPAD BILLBOARD LIGHTINING/DARKEN*/}
-          <Grid style={{ position: "absolute", zIndex: 0 }} container>
+          <Grid
+            style={{
+              position: "relative",
+              zIndex: 0,
+            }}
+            container
+          >
             <Grid
               item
               component={Box}
               display={{ xs: "none", md: "block" }}
               md={2}
             ></Grid>
-            <Grid item xs={12} md={8}>
+            <Grid
+              item
+              xs={12}
+              md={8}
+              style={{ marginTop: `-${billboardDynamicHeight}` }}
+            >
               {/*///////////////////////////////////////////////////////////////////////////BILLBOARD IMAGE*/}
 
               <SliderBillboard

@@ -317,6 +317,7 @@ function SliderBillboardx({
               borderBottomRightRadius: matchPc ? "7px" : "0em",
               filter: "blur(3px)",
               left: "0",
+              zIndex: 1,
             }}
             src={`./images/billboardthumb/${slides[i]}`}
           />
@@ -346,7 +347,7 @@ function SliderBillboardx({
                 ? "7px"
                 : "0px",
               left: "0",
-              zIndex: 1,
+              zIndex: 2,
             }}
             src={`./images/billboard/${slides[i]}`}
           />

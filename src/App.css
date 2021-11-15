@@ -159,6 +159,15 @@
   box-shadow: 0 0 5px#cccccc;
 }
 
+.caption-darkPost {
+  text-shadow: 1.5px 3px 2.5px #222222;
+  height: auto;
+  background-color: rgba(005, 005, 005, 0.26);
+  -moz-box-shadow: 0 0 3.5px#222222;
+  -webkit-box-shadow: 0 0 3.5px#222222;
+  box-shadow: 0 0 3.5px#222222;
+}
+
 .caption-dark {
   text-shadow: 1.5px 3px 2.5px #222222;
   height: auto;
@@ -166,6 +175,15 @@
   -moz-box-shadow: 0 0 3.5px#222222;
   -webkit-box-shadow: 0 0 3.5px#222222;
   box-shadow: 0 0 3.5px#222222;
+}
+
+.caption-lightPost {
+  text-shadow: 0.3px 0.5px 1px rgba(11, 23, 40, 0.52);
+  height: auto;
+  background-color: rgba(255, 255, 255, 0.26);
+  -moz-box-shadow: 0 0 5px#cccccc;
+  -webkit-box-shadow: 0 0 5px#cccccc;
+  box-shadow: 0 0 5px#cccccc;
 }
 
 .caption-light {
@@ -596,9 +614,7 @@
 .post-background-dark {
   background-image: linear-gradient(
     to top,
-    rgb(000, 000, 000, 0.93),
-    rgb(000, 000, 000, 0.92),
-    rgb(000, 000, 000, 0.91),
+    rgb(000, 000, 000, 0.95),
     rgb(000, 000, 000, 0.9),
     rgb(000, 000, 000, 0.89),
     rgb(000, 000, 000, 0.88),
@@ -643,47 +659,49 @@
 .post-background-light {
   background-image: linear-gradient(
     to top,
-    rgb(210, 210, 210, 0.93),
-    rgb(210, 210, 210, 0.92),
-    rgb(210, 210, 210, 0.91),
-    rgb(210, 210, 210, 0.9),
-    rgb(210, 210, 210, 0.89),
-    rgb(210, 210, 210, 0.88),
-    rgb(210, 210, 210, 0.87),
-    rgb(210, 210, 210, 0.86),
-    rgb(210, 210, 210, 0.85),
-    rgb(210, 210, 210, 0.84),
-    rgb(210, 210, 210, 0.83),
-    rgb(210, 210, 210, 0.82),
-    rgb(210, 210, 210, 0.81),
-    rgb(210, 210, 210, 0.8),
-    rgb(210, 210, 210, 0.79),
-    rgb(210, 210, 210, 0.78),
-    rgb(210, 210, 210, 0.76),
-    rgb(210, 210, 210, 0.73),
-    rgb(210, 210, 210, 0.7),
-    rgb(210, 210, 210, 0.66),
-    rgb(210, 210, 210, 0.61),
-    rgb(210, 210, 210, 0.56),
-    rgba(210, 210, 210, 0.5),
-    rgb(210, 210, 210, 0.45),
-    rgb(210, 210, 210, 0.4),
-    rgb(210, 210, 210, 0.35),
-    rgb(210, 210, 210, 0.3),
-    rgb(210, 210, 210, 0.25),
-    rgb(210, 210, 210, 0.2),
-    rgb(210, 210, 210, 0.17),
-    rgb(210, 210, 210, 0.13),
-    rgb(210, 210, 210, 0.11),
-    rgb(210, 210, 210, 0.09),
-    rgb(210, 210, 210, 0.08),
-    rgb(210, 210, 210, 0.07),
-    rgb(210, 210, 210, 0.06),
-    rgb(210, 210, 210, 0.05),
-    rgb(210, 210, 210, 0.03),
-    rgb(210, 210, 210, 0.02),
-    rgb(210, 210, 210, 0.01),
-    rgb(210, 210, 210, 0)
+    rgb(190, 190, 190, 0.95),
+    rgb(190, 190, 190, 0.94),
+    rgb(190, 190, 190, 0.93),
+    rgb(190, 190, 190, 0.92),
+    rgb(190, 190, 190, 0.91),
+    rgb(190, 190, 190, 0.9),
+    rgb(190, 190, 190, 0.89),
+    rgb(190, 190, 190, 0.88),
+    rgb(190, 190, 190, 0.87),
+    rgb(190, 190, 190, 0.86),
+    rgb(190, 190, 190, 0.85),
+    rgb(190, 190, 190, 0.84),
+    rgb(190, 190, 190, 0.83),
+    rgb(190, 190, 190, 0.82),
+    rgb(190, 190, 190, 0.81),
+    rgb(190, 190, 190, 0.8),
+    rgb(190, 190, 190, 0.79),
+    rgb(190, 190, 190, 0.78),
+    rgb(190, 190, 190, 0.76),
+    rgb(190, 190, 190, 0.73),
+    rgb(190, 190, 190, 0.7),
+    rgb(190, 190, 190, 0.66),
+    rgb(190, 190, 190, 0.61),
+    rgb(190, 190, 190, 0.56),
+    rgba(190, 190, 190, 0.5),
+    rgb(190, 190, 190, 0.45),
+    rgb(190, 190, 190, 0.4),
+    rgb(190, 190, 190, 0.35),
+    rgb(190, 190, 190, 0.3),
+    rgb(190, 190, 190, 0.25),
+    rgb(190, 190, 190, 0.2),
+    rgb(190, 190, 190, 0.17),
+    rgb(190, 190, 190, 0.13),
+    rgb(190, 190, 190, 0.11),
+    rgb(190, 190, 190, 0.09),
+    rgb(190, 190, 190, 0.08),
+    rgb(190, 190, 190, 0.07),
+    rgb(190, 190, 190, 0.06),
+    rgb(190, 190, 190, 0.05),
+    rgb(190, 190, 190, 0.03),
+    rgb(190, 190, 190, 0.02),
+    rgb(190, 190, 190, 0.01),
+    rgb(190, 190, 190, 0)
   );
 }
 
@@ -1088,10 +1106,21 @@ zuperxyinfo {
 
 /*   T T T   T T T   T T T   T T T   T T T   T T T   T T T   T T T   T T T   T T T T T T  T T T */
 .tur {
-  height: auto;
-  -moz-box-shadow: 0 0 16px#00ccff;
-  -webkit-box-shadow: 0 0 16px#00ccff;
-  box-shadow: 0 0 16px#00ccff;
+  padding: "0px";
+  -webkit-filter: drop-shadow(0.6px 0.1px 5px rgba(255, 255, 255, 0.6));
+  filter: drop-shadow(0.6px 0.1px 5px rgba(255, 255, 255, 0.6));
+}
+
+.turpostLight {
+  padding: "0px";
+  -webkit-filter: drop-shadow(0.6px 0.1px 5px rgba(255, 255, 255, 0.6));
+  filter: drop-shadow(0.6px 0.1px 5px rgba(255, 255, 255, 0.6));
+}
+
+.turpostDark {
+  padding: "0px";
+  -webkit-filter: drop-shadow(0.6px 0.1px 5px rgba(000, 000, 005, 0.6));
+  filter: drop-shadow(0.6px 0.1px 5px rgba(000, 000, 005, 0.6));
 }
 
 .turlightbillboard {
@@ -1110,9 +1139,9 @@ zuperxyinfo {
 }
 
 .turprofileDark {
-  -moz-box-shadow: 0 0 3px#aaaaaa;
-  -webkit-box-shadow: 0 0 3px#aaaaaa;
-  box-shadow: 0 0 3px#aaaaaa;
+  -moz-box-shadow: 0 0 1.5px#999999;
+  -webkit-box-shadow: 0 0 1.5px#999999;
+  box-shadow: 0 0 1.5px#999999;
 }
 
 .turprofileLight {
@@ -1202,6 +1231,16 @@ zuperxyinfo {
 .zuperxyinfo {
   text-shadow: 1.2px 2px 2.4px #000000;
   color: #ffffff;
+}
+
+.zuperxyinfoPostDark {
+  text-shadow: 1.2px 2px 5px #888888;
+  color: #ffffff;
+}
+
+.zuperxyinfoPostLight {
+  text-shadow: 1.2px 2px 5px #777777;
+  color: #000000;
 }
 
 .zuperxyloud3d {

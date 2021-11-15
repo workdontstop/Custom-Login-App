@@ -6,7 +6,7 @@ import { matchPc, matchTablet } from "../DetectDevice";
 import { SuperLoader } from "../SuperLoader";
 import { ServerError } from "./ServerError";
 import { FormHolder } from "./FormHolder";
-import { Scrollbars } from "react-custom-scrollbars";
+import { Scrollbars } from "react-custom-scrollbars-2";
 
 import SuperstarzIconLight from "./../images/ssmall.png";
 import SuperstarzIconDark from "./../images/sdsmall.png";

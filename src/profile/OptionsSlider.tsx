@@ -250,14 +250,6 @@ function OptionsSliderx({ getSliderWidth }: any) {
     return false;
   };
 
-  const optionsItem1Loaded = (i: number) => {
-    if (i === 1) {
-      setInterval(function () {
-        setoptionsShow(false);
-      }, 5000);
-    }
-  };
-
   return (
     <>
       {optionsShow ? (
@@ -304,9 +296,6 @@ function OptionsSliderx({ getSliderWidth }: any) {
               {optionsImages.map((im: any, i: any) => (
                 <Grid key={i} item xs={12}>
                   <img
-                    onLoad={() => {
-                      optionsItem1Loaded(i);
-                    }}
                     alt={` ${optionsNameData[i]}  option`}
                     onClick={() => {
                       clickOptions(i, optionsClickType);
@@ -322,10 +311,10 @@ function OptionsSliderx({ getSliderWidth }: any) {
                       marginTop: "14px",
                       boxShadow: darkmodeReducer
                         ? ActiveSlide === i
-                          ? `0 0 4.4px ${colorDarkReducer}`
+                          ? `0 0 5px ${colorDarkReducer}`
                           : ""
                         : ActiveSlide === i
-                        ? `0 0 2.5px ${colorReducer}`
+                        ? `0 0 3.5px ${colorReducer}`
                         : "",
 
                       marginBottom: "2.2px",
@@ -373,9 +362,13 @@ function OptionsSliderx({ getSliderWidth }: any) {
                 marginTop: matchPc ? "6.4vh" : matchTablet ? "8.8vh" : "8.3vh",
               }}
             >
-              <span style={{ padding: "16px", cursor: "pointer" }}>
+              <span
+                style={{
+                  padding: "16px",
+                  cursor: "pointer",
+                }}
+              >
                 <CircleIcon
-                  className="circleshowoptions"
                   style={{
                     fontSize: matchPc
                       ? "1.2vw"

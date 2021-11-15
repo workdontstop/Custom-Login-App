@@ -8,7 +8,7 @@ var cors = require("cors");
 app.use(
   cors({
     credentials: true,
-    origin: "http://192.168.43.137:3000",
+    origin: "http://192.168.43.136:3000",
     ////origin: "http://localhost:3000",
   })
 );
@@ -41,7 +41,7 @@ const loginId = `SELECT username,id,password,color,profile_image,first_name,sur_
 const checkpassword = `SELECT id FROM members WHERE  username =?`;
 
 ///checkIsLogged
-const posts = `SELECT id,sender,post_count,topic,caption,item1,itemtype1,item2,itemtype2,item3,itemtype3,item4,itemtype4,item5,itemtype5,item6,itemtype6,item7,itemtype7,item8,itemtype8,item9,itemtype9,item10,itemtype10,item11,itemtype11,item12,itemtype12,item13,itemtype13,item14,itemtype14,item15,itemtype15,item16,itemtype16,time  FROM posts WHERE id `;
+const posts = `SELECT members.profile_image,members.username,posts.id,sender,post_count,topic,caption,item1,itemtype1,item2,itemtype2,item3,itemtype3,item4,itemtype4,item5,itemtype5,item6,itemtype6,item7,itemtype7,item8,itemtype8,item9,itemtype9,item10,itemtype10,item11,itemtype11,item12,itemtype12,item13,itemtype13,item14,itemtype14,item15,itemtype15,item16,itemtype16,time  FROM posts inner join members on posts.sender = members.id  ORDER BY posts.id DESC  LIMIT 15  `;
 
 app.post("/feeds_chronological", async (req: Request, res: Response) => {
   const connection = mysql.createConnection(CONNECTION_CONFIG);

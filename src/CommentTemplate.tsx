@@ -5,7 +5,6 @@ import { matchTablet } from "./DetectDevice";
 
 import "./log/logCss.css";
 import { ICommentTemplate, IGrid } from "./log/log-Interfaces";
-
 import { useSelector } from "react-redux";
 
 import image1 from "./log/images/modalpic1.jpg";

@@ -15,7 +15,7 @@ function ArrowBillboardx({
           container
           style={{
             position: "absolute",
-            zIndex: 2,
+            zIndex: 3,
             height: "0px",
             width: matchPc ? "100.8%" : "100%",
             padding: "1px",

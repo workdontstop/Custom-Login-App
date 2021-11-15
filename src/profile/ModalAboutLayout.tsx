@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { animated } from "react-spring";
 import { matchPc, matchTablet, matchMobile } from "../DetectDevice";
 
-import { Scrollbars } from "react-custom-scrollbars";
+import { Scrollbars } from "react-custom-scrollbars-2";
 
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 
