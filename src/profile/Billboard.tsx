@@ -74,7 +74,7 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
 
   //////////////////////////////////BILLBOARD VARIABLES FOR DEVICE TYPES
   var widthh = matchPc ? "65vw" : "98.5vw";
-  var topp = matchPc ? "3.8vh" : matchTablet ? "4.3em" : "1.55em";
+  var topp = matchPc ? "5.9vh" : matchTablet ? "4.3em" : "1.55em";
   var usernameClass = matchPc
     ? "usernamePc"
     : matchTablet
@@ -82,7 +82,7 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
     : "usernameMobile";
 
   var widthName = matchPc ? "65vw" : "98.5vw";
-  var topName = matchPc ? "11.4vh" : matchTablet ? "11.9em" : "3.8em";
+  var topName = matchPc ? "13.5vh" : matchTablet ? "11.9em" : "4em";
   var name = matchPc ? "namePc" : matchTablet ? "nameTablet" : "nameMobile";
 
   var widthConnect = matchPc ? "65vw" : "98.5vw";
@@ -178,8 +178,8 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
                 position: "relative",
                 height: billboardDynamicHeight,
                 backgroundColor: darkmodeReducer
-                  ? "rgba(005, 005, 005, 0.29)"
-                  : "rgba(250, 250, 250, 0.27)",
+                  ? "rgba(005, 005, 005, 0.26)"
+                  : "rgba(250, 250, 250, 0.23)",
                 borderRadius: "0px",
                 borderBottomLeftRadius: matchPc ? "7px" : "0em",
                 borderBottomRightRadius: matchPc ? "7px" : "0em",
@@ -236,8 +236,8 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
                     cursor: "pointer",
                     color: darkmodeReducer ? "#dddddd" : "#0b111b",
                     backgroundColor: darkmodeReducer
-                      ? "rgba(005, 005, 005, 0.42)"
-                      : "rgba(250, 250, 250, 0.75)",
+                      ? "rgba(005, 005, 005, 0.45)"
+                      : "rgba(250, 250, 250, 0.7)",
                   }}
                 >
                   {usernameReducer}
@@ -262,8 +262,8 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
                     cursor: "pointer",
                     color: darkmodeReducer ? "#dddddd" : "#0b111b",
                     backgroundColor: darkmodeReducer
-                      ? "rgba(005, 005, 005, 0.42)"
-                      : "rgba(250, 250, 250, 0.75)",
+                      ? "rgba(005, 005, 005, 0.45)"
+                      : "rgba(250, 250, 250, 0.7)",
                   }}
                   className={
                     darkmodeReducer
@@ -298,14 +298,14 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
                       fontSize: fontConnectText,
                       backgroundColor: darkmodeReducer
                         ? "rgba(005, 005, 005, 0.29)"
-                        : "rgba(145, 95, 95, 0.35)",
+                        : "rgba(255, 255, 255, 0.35)",
                       padding: "1px  ",
                       opacity: "0.75",
                     }}
                     className={
                       darkmodeReducer
                         ? `fontfamilyArial zuperxyinfotext turdarkfavfan ${fanclass}  `
-                        : `fontfamilyArial text-connect-light zuperxyinfotext turlight ${fanclass}  `
+                        : `fontfamilyArial  text-connect-light zuperxyinfotext turlight ${fanclass}  `
                     }
                   >
                     FANS

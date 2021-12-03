@@ -18,7 +18,6 @@ function DotsBillboardx({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-
         zIndex: 2,
       }}
     >
@@ -31,10 +30,10 @@ function DotsBillboardx({
           }}
           style={{
             backgroundColor: "rgba(255,255,255,0.8)",
-            opacity: activeSlide === i ? 0.85 : 0.5,
-            padding: activeSlide === i ? "5px" : "3px",
-            marginTop: activeSlide === i ? "0px" : "0.5px",
-            marginRight: "5px",
+            opacity: activeSlide === i ? 0.95 : 0.6,
+            padding: activeSlide === i ? "5px" : "4px",
+            verticalAlign: "middle",
+            marginRight: "3.5px",
             cursor: "pointer",
             borderRadius: "50%",
             display: ShowBillboard ? "block" : "none",

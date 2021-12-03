@@ -260,6 +260,7 @@ function OptionsSliderx({ getSliderWidth }: any) {
             onTouchStart={handleTouchStartOptions}
             onTouchMove={handleTouchMoveOptions}
             style={{
+              scrollSnapAlign: "start",
               position: "relative",
               margin: "0 auto",
               overflow: "hidden",
@@ -335,7 +336,7 @@ function OptionsSliderx({ getSliderWidth }: any) {
                       item
                       xs={12}
                       style={{
-                        fontSize: matchPc ? "1vw" : "2.1vh",
+                        fontSize: matchPc ? "1.1vw" : "2vh",
                         fontWeight: "bolder",
                         fontFamily: "Arial, Helvetica, sans-serif",
                         display: ActiveSlide === i ? "block" : "none",

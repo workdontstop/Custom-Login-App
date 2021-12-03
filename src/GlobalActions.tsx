@@ -6,6 +6,7 @@ import {
   UPDATE_GLOBAL_COLOR,
   HIDE_GLOBAL_LOADER,
   ACTIVATE_GLOBAL_LOADER,
+  UPDATE_ScrollType,
 } from "./global_ActionTypes";
 
 export function DarkmodeAction(newDarkModeData: boolean) {
@@ -51,5 +52,12 @@ export function ActivateLoaderAction() {
 export function HideLoaderAction() {
   return {
     type: HIDE_GLOBAL_LOADER,
+  };
+}
+
+export function ScrollerAction(Payload: string) {
+  return {
+    type: UPDATE_ScrollType,
+    payload: Payload,
   };
 }

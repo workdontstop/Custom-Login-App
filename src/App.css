@@ -160,9 +160,9 @@
 }
 
 .caption-darkPost {
-  text-shadow: 1.5px 3px 2.5px #222222;
+  text-shadow: 1.5px 3px 2.5px #000000;
   height: auto;
-  background-color: rgba(005, 005, 005, 0.26);
+  background-color: rgba(29, 29, 29, 0.9);
   -moz-box-shadow: 0 0 3.5px#222222;
   -webkit-box-shadow: 0 0 3.5px#222222;
   box-shadow: 0 0 3.5px#222222;
@@ -180,7 +180,7 @@
 .caption-lightPost {
   text-shadow: 0.3px 0.5px 1px rgba(11, 23, 40, 0.52);
   height: auto;
-  background-color: rgba(255, 255, 255, 0.26);
+  background-color: rgba(240, 240, 240, 0.7);
   -moz-box-shadow: 0 0 5px#cccccc;
   -webkit-box-shadow: 0 0 5px#cccccc;
   box-shadow: 0 0 5px#cccccc;
@@ -614,140 +614,170 @@
 .post-background-dark {
   background-image: linear-gradient(
     to top,
-    rgb(000, 000, 000, 0.95),
-    rgb(000, 000, 000, 0.9),
-    rgb(000, 000, 000, 0.89),
-    rgb(000, 000, 000, 0.88),
-    rgb(000, 000, 000, 0.87),
-    rgb(000, 000, 000, 0.86),
-    rgb(000, 000, 000, 0.85),
-    rgb(000, 000, 000, 0.84),
-    rgb(000, 000, 000, 0.83),
-    rgb(000, 000, 000, 0.82),
-    rgb(000, 000, 000, 0.81),
-    rgb(000, 000, 000, 0.8),
-    rgb(000, 000, 000, 0.79),
-    rgb(000, 000, 000, 0.78),
-    rgb(000, 000, 000, 0.76),
-    rgb(000, 000, 000, 0.73),
-    rgb(000, 000, 000, 0.7),
-    rgb(000, 000, 000, 0.66),
-    rgb(000, 000, 000, 0.61),
-    rgb(000, 000, 000, 0.56),
-    rgba(000, 000, 000, 0.5),
-    rgb(000, 000, 000, 0.45),
-    rgb(000, 000, 000, 0.4),
-    rgb(000, 000, 000, 0.35),
-    rgb(000, 000, 000, 0.3),
-    rgb(000, 000, 000, 0.25),
-    rgb(000, 000, 000, 0.2),
-    rgb(000, 000, 000, 0.17),
-    rgb(000, 000, 000, 0.13),
-    rgb(000, 000, 000, 0.11),
-    rgb(000, 000, 000, 0.09),
-    rgb(000, 000, 000, 0.08),
-    rgb(000, 000, 000, 0.07),
-    rgb(000, 000, 000, 0.06),
-    rgb(000, 000, 000, 0.05),
-    rgb(000, 000, 000, 0.03),
-    rgb(000, 000, 000, 0.02),
-    rgb(000, 000, 000, 0.01),
-    rgb(000, 000, 000, 0)
+    rgb(015, 015, 015, 0.91),
+    rgb(015, 015, 015, 0.9),
+    rgb(015, 015, 015, 0.89),
+    rgb(015, 015, 015, 0.88),
+    rgb(015, 015, 015, 0.87),
+    rgb(015, 015, 015, 0.86),
+    rgb(015, 015, 015, 0.85),
+    rgb(015, 015, 015, 0.84),
+    rgb(015, 015, 015, 0.83),
+    rgb(015, 015, 015, 0.82),
+    rgb(015, 015, 015, 0.81),
+    rgb(015, 015, 015, 0.8),
+    rgb(015, 015, 015, 0.79),
+    rgb(015, 015, 015, 0.78),
+    rgb(015, 015, 015, 0.76),
+    rgb(015, 015, 015, 0.73),
+    rgb(015, 015, 015, 0.7),
+    rgb(015, 015, 015, 0.66),
+    rgb(015, 015, 015, 0.61),
+    rgb(015, 015, 015, 0.56),
+    rgba(015, 015, 015, 0.5),
+    rgb(015, 015, 015, 0.45),
+    rgb(015, 015, 015, 0.4),
+    rgb(015, 015, 015, 0.35),
+    rgb(015, 015, 015, 0.3),
+    rgb(015, 015, 015, 0.25),
+    rgb(015, 015, 015, 0.2),
+    rgb(015, 015, 015, 0.17),
+    rgb(015, 015, 015, 0.13),
+    rgb(015, 015, 015, 0.11),
+    rgb(015, 015, 015, 0.09),
+    rgb(015, 015, 015, 0.08),
+    rgb(015, 015, 015, 0.07),
+    rgb(015, 015, 015, 0.06),
+    rgb(015, 015, 015, 0.05),
+    rgb(015, 015, 015, 0.03),
+    rgb(015, 015, 015, 0.02),
+    rgb(015, 015, 015, 0.01),
+    rgb(015, 015, 015, 0)
   );
 }
 
 .post-background-light {
   background-image: linear-gradient(
     to top,
-    rgb(190, 190, 190, 0.95),
-    rgb(190, 190, 190, 0.94),
-    rgb(190, 190, 190, 0.93),
-    rgb(190, 190, 190, 0.92),
-    rgb(190, 190, 190, 0.91),
-    rgb(190, 190, 190, 0.9),
-    rgb(190, 190, 190, 0.89),
-    rgb(190, 190, 190, 0.88),
-    rgb(190, 190, 190, 0.87),
-    rgb(190, 190, 190, 0.86),
-    rgb(190, 190, 190, 0.85),
-    rgb(190, 190, 190, 0.84),
-    rgb(190, 190, 190, 0.83),
-    rgb(190, 190, 190, 0.82),
-    rgb(190, 190, 190, 0.81),
-    rgb(190, 190, 190, 0.8),
-    rgb(190, 190, 190, 0.79),
-    rgb(190, 190, 190, 0.78),
-    rgb(190, 190, 190, 0.76),
-    rgb(190, 190, 190, 0.73),
-    rgb(190, 190, 190, 0.7),
-    rgb(190, 190, 190, 0.66),
-    rgb(190, 190, 190, 0.61),
-    rgb(190, 190, 190, 0.56),
-    rgba(190, 190, 190, 0.5),
-    rgb(190, 190, 190, 0.45),
-    rgb(190, 190, 190, 0.4),
-    rgb(190, 190, 190, 0.35),
-    rgb(190, 190, 190, 0.3),
-    rgb(190, 190, 190, 0.25),
-    rgb(190, 190, 190, 0.2),
-    rgb(190, 190, 190, 0.17),
-    rgb(190, 190, 190, 0.13),
-    rgb(190, 190, 190, 0.11),
-    rgb(190, 190, 190, 0.09),
-    rgb(190, 190, 190, 0.08),
-    rgb(190, 190, 190, 0.07),
-    rgb(190, 190, 190, 0.06),
-    rgb(190, 190, 190, 0.05),
-    rgb(190, 190, 190, 0.03),
-    rgb(190, 190, 190, 0.02),
-    rgb(190, 190, 190, 0.01),
-    rgb(190, 190, 190, 0)
+    rgb(183, 183, 183, 0.92),
+    rgb(183, 183, 183, 0.91),
+    rgb(183, 183, 183, 0.9),
+    rgb(183, 183, 183, 0.89),
+    rgb(183, 183, 183, 0.88),
+    rgb(183, 183, 183, 0.87),
+    rgb(183, 183, 183, 0.86),
+    rgb(183, 183, 183, 0.85),
+    rgb(183, 183, 183, 0.84),
+    rgb(183, 183, 183, 0.83),
+    rgb(183, 183, 183, 0.82),
+    rgb(183, 183, 183, 0.81),
+    rgb(183, 183, 183, 0.8),
+    rgb(183, 183, 183, 0.79),
+    rgb(183, 183, 183, 0.78),
+    rgb(183, 183, 183, 0.76),
+    rgb(183, 183, 183, 0.73),
+    rgb(183, 183, 183, 0.7),
+    rgb(183, 183, 183, 0.66),
+    rgb(183, 183, 183, 0.61),
+    rgb(183, 183, 183, 0.56),
+    rgba(183, 183, 183, 0.5),
+    rgb(183, 183, 183, 0.45),
+    rgb(183, 183, 183, 0.4),
+    rgb(183, 183, 183, 0.35),
+    rgb(183, 183, 183, 0.3),
+    rgb(183, 183, 183, 0.25),
+    rgb(183, 183, 183, 0.2),
+    rgb(183, 183, 183, 0.17),
+    rgb(183, 183, 183, 0.13),
+    rgb(183, 183, 183, 0.11),
+    rgb(183, 183, 183, 0.09),
+    rgb(183, 183, 183, 0.08),
+    rgb(183, 183, 183, 0.07),
+    rgb(183, 183, 183, 0.06),
+    rgb(183, 183, 183, 0.05),
+    rgb(183, 183, 183, 0.03),
+    rgb(183, 183, 183, 0.02),
+    rgb(183, 183, 183, 0.01),
+    rgb(183, 183, 183, 0)
   );
 }
 
-.profile-optionsImagePc {
-  position: absolute;
-  margin: auto;
-  left: -0.5vw;
-  top: 0.9vh;
-  height: 68px;
-  width: 68px;
-  border-radius: 50%;
-  text-align: center;
-  align-items: center;
-  display: grid;
-  justify-content: center;
-}
-
-.profile-optionsImageTablet {
-  position: absolute;
-  margin: auto;
-  left: -1.8vw;
-  top: 1vh;
-  height: 98px;
-  width: 98px;
-  border-radius: 50%;
-  text-align: center;
-  align-items: center;
-  display: grid;
-  justify-content: center;
-}
-
-.profile-optionsImageMobile {
-  position: absolute;
-  margin: auto;
-  left: -1.8vw;
-  top: -1vh;
-  height: 60px;
-  width: 60px;
-  border-radius: 50%;
-  text-align: center;
-  align-items: center;
-  display: grid;
-  justify-content: center;
-}
 /* P P P P P P P P PP  P P*/
 /*   S S S    S S S   S S S   S S S   S S S   S S S   S S S   S S S   S S S   S S S   S S S    */
+
+.slider-arrow-backpad-leftDARK:hover {
+  -webkit-filter: drop-shadow(1.2px 0.1px 1.92px rgba(005, 005, 005, 0.4));
+  filter: drop-shadow(1.2px 0.1px 1.92px rgba(005, 005, 005, 0.4));
+  background-image: linear-gradient(
+    to right,
+    rgb(005, 005, 005, 0.4),
+    rgb(005, 005, 005, 0.34),
+    rgb(005, 005, 005, 0.34),
+    rgb(005, 005, 005, 0.3),
+    rgb(005, 005, 005, 0.25),
+    rgb(005, 005, 005, 0.2),
+    rgb(005, 005, 005, 0.15),
+    rgb(005, 005, 005, 0.1),
+    rgb(005, 005, 005, 0.05),
+    rgb(005, 005, 005, 0.025),
+    rgb(005, 005, 005, 0)
+  );
+}
+
+.slider-arrow-backpad-rightDARK:hover {
+  -webkit-filter: drop-shadow(1.2px 0.1px 1.92px rgba(005, 005, 005, 0.4));
+  filter: drop-shadow(1.2px 0.1px 1.92px rgba(005, 005, 005, 0.4));
+  background-image: linear-gradient(
+    to left,
+    rgb(005, 005, 005, 0.4),
+    rgb(005, 005, 005, 0.34),
+    rgb(005, 005, 005, 0.3),
+    rgb(005, 005, 005, 0.25),
+    rgb(005, 005, 005, 0.2),
+    rgb(005, 005, 005, 0.15),
+    rgb(005, 005, 005, 0.1),
+    rgb(005, 005, 005, 0.05),
+    rgb(005, 005, 005, 0.025),
+    rgb(005, 005, 005, 0)
+  );
+}
+
+.slider-arrow-backpad-leftLIGHT:hover {
+  -webkit-filter: drop-shadow(1.2px 0.1px 1.92px rgba(225, 225, 225, 0.3));
+  filter: drop-shadow(1.2px 0.1px 1.92px rgba(225, 225, 225, 0.3));
+  background-image: linear-gradient(
+    to right,
+    rgb(200, 200, 200, 0.4),
+    rgb(200, 200, 200, 0.34),
+    rgb(200, 200, 200, 0.34),
+    rgb(200, 200, 200, 0.3),
+    rgb(200, 200, 200, 0.25),
+    rgb(200, 200, 200, 0.2),
+    rgb(200, 200, 200, 0.15),
+    rgb(200, 200, 200, 0.1),
+    rgb(200, 200, 200, 0.05),
+    rgb(200, 200, 200, 0.025),
+    rgb(200, 200, 200, 0)
+  );
+}
+
+.slider-arrow-backpad-rightLIGHT:hover {
+  -webkit-filter: drop-shadow(1.2px 0.1px 1.92px rgba(225, 225, 225, 0.3));
+  filter: drop-shadow(1.2px 0.1px 1.92px rgba(225, 225, 225, 0.3));
+  background-image: linear-gradient(
+    to left,
+    rgb(200, 200, 200, 0.4),
+    rgb(200, 200, 200, 0.34),
+    rgb(200, 200, 200, 0.3),
+    rgb(200, 200, 200, 0.25),
+    rgb(200, 200, 200, 0.2),
+    rgb(200, 200, 200, 0.15),
+    rgb(200, 200, 200, 0.1),
+    rgb(200, 200, 200, 0.05),
+    rgb(200, 200, 200, 0.025),
+    rgb(200, 200, 200, 0)
+  );
+}
 
 .slider-arrow-backpad-rightMobile:active {
   -webkit-filter: drop-shadow(1.2px 0.1px 1.92px rgba(225, 225, 225, 0.4));
@@ -764,37 +794,7 @@
   );
 }
 
-.slider-arrow-backpad-right:hover {
-  -webkit-filter: drop-shadow(1.2px 0.1px 1.92px rgba(225, 225, 225, 0.4));
-  filter: drop-shadow(1.2px 0.1px 1.92px rgba(225, 225, 225, 0.4));
-  background-image: linear-gradient(
-    to left,
-    rgb(200, 200, 200, 0.7),
-    rgb(200, 200, 200, 0.45),
-    rgb(200, 200, 200, 0.35),
-    rgb(200, 200, 200, 0.3),
-    rgb(200, 200, 200, 0.2),
-    rgb(200, 200, 200, 0.1),
-    rgb(200, 200, 200, 0)
-  );
-}
-
 .slider-arrow-backpad-leftMobile:active {
-  -webkit-filter: drop-shadow(1.2px 0.1px 1.92px rgba(225, 225, 225, 0.4));
-  filter: drop-shadow(1.2px 0.1px 1.92px rgba(225, 225, 225, 0.4));
-  background-image: linear-gradient(
-    to right,
-    rgb(200, 200, 200, 0.7),
-    rgb(200, 200, 200, 0.45),
-    rgb(200, 200, 200, 0.35),
-    rgb(200, 200, 200, 0.3),
-    rgb(200, 200, 200, 0.2),
-    rgb(200, 200, 200, 0.1),
-    rgb(200, 200, 200, 0)
-  );
-}
-
-.slider-arrow-backpad-left:hover {
   -webkit-filter: drop-shadow(1.2px 0.1px 1.92px rgba(225, 225, 225, 0.4));
   filter: drop-shadow(1.2px 0.1px 1.92px rgba(225, 225, 225, 0.4));
   background-image: linear-gradient(
@@ -902,10 +902,10 @@ zuperxyinfo {
 }
 
 .superloaderAutoSlider {
-  -webkit-animation: superloader-keyframeAutoSlider 3.2s linear 1 forwards; /* Safari 4+ */
-  -moz-animation: superloader-keyframeAutoSlider 3.2s linear 1 forwards; /* Fx 5+ */
-  -o-animation: superloader-keyframeAutoSlider 3.2s linear 1 forwards; /* Opera 12+ */
-  animation: superloader-keyframeAutoSlider 3.2s linear 1 forwards; /* IE 10+, Fx 29+ */
+  -webkit-animation: superloader-keyframeAutoSlider 5.2s linear 1 forwards; /* Safari 4+ */
+  -moz-animation: superloader-keyframeAutoSlider 5.2s linear 1 forwards; /* Fx 5+ */
+  -o-animation: superloader-keyframeAutoSlider 5.2s linear 1 forwards; /* Opera 12+ */
+  animation: superloader-keyframeAutoSlider 5.2s linear 1 forwards; /* IE 10+, Fx 29+ */
 }
 
 @keyframes superloader-keyframeAutoSlider {
@@ -1162,6 +1162,14 @@ zuperxyinfo {
   box-shadow: 0 0 0.4px#000000;
 }
 
+.turdarkdot {
+  height: auto;
+
+  -moz-box-shadow: 0 0 3.5#ffffff;
+  -webkit-box-shadow: 0 0 3.5px#ffffff;
+  box-shadow: 0 0 3.5px#ffffff;
+}
+
 .turlight {
   height: auto;
 
@@ -1181,9 +1189,9 @@ zuperxyinfo {
 .turdarkfavfan {
   height: auto;
 
-  -moz-box-shadow: 0 0 9.1px#000000;
-  -webkit-box-shadow: 0 0 9.1px#000000;
-  box-shadow: 0 0 9.1px#000000;
+  -moz-box-shadow: 0 0 6.1px#444444;
+  -webkit-box-shadow: 0 0 6.1px#444444;
+  box-shadow: 0 0 6.1px#444444;
 }
 
 .text-superstarz-dark {
@@ -1207,6 +1215,13 @@ zuperxyinfo {
 /*   T T T   T T T   T T T   T T T   T T T   T T T   T T T   T T T   T T T   T T T T T T  T T T */
 
 /*   Z Z  Z   Z Z  Z Z Z  Z Z Z  Z Z Z  Z Z Z  Z Z Z  Z Z Z  Z Z Z  Z Z Z  Z Z Z  Z Z Z  Z   */
+
+.zuperkingxx {
+  -webkit-filter: drop-shadow(1px 1px 1.3px rgba(0, 0, 0, 1));
+  filter: drop-shadow(1px 1px 1.3px rgba(0, 0, 0, 1));
+  color: #ffffff;
+}
+
 .zuperking {
   -webkit-filter: drop-shadow(1.9px 1.1px 3.3px rgba(0, 0, 0, 0.5));
   filter: drop-shadow(1.9px 1.1px 3.3px rgba(0, 0, 0, 0.5));
@@ -1234,12 +1249,12 @@ zuperxyinfo {
 }
 
 .zuperxyinfoPostDark {
-  text-shadow: 1.2px 2px 5px #888888;
+  text-shadow: 1.2px 2px 5px #999999;
   color: #ffffff;
 }
 
 .zuperxyinfoPostLight {
-  text-shadow: 1.2px 2px 5px #777777;
+  text-shadow: -1px 0px 4.5px #666666;
   color: #000000;
 }
 

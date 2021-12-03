@@ -11,3 +11,5 @@ export const UPDATE_GLOBAL_COLOR = "UPDATE_GLOBAL_COLOR";
 export const ACTIVATE_GLOBAL_LOADER = "ACTIVATE_GLOBAL_LOADER";
 
 export const HIDE_GLOBAL_LOADER = "HIDE_GLOBAL_LOADER";
+
+export const UPDATE_ScrollType = "UPDATE_ScrollType";

@@ -1,16 +1,20 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { Paper, Grid, Box } from "@material-ui/core";
-import { useSelector } from "react-redux";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import Crop54Icon from "@mui/icons-material/Crop54";
 import CropPortraitIcon from "@mui/icons-material/CropPortrait";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CommentIcon from "@mui/icons-material/Comment";
 import CircleIcon from "@mui/icons-material/Circle";
+import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
+import { ScrollerAction } from "../GlobalActions";
+import { matchMobile, matchPc, matchTablet } from "../DetectDevice";
+import { Slider } from "./Slider";
 
 function Postx({
   pey,
-  refy,
+  addPostItemsRef,
   onPostsItemload,
   post,
   length,
@@ -21,9 +25,18 @@ function Postx({
   itemFinalPostHeight,
   onPostsItemClicked,
   itemCLICKED,
+  addpostDivRef,
+  postDatainner,
+  itemOriginalPostHeight,
+  ScrolltypeChange,
+  ActiveAutoPlay,
+  setActiveAutoPlay,
+  AUTOSlideLongImages,
+  postDivRef,
 }: any) {
-  var paddingTopemo = "7vh";
-  var fontSizeemo = "2.7%";
+  const [autoSlideDuration] = useState(6000);
+
+  const dispatch = useDispatch();
 
   ///
   ///
@@ -50,15 +63,239 @@ function Postx({
 
   const [itemInfoTopShow, setitemInfoTopShow] = useState<boolean>(false);
 
+  const [hideItemForAWhile, sethideItemForAWhile] = useState<boolean>(false);
+
   ///
   ///
   ///
   ///GET OPTIONS SLIDER IMAGE WIDTH FROM MATERIAL UI GRID
   useEffect(() => {
+    if (pey === 0) {
+      var time1: number = 1 + 1 + 1 + 1 * 1500;
+    } else {
+      var time1: number = pey + pey + pey + pey * 1500;
+    }
+
+    if (pey === 0) {
+      var time2: number = 1 + 1 + 1 + 1 * 2000;
+    } else {
+      var time2: number = pey + pey + pey + pey * 1600;
+    }
+
+    setTimeout(function () {
+      sethideItemForAWhile(true);
+      if (pey === length - 1) {
+        if (matchMobile) {
+        } else {
+          dispatch(ScrollerAction("y mandatory"));
+        }
+      }
+    }, time1);
     setTimeout(function () {
       setitemInfoTopShow(true);
-    }, 1500);
-  }, [itemheighthold, itemheight]);
+    }, time2);
+  }, []);
+
+  var textback = "";
+  if (darkmodeReducer) {
+    textback = "caption-darkPost";
+  } else {
+    textback = "caption-lightPost";
+  }
+
+  const showcaptionwaitTimer = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+  const [showSliderLoader, setshowSliderLoader] = useState(true);
+
+  const autoPlayTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const [sliderIndex, setSliderIndex] = useState(0);
+  const [sliderIndexSlow, setSliderIndexSlow] = useState(0);
+
+  const waitChangeIndexTimer2 = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+
+  const flashBlackAndWhite = () => {
+    postDivRef.current[pey].style.filter = "grayscale(100%)";
+
+    setTimeout(function () {
+      postDivRef.current[pey].style.filter = "none";
+    }, 500);
+  };
+
+  const stopSlider = (type: any) => {
+    if (type === 1) {
+      flashBlackAndWhite();
+    }
+
+    ///////////////////////////////
+    const newArrxq = [...ActiveAutoPlay];
+    newArrxq[pey] = true;
+    setActiveAutoPlay(newArrxq);
+    ////////////////////////////
+    setshowSliderLoader(true);
+    if (autoPlayTimer.current) {
+      clearInterval(autoPlayTimer.current);
+    }
+  };
+
+  ///
+  ///
+  ///
+  /// SHOW  LOGIN PASSWORD FOR A WHILE
+  const startSlider = useCallback(() => {
+    flashBlackAndWhite();
+    //////the callback is passed the element, the index, and the array itself.
+    ActiveAutoPlay.forEach(function (part: any, index: any, theArray: any) {
+      if (pey === index) {
+        theArray[index] = false;
+      } else {
+        theArray[index] = true;
+      }
+      if (index === ActiveAutoPlay.length) {
+        setActiveAutoPlay(theArray);
+      }
+    });
+
+    ///////////////////////////////
+    const newArrxq = [...ActiveAutoPlay];
+    newArrxq[pey] = false;
+    setActiveAutoPlay(newArrxq);
+    ////////////////////////////
+    setshowSliderLoader(false);
+    autoPlayTimer.current = setInterval(function () {
+      ScrolltypeChange();
+      AUTOSlideLongImages(pey);
+      setshowSliderLoader(true);
+
+      setSliderIndex((state) => (state + 1) % postDatainner[pey].length);
+      if (waitChangeIndexTimer2.current) {
+        clearTimeout(waitChangeIndexTimer2.current);
+      }
+      waitChangeIndexTimer2.current = setTimeout(function () {
+        setSliderIndexSlow((state) => (state + 1) % postDatainner[pey].length);
+        setshowSliderLoader(false);
+      }, 500);
+    }, autoSlideDuration);
+  }, [ActiveAutoPlay[pey], ActiveAutoPlay]);
+
+  const SliderAutoPlay = (type: number) => {
+    if (type === 1) {
+      startSlider();
+    } else {
+      if (ActiveAutoPlay[pey]) {
+        startSlider();
+      } else {
+        stopSlider(1);
+      }
+    }
+  };
+
+  ///
+  ///
+  ///
+  /// CHANGE SLIDER CONTENT USING  DOTS
+  const checkifClicked = () => {
+    if (itemCLICKED[pey]) {
+      if (ActiveAutoPlay[pey]) {
+        showcaptionwaitTimer.current = setTimeout(function () {
+          onPostsItemClicked(pey);
+        }, 250);
+      } else {
+        SliderAutoPlay(0);
+      }
+    } else {
+      onPostsItemClicked(pey);
+    }
+  };
+
+  ///
+  ///
+  ///
+  /// CHANGE SLIDER CONTENT USING  DOTS
+  const checkifClickedDouble = () => {
+    if (itemCLICKED[pey]) {
+      if (showcaptionwaitTimer.current) {
+        clearTimeout(showcaptionwaitTimer.current);
+      }
+
+      SliderAutoPlay(0);
+    } else {
+    }
+  };
+
+  ///
+  ///
+  ///
+  /// CLICK BILLBOARD OPEN ON DOUBLE CLICK
+  const clickslider = (e: any) => {
+    switch (e.detail) {
+      case 1:
+        checkifClicked();
+        break;
+      case 2:
+        checkifClickedDouble();
+        break;
+      case 3:
+        checkifClickedDouble();
+        break;
+      case 4:
+        checkifClickedDouble();
+        break;
+    }
+  };
+
+  var postcropfont = matchPc ? "2.1vw" : matchTablet ? "4vh" : "3.6vh";
+  var postcroppadding = matchPc ? "17px" : matchTablet ? "20px" : "4px";
+  var cropTop: number = matchPc ? 1.5 : matchTablet ? 7 : 3;
+
+  var posteyefont = matchPc ? "1.75vw" : matchTablet ? "3.4vh" : "3.3vh";
+  var posteyeleft = matchPc ? "92.4%" : matchTablet ? "92.693%" : "90%";
+  var eyeTop = matchPc ? "-9px" : matchTablet ? "-6px" : "-8px";
+
+  var emotionClass = matchPc
+    ? "turpostDark emotionspostPC"
+    : matchTablet
+    ? "turpostDark emotionspostTablet"
+    : "turpostDark emotionspostMOBILE";
+  var emolove = matchPc ? 90 : matchTablet ? 170 : 115;
+  var emocool = matchPc ? 70 : matchTablet ? 145 : 101;
+  var emocare = matchPc ? 50 : matchTablet ? 115 : 83;
+  var emofunny = matchPc ? 30 : matchTablet ? 90 : 64;
+
+  var profilewidth = matchPc ? "10.5%" : matchTablet ? "16.5%" : "15%";
+  var postprofiletop = matchPc ? "9.5vh" : matchTablet ? "4.2vh" : "-2vh";
+
+  var postusernametop = matchPc ? "7.6vh" : matchTablet ? "1.9vh" : "-3.1vh";
+  var postusernamefont = matchPc ? "1.41vw" : matchTablet ? "3.1vh" : "2.4vh";
+  var postusernameleft = matchPc ? "12%" : matchTablet ? "18%" : "17.2%";
+
+  var postcirclefont = matchPc ? "0.4vw" : matchTablet ? "0.4vw" : "0.6vh";
+  var dotspace = matchPc ? "0.8vw" : matchTablet ? "0.8vw" : "0.6vh";
+  var dotspace2 = matchPc ? "0.4vw" : matchTablet ? "0.4vw" : "0.3vh";
+
+  var posttopicfont = matchPc ? "1.1vw" : matchTablet ? "2.1vh" : "1.8vh";
+
+  var postcaptiontop = matchPc ? "10vh" : matchTablet ? "4vh" : "-1.4vh";
+  var postcaptionfont = matchPc ? "1.27vw" : matchTablet ? "2.39vh" : "2vh";
+  var postcaptionline = matchPc ? "1.55" : matchTablet ? "1.55" : "1.3";
+  var postcaptionleft = matchPc ? "12%" : matchTablet ? "18%" : "17.3%";
+  var postcaptionheight = matchPc ? "7.3vh" : matchTablet ? "7.35vh" : "5.7vh";
+  var postcaptionwidth = matchPc ? "79%" : matchTablet ? "71%" : "71%";
+
+  var postcommenttop = matchPc ? "9vh" : matchTablet ? "2.55vh" : "-2.4vh";
+  var postcommentfont = matchPc ? "1.8vw" : matchTablet ? "4vh" : "3.55vh";
+  var postcommentwidth = matchPc ? "98.5%" : matchTablet ? "98.5%" : "95.5%";
+
+  var postoptionstop = matchPc ? "0.15vh" : matchTablet ? "-5.8vh" : "-9.2vh";
+  var postoptionsleft = matchPc ? "94.5%" : matchTablet ? "94.5%" : "91.6%";
+  var postvertfont = matchPc ? "2.2vw" : matchTablet ? "3.9vh" : "3.6vh";
+
+  var postdatetop = matchPc ? "1.9vh" : matchTablet ? "-4.4vh" : "-7.8vh";
+  var postdatefont = matchPc ? "0.9vw" : matchTablet ? "1.6vh" : "1.25vh";
+  var postdateleft = matchPc ? "98.5%" : matchTablet ? "98.5%" : "96.3%";
 
   var textback = "";
   if (darkmodeReducer) {
@@ -70,34 +307,43 @@ function Postx({
   return (
     <>
       <div
+        ref={addpostDivRef}
         style={{
-          scrollSnapAlign: "start",
+          scrollSnapAlign: matchMobile ? "none" : "start",
           padding: "0px",
           width: "100%",
+          marginTop: pey === 0 || pey === 1 ? "0px" : "-0.6px",
+          visibility: hideItemForAWhile ? "visible" : "hidden",
         }}
       >
         {/*///////////////////////////////////////////////////////////////////////////POST DATA*/}
-        <img
-          onLoad={(e: any) => {
-            onPostsItemload(e, pey);
-          }}
-          onClick={() => {
-            onPostsItemClicked(pey);
-          }}
-          ref={refy}
-          className={darkmodeReducer ? "turlightpostdark" : "turlightpostlight"}
-          src={`./images/posts/${post.item1}`}
-          alt="a superstarz post "
-          style={{
-            cursor: "alias",
-            width: "100%",
-            height: itemheight[pey],
-            position: "relative",
-            padding: "0px",
-            objectFit: "contain",
-            display: "block",
-            objectPosition: itemheight[pey] === "auto" ? "50% 50" : "50% top",
-          }}
+
+        <Slider
+          ActiveAutoPlay={ActiveAutoPlay}
+          setActiveAutoPlay={setActiveAutoPlay}
+          pey={pey}
+          addPostItemsRef={addPostItemsRef}
+          itemheight={itemheight}
+          onPostsItemClicked={onPostsItemClicked}
+          onPostsItemload={onPostsItemload}
+          post={post}
+          slides={postDatainner[pey]}
+          itemcroptype={itemcroptype}
+          itemFinalPostHeight={itemFinalPostHeight}
+          itemCLICKED={itemCLICKED}
+          itemOriginalPostHeight={itemOriginalPostHeight}
+          ScrolltypeChange={ScrolltypeChange}
+          AUTOSlideLongImages={AUTOSlideLongImages}
+          clickslider={clickslider}
+          stopSlider={stopSlider}
+          SliderAutoPlay={SliderAutoPlay}
+          showSliderLoader={showSliderLoader}
+          setshowSliderLoader={setshowSliderLoader}
+          autoPlayTimer={autoPlayTimer}
+          sliderIndex={sliderIndex}
+          setSliderIndex={setSliderIndex}
+          sliderIndexSlow={sliderIndexSlow}
+          setSliderIndexSlow={setSliderIndexSlow}
         />
         {/*///////////////////////////////////////////////////////////////////////////POST DATA*/}
         {itemCLICKED[pey] ? null : (
@@ -114,19 +360,21 @@ function Postx({
                 position: "relative",
                 transition: "all 350ms ease",
                 opacity: itemInfoTopShow ? 1 : 0,
+                zIndex: 2,
               }}
             >
               {/*///////////////////////////////////////////////////////////////////////////CROPED*/}
               <div
                 style={{
-                  top: `-${itemheighthold[pey] - 6.5}px`,
+                  top: `-${itemheighthold[pey] - cropTop}px`,
+
                   position: "relative",
                   transition: "all 350ms ease",
                   opacity: 1,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "left",
-                  paddingLeft: "20px",
+                  paddingLeft: postcroppadding,
                   zIndex: 1,
                   height: "0px",
                 }}
@@ -135,11 +383,11 @@ function Postx({
                   <Crop54Icon
                     className={
                       darkmodeReducer
-                        ? "make-small-icons-clickable-light  dontallowhighlighting   zuperking"
-                        : "make-small-icons-clickable-dark  dontallowhighlighting  zuperking"
+                        ? "make-small-icons-clickable-light  dontallowhighlighting   zuperkingxx"
+                        : "make-small-icons-clickable-dark  dontallowhighlighting  zuperkingxx"
                     }
                     style={{
-                      fontSize: "2.2vw",
+                      fontSize: postcropfont,
                       opacity: itemInfoTopShow
                         ? itemheight[pey] === "auto"
                           ? 0
@@ -151,11 +399,11 @@ function Postx({
                   <CropPortraitIcon
                     className={
                       darkmodeReducer
-                        ? "make-small-icons-clickable-light  dontallowhighlighting   zuperking"
-                        : "make-small-icons-clickable-dark  dontallowhighlighting  zuperking"
+                        ? "make-small-icons-clickable-light  dontallowhighlighting   zuperkingxx"
+                        : "make-small-icons-clickable-dark  dontallowhighlighting  zuperkingxx"
                     }
                     style={{
-                      fontSize: "2.2vw",
+                      fontSize: postcropfont,
                       opacity: itemInfoTopShow
                         ? itemheight[pey] === "auto"
                           ? 0
@@ -180,126 +428,146 @@ function Postx({
                   position: "relative",
                   transition: "all 350ms ease",
                   opacity: 1,
-
                   zIndex: 2,
-                  marginTop: "0px",
+                  marginTop: eyeTop,
                   height: "0px",
                 }}
               >
                 <RemoveRedEyeIcon
                   className={
                     darkmodeReducer
-                      ? "make-small-icons-clickable-light  dontallowhighlighting   zuperking"
-                      : "make-small-icons-clickable-dark  dontallowhighlighting  zuperking"
+                      ? "make-small-icons-clickable-light  dontallowhighlighting   zuperkingxx"
+                      : "make-small-icons-clickable-dark  dontallowhighlighting  zuperkingxx"
                   }
                   style={{
-                    fontSize: "1.75vw",
+                    fontSize: posteyefont,
                     opacity: 0.4,
-                    marginLeft: "92.4%",
+                    marginLeft: posteyeleft,
+                    color: "#ffffff",
                   }}
                 />
               </div>
               {/*///////////////////////////////////////////////////////////////////////////VIEWS*/}
 
+              <Grid
+                item
+                xs={12}
+                style={{
+                  position: "absolute",
+                  top: `-20vh`,
+                  width: matchPc ? "13%" : matchTablet ? "14%" : "22%",
+                  height: matchPc ? "160px" : matchTablet ? "150px" : "200px",
+                  marginLeft: matchPc ? "87%" : matchTablet ? "86%" : "78%",
+                  zIndex: 7,
+                }}
+              ></Grid>
               {/*///////////////////////////////////////////////////////////////////////////EMOTIONS*/}
 
               <img
-                className={darkmodeReducer ? "turpostDark" : "turpostLight"}
+                className={emotionClass}
                 src={`./images/emotions/love.png`}
                 alt="a superstarz post "
                 style={{
-                  top: `-${itemheighthold[pey] - 40}px`,
-                  marginLeft: "92.8%",
+                  top: `-${emolove}px`,
                   cursor: "pointer",
                   boxShadow: darkmodeReducer
                     ? "0 0 1px #555555"
                     : "0 0 4.5px #aaaaaa",
-                  width: fontSizeemo,
+
                   height: "auto",
                   padding: "0px",
                   objectFit: "contain",
                   borderRadius: "50%",
                   position: "relative",
-                  zIndex: 1,
-                  opacity: 0.75,
+                  zIndex: 8,
                 }}
               />
 
               <img
-                className={darkmodeReducer ? "turpostDark" : "turpostLight"}
+                className={emotionClass}
                 src={`./images/emotions/cool.png`}
                 alt="a superstarz post "
                 style={{
-                  top: `-${itemheighthold[pey] - 60}px`,
-                  marginLeft: "92.8%",
+                  top: `-${emocool}px`,
                   cursor: "pointer",
                   boxShadow: darkmodeReducer
                     ? "0 0 1px #555555"
                     : "0 0 4.5px #aaaaaa",
-                  width: fontSizeemo,
+
                   height: "auto",
                   padding: "0px",
                   objectFit: "contain",
                   borderRadius: "50%",
                   position: "relative",
-                  zIndex: 1,
-                  opacity: 0.75,
+                  zIndex: 8,
                 }}
               />
 
               <img
-                className={darkmodeReducer ? "turpostDark" : "turpostLight"}
+                className={emotionClass}
                 src={`./images/emotions/oo.png`}
                 alt="a superstarz post "
                 style={{
-                  top: `-${itemheighthold[pey] - 80}px`,
-                  marginLeft: "92.8%",
+                  top: `-${emocare}px`,
                   cursor: "pointer",
                   boxShadow: darkmodeReducer
                     ? "0 0 1px #555555"
                     : "0 0 4.5px #aaaaaa",
-                  width: fontSizeemo,
+
                   height: "auto",
                   padding: "0px",
                   objectFit: "contain",
                   borderRadius: "50%",
                   position: "relative",
-                  zIndex: 1,
-                  opacity: 0.7,
+                  zIndex: 8,
                 }}
               />
 
               <img
-                className={darkmodeReducer ? "turpostDark" : "turpostLight"}
+                className={emotionClass}
                 src={`./images/emotions/laugh.png`}
                 alt="a superstarz post "
                 style={{
-                  top: `-${itemheighthold[pey] - 100}px`,
-                  marginLeft: "92.8%",
+                  top: `-${emofunny}px`,
                   cursor: "pointer",
                   boxShadow: darkmodeReducer
                     ? "0 0 1px #555555"
                     : "0 0 3.5px #aaaaaa",
-                  width: fontSizeemo,
 
                   height: "auto",
                   padding: "0px",
                   objectFit: "contain",
                   borderRadius: "50%",
                   position: "relative",
-                  zIndex: 1,
-                  opacity: 0.7,
+                  zIndex: 8,
                 }}
               />
 
               {/*///////////////////////////////////////////////////////////////////////////EMOTIONS*/}
+
+              {/*///////////////////////////////////////////////////////////////////////////BACKPAD CLICKABLE*/}
+              <div
+                onClick={clickslider}
+                style={{
+                  opacity: darkmodeReducer ? 0.89 : 0.94,
+                  cursor: "alias",
+                  top: `-1vh`,
+                  position: "absolute",
+                  zIndex: 6,
+                  paddingLeft: "2vw",
+                  fontFamily: "Arial, Helvetica, sans-seri",
+                  height: "80px",
+                  width: "100%",
+                }}
+              ></div>
+              {/*///////////////////////////////////////////////////////////////////////////BACKPAD CLICKABLE*/}
+              {/*///////////////////////////////////////////////////////////////////////////PROFILE-PIC*/}
               <div
                 className="zuperxyinfo"
                 style={{
                   opacity: 1,
-                  top: `5.6vh`,
+                  top: postprofiletop,
                   position: "relative",
-
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "left",
@@ -318,7 +586,7 @@ function Postx({
                     boxShadow: darkmodeReducer
                       ? "0 0 1px #555555"
                       : "0 0 3.5px #aaaaaa",
-                    width: "10.5%",
+                    width: profilewidth,
                     height: "auto",
                     padding: "0px",
                     objectFit: "contain",
@@ -337,8 +605,8 @@ function Postx({
                     : "zuperxyinfoPostLight"
                 }
                 style={{
-                  opacity: darkmodeReducer ? 0.86 : 0.9,
-                  top: `4vh`,
+                  opacity: darkmodeReducer ? 0.89 : 0.94,
+                  top: postusernametop,
                   position: "relative",
                   transition: "all 350ms ease",
                   display: "flex",
@@ -347,14 +615,14 @@ function Postx({
                   zIndex: 1,
                   paddingLeft: "2vw",
                   fontFamily: "Arial, Helvetica, sans-seri",
-                  marginLeft: "12%",
+                  marginLeft: postusernameleft,
                   height: "0px",
                 }}
               >
                 <span
                   style={{
                     fontWeight: "bolder",
-                    fontSize: "1.41vw",
+                    fontSize: postusernamefont,
                     verticalAlign: "middle",
                   }}
                 >
@@ -368,21 +636,21 @@ function Postx({
                     <span
                       style={{
                         opacity: 0,
-                        fontSize: "0.8vw",
+                        fontSize: dotspace,
                       }}
                     >
                       .
                     </span>
                     <CircleIcon
                       style={{
-                        fontSize: "0.4vw",
+                        fontSize: postcirclefont,
                         verticalAlign: "middle",
                       }}
                     />
                     <span
                       style={{
                         opacity: 0,
-                        fontSize: "0.4vw",
+                        fontSize: dotspace2,
                       }}
                     >
                       .
@@ -392,7 +660,7 @@ function Postx({
 
                 <span
                   style={{
-                    fontSize: "1.1vw",
+                    fontSize: posttopicfont,
                     verticalAlign: "middle",
                     fontFamily: "kaushan_scriptregular",
                     fontWeight: "normal",
@@ -411,31 +679,31 @@ function Postx({
                     : "zuperxyinfoPostLight"
                 }
                 style={{
-                  opacity: 1,
-                  top: `6vh`,
+                  opacity: darkmodeReducer ? 0.89 : 0.78,
+                  top: postcaptiontop,
                   position: "relative",
                   transition: "all 350ms ease",
-                  marginLeft: "12%",
+                  marginLeft: postcaptionleft,
                   zIndex: 1,
                   paddingLeft: "1.95vw",
                   fontFamily: "Arial, Helvetica, sans-seri",
-                  height: "7.7vh",
-                  width: "80%",
-                  lineHeight: 1.68,
+                  height: postcaptionheight,
+                  width: postcaptionwidth,
+                  lineHeight: postcaptionline,
                   overflow: "hidden",
                 }}
               >
                 <span
+                  className={textback}
                   style={{
                     verticalAlign: "middle",
-                    fontSize: "1.15vw",
+                    fontSize: postcaptionfont,
                     fontWeight: "bold",
                     margin: "0",
                     justifyContent: "center",
-                    opacity: darkmodeReducer ? 0.82 : 0.75,
-                    color: darkmodeReducer ? "#dddddd" : "#0b1728",
+
+                    color: darkmodeReducer ? "#eeeeee" : "#000000",
                   }}
-                  className={textback}
                 >
                   {post.caption}{" "}
                 </span>
@@ -449,7 +717,7 @@ function Postx({
                     : "zuperxyinfoPostLight"
                 }
                 style={{
-                  top: `-3.2vh`,
+                  top: postoptionstop,
                   position: "relative",
                   transition: "all 350ms ease",
                   display: "flex",
@@ -459,11 +727,16 @@ function Postx({
                   height: "0px",
                   width: "98%",
                   paddingLeft: "2vw",
-                  opacity: 0.75,
+                  opacity: darkmodeReducer ? 0.6 : 0.64,
                 }}
               >
-                <span style={{ marginLeft: "94%" }}>
-                  <MoreHorizIcon style={{ fontSize: "2.3vw" }} />
+                <span style={{ marginLeft: postoptionsleft, padding: "0px" }}>
+                  <MoreHorizIcon
+                    style={{
+                      fontSize: postvertfont,
+                      verticalAlign: "middle",
+                    }}
+                  />
                 </span>
               </div>
               {/*///////////////////////////////////////////////////////////////////////////OPTIONS*/}
@@ -475,7 +748,7 @@ function Postx({
                     : "zuperxyinfoPostLight"
                 }
                 style={{
-                  top: `-1.3vh`,
+                  top: postdatetop,
                   position: "relative",
                   transition: "all 350ms ease",
                   display: "flex",
@@ -483,15 +756,21 @@ function Postx({
                   justifyContent: "left",
                   zIndex: 2,
                   height: "0px",
-                  width: "98.5%",
+                  width: postdateleft,
                   paddingLeft: "2vw",
-                  fontWeight: "bolder",
-                  fontSize: "0.82vw",
                   fontFamily: "Arial, Helvetica, sans-seri",
-                  opacity: 0.75,
+                  opacity: darkmodeReducer ? 0.6 : 0.64,
                 }}
               >
-                <span style={{ marginLeft: "94%" }}>Jul 6</span>
+                <span
+                  style={{
+                    marginLeft: "94%",
+                    fontSize: postdatefont,
+                    fontWeight: "bold",
+                  }}
+                >
+                  Jul 6
+                </span>
               </div>
               {/*///////////////////////////////////////////////////////////////////////////DATE*/}
               {/*///////////////////////////////////////////////////////////////////////////COMMENT*/}
@@ -502,7 +781,7 @@ function Postx({
                     : "zuperxyinfoPostLight"
                 }
                 style={{
-                  top: `5.5vh`,
+                  top: postcommenttop,
                   position: "relative",
                   transition: "all 350ms ease",
                   display: "flex",
@@ -510,10 +789,10 @@ function Postx({
                   justifyContent: "left",
                   zIndex: 2,
                   height: "0px",
-                  width: "98.5%",
+                  width: postcommentwidth,
                   paddingLeft: "2vw",
                   fontWeight: "bolder",
-                  opacity: 0.75,
+                  opacity: darkmodeReducer ? 0.5 : 0.65,
                 }}
               >
                 {" "}
@@ -521,13 +800,26 @@ function Postx({
                   <CommentIcon
                     style={{
                       verticalAlign: "middle",
-                      fontSize: "1.8vw",
-                      opacity: 1,
+                      fontSize: postcommentfont,
                     }}
                   />
                 </span>
               </div>
               {/*///////////////////////////////////////////////////////////////////////////COMMENT*/}
+
+              {pey === length - 1 ? (
+                <Grid
+                  item
+                  xs={12}
+                  style={{ padding: "0px", height: "200px" }}
+                ></Grid>
+              ) : (
+                <Grid
+                  item
+                  xs={12}
+                  style={{ padding: "0px", height: "0px" }}
+                ></Grid>
+              )}
             </div>{" "}
           </>
         )}

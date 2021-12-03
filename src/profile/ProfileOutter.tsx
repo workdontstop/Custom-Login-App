@@ -1,12 +1,21 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { Paper, Grid, Box } from "@material-ui/core";
-import { matchPc, matchTablet } from "../DetectDevice";
-import { RootStateOrAny, useSelector } from "react-redux";
+import { matchMobile, matchPc, matchTablet } from "../DetectDevice";
+import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
+import { ScrollerAction } from "../GlobalActions";
+
 import "./profile.css";
 import { Profile } from "./Profile";
 import Axios from "axios";
 
 function ProfileOutter() {
+  const { REACT_APP_SUPERSTARZ_URL } = process.env;
+
+  const dispatch = useDispatch();
+
+  const [postData, setPostData] = useState<Array<any>>([]);
+  const [postDatainner, setpostDatainner] = useState<Array<any>>([[]]);
+
   const getSliderWidthRef = useRef<HTMLDivElement>(null);
 
   const [formtype] = useState<number>(1);
@@ -17,12 +26,48 @@ function ProfileOutter() {
   const [aboutTemplateGo] = useState<boolean>(true);
   const [commentTemplateGo] = useState<boolean>(false);
 
-  const [postData, setPostData] = useState<Array<any>>([]);
+  const [itemheight, setitemheight] = useState<Array<string>>([]);
+  const [itemheighthold, setitemheighthold] = useState<Array<string>>([]);
+  const [itemcroptype, setitemcroptype] = useState<Array<number>>([]);
+  const [itemFinalPostHeight, setitemFinalPostHeight] = useState<Array<number>>(
+    []
+  );
+  const [itemOriginalPostHeight, setitemOriginalPostHeight] = useState<
+    Array<number>
+  >([]);
+  const [itemCLICKED, setitemCLICKED] = useState<Array<boolean>>([]);
+  const [onLoadDataOnce, setonLoadDataOnce] = useState<Array<boolean>>([]);
+  const [ActiveAutoPlay, setActiveAutoPlay] = useState<Array<boolean>>([]);
+
+  const postDivRef = useRef<any>([]);
 
   const postItemsRef = useRef<any>([]);
 
-  var postbackheighthold = document.documentElement.clientHeight * 0.3;
+  var heightplus = matchPc ? 0.33 : matchTablet ? 0.27 : 0.21;
+  var postbackheighthold = document.documentElement.clientHeight * heightplus;
+
   const [postbackheight] = useState<number>(postbackheighthold);
+
+  const scrollTypeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  ///
+  ///
+  ///
+  ///TYPES FOR ISLOGGEDIN
+  interface RootStateScrollType {
+    ScrollTypeReducer: {
+      scroller: string;
+    };
+  }
+
+  /////////////////////////////
+  ///
+  ///
+  ///LOGGED IN DATA FROM REDUX
+  const { scroller } = useSelector((state: RootStateScrollType) => ({
+    ...state.ScrollTypeReducer,
+  }));
+  const scrollerReducer = scroller;
 
   ///
   ///
@@ -128,16 +173,18 @@ function ProfileOutter() {
   ///
   ///
   ///
-  ///DOT ENV DATA
-  const { REACT_APP_SUPERSTARZ_URL } = process.env;
+  ///CREATE div REFS FROM POSTS AND ADD THEM TO ARRAY
+  const addpostDivRef = (divRef: any) => {
+    if (divRef && !postDivRef.current.includes(divRef)) {
+      postDivRef.current.push(divRef);
+    }
+    ////console.log(postItemsRef.current[1]);
+  };
 
-  const [itemheight, setitemheight] = useState<Array<string>>([]);
-  const [itemheighthold, setitemheighthold] = useState<Array<string>>([]);
-  const [itemcroptype, setitemcroptype] = useState<Array<number>>([]);
-  const [itemFinalPostHeight, setitemFinalPostHeight] = useState<Array<number>>(
-    []
-  );
-  const [itemCLICKED, setitemCLICKED] = useState<Array<boolean>>([]);
+  ///
+  ///
+  ///
+  ///DOT ENV DATA
 
   ///
   ///
@@ -155,7 +202,60 @@ function ProfileOutter() {
             obj.itemrealheighthold = "0";
             obj.itemcroptype = "0";
             obj.itemFinalPostHeight = "0";
+            obj.itemOriginalPostHeight = "0";
             obj.itemCLICKED = false;
+            obj.onLoadDataOnce = false;
+            obj.ActiveAutoPlay = true;
+          });
+
+          const newArrxt: any = [[...postDatainner]];
+          postdataRep.map((obj: any, index: any) => {
+            const newArrxtq: any = [];
+            for (let i = 0; i < postdataRep[index].post_count; i++) {
+              ///////////////////////////////
+
+              if (i === 0) {
+                newArrxtq[i] = `${postdataRep[index].item1}`;
+              } else if (i === 1) {
+                newArrxtq[i] = `${postdataRep[index].item2}`;
+              } else if (i === 2) {
+                newArrxtq[i] = `${postdataRep[index].item3}`;
+              } else if (i === 3) {
+                newArrxtq[i] = `${postdataRep[index].item4}`;
+              } else if (i === 4) {
+                newArrxtq[i] = `${postdataRep[index].item5}`;
+              } else if (i === 5) {
+                newArrxtq[i] = `${postdataRep[index].item6}`;
+              } else if (i === 6) {
+                newArrxtq[i] = `${postdataRep[index].item7}`;
+              } else if (i === 7) {
+                newArrxtq[i] = `${postdataRep[index].item8}`;
+              } else if (i === 8) {
+                newArrxtq[i] = `${postdataRep[index].item9}`;
+              } else if (i === 9) {
+                newArrxtq[i] = `${postdataRep[index].item10}`;
+              } else if (i === 10) {
+                newArrxtq[i] = `${postdataRep[index].item11}`;
+              } else if (i === 11) {
+                newArrxtq[i] = `${postdataRep[index].item12}`;
+              } else if (i === 12) {
+                newArrxtq[i] = `${postdataRep[index].item13}`;
+              } else if (i === 13) {
+                newArrxtq[i] = `${postdataRep[index].item14}`;
+              } else if (i === 14) {
+                newArrxtq[i] = `${postdataRep[index].item15}`;
+              } else if (i === 15) {
+                newArrxtq[i] = `${postdataRep[index].item16}`;
+              } else {
+              }
+
+              if (i + 1 === postdataRep[index].post_count) {
+                newArrxt[index] = newArrxtq;
+                setpostDatainner(newArrxt);
+              }
+              /////
+              ///////////////////////////////
+            }
           });
 
           setPostData(postdataRep);
@@ -184,86 +284,122 @@ function ProfileOutter() {
       );
       setitemFinalPostHeight(initialitemFinalPostHeight);
 
+      const initialitemOriginalPostHeight = postData.map(
+        (obj) => obj.itemOriginalPostHeight
+      );
+      setitemOriginalPostHeight(initialitemOriginalPostHeight);
+
       const initialitemCLICKED = postData.map((obj) => obj.itemCLICKED);
       setitemCLICKED(initialitemCLICKED);
+
+      const initialsetonLoadDataOnce = postData.map(
+        (obj) => obj.onLoadDataOnce
+      );
+      setonLoadDataOnce(initialsetonLoadDataOnce);
+
+      const initialsetActiveAutoPlay = postData.map(
+        (obj) => obj.ActiveAutoPlay
+      );
+      setActiveAutoPlay(initialsetActiveAutoPlay);
     }
   }, [postData]);
 
   ///
   ///
   const onPostsItemload = useCallback(
-    (e: any, index: number) => {
-      if (postItemsRef.current[index]) {
-        var imageHeight = postItemsRef.current[index].clientHeight;
-        var imageWidth = postItemsRef.current[index].clientWidth;
-        ///////////////////////////////
-        const newArrx = [...itemheighthold];
-        var newh = imageHeight / 1.042 - postbackheighthold;
-        newArrx[index] = `${newh}`;
-        setitemheighthold(newArrx);
-        ///////////////////////////////
-        const newArrayFinalPostHeight = [...itemFinalPostHeight];
-        newArrayFinalPostHeight[index] = imageHeight;
-        setitemFinalPostHeight(newArrayFinalPostHeight);
+    (e: any, index: number, itemnum: number) => {
+      if (onLoadDataOnce[index]) {
+      } else {
+        if (itemnum === 0) {
+          if (postItemsRef.current[index]) {
+            var imageHeight = postItemsRef.current[index].clientHeight;
 
-        //console.log(screenHeightReducer);
-        ///console.log("jj");
-        ///console.log(imageHeight);
+            ///////////////////////////////
+            const newArraa = [...itemheight];
+            newArraa[index] = `${imageHeight}px`;
+            setitemheight(newArraa);
+            ///////////////////////////////
 
-        var choppedHeight = percentage(screenHeightReducer, 100);
+            ///////////////////////////////
+            const newArrx = [...itemheighthold];
+            var newh = imageHeight / 1.042 - postbackheighthold;
+            newArrx[index] = `${newh}`;
+            setitemheighthold(newArrx);
+            ///////////////////////////////
+            const newArrayFinalPostHeight = [...itemFinalPostHeight];
+            newArrayFinalPostHeight[index] = imageHeight;
+            setitemFinalPostHeight(newArrayFinalPostHeight);
 
-        var choppedwidth = percentage(screenHeightReducer, 58);
+            ///////////////////////////////
+            const newArrayitemOriginalPostHeight = [...itemOriginalPostHeight];
+            newArrayitemOriginalPostHeight[index] = imageHeight;
+            setitemOriginalPostHeight(newArrayitemOriginalPostHeight);
+            ///////////////////////////////
 
-        if (imageHeight < choppedwidth) {
-          postItemsRef.current[index].style.objectFit = "cover";
-          /////WIDE IMAGE SET
-          const newArr = [...itemheight];
-          newArr[index] = `${choppedwidth}px`;
-          setitemheight(newArr);
-          ///////////////////////////////
-          const newArrx = [...itemheighthold];
-          var newh = choppedwidth / 1.055 - postbackheighthold;
-          newArrx[index] = `${newh}`;
-          setitemheighthold(newArrx);
-          ////////////////////////////
-          ///////////////////////////////
-          const newArrxq = [...itemcroptype];
-          newArrxq[index] = 1;
-          setitemcroptype(newArrxq);
-          ////////////////////////////
-          ///////////////////////////////
-          const newArrayFinalPostHeight = [...itemFinalPostHeight];
-          newArrayFinalPostHeight[index] = choppedwidth;
-          setitemFinalPostHeight(newArrayFinalPostHeight);
-        } else if (imageHeight > choppedHeight) {
-          postItemsRef.current[index].style.objectFit = "cover";
-          /////LONG IMAGE SET
-          const newArr = [...itemheight];
-          newArr[index] = `${choppedHeight}px`;
-          setitemheight(newArr);
-          ///////////////////////////////
-          const newArrx = [...itemheighthold];
-          var newh = choppedHeight / 1.032 - postbackheighthold;
-          newArrx[index] = `${newh}`;
-          setitemheighthold(newArrx);
-          ////////////////////////////////
-          ///////////////////////////////
-          const newArrxq = [...itemcroptype];
-          newArrxq[index] = 2;
-          setitemcroptype(newArrxq);
-          ///////////////////////////////
-          const newArrayFinalPostHeight = [...itemFinalPostHeight];
-          newArrayFinalPostHeight[index] = choppedHeight;
-          setitemFinalPostHeight(newArrayFinalPostHeight);
-          ///////////////////////////////
-        } else if (imageWidth > imageHeight) {
-          ///////////////////////////////
-          const newArrx = [...itemheighthold];
-          var newh = imageHeight / 1.066 - postbackheighthold;
-          newArrx[index] = `${newh}`;
-          setitemheighthold(newArrx);
-          ///////////////////////////////
-        } else {
+            var choppedHeight = percentage(screenHeightReducer, 100);
+
+            var choppedwidth = percentage(
+              screenHeightReducer,
+              matchPc ? 60 : matchTablet ? 52 : 42
+            );
+
+            if (imageHeight < choppedwidth) {
+              /////WIDE IMAGE SET
+              const newArr = [...itemheight];
+              newArr[index] = `${choppedwidth}px`;
+              setitemheight(newArr);
+              ///////////////////////////////
+              const newArrx = [...itemheighthold];
+              var newh = choppedwidth / 1.055 - postbackheighthold;
+              newArrx[index] = `${newh}`;
+              setitemheighthold(newArrx);
+              ////////////////////////////
+              ///////////////////////////////
+              const newArrxq = [...itemcroptype];
+              newArrxq[index] = 1;
+              setitemcroptype(newArrxq);
+              ////////////////////////////
+              ///////////////////////////////
+              const newArrayFinalPostHeight = [...itemFinalPostHeight];
+              newArrayFinalPostHeight[index] = choppedwidth;
+              setitemFinalPostHeight(newArrayFinalPostHeight);
+            } else if (imageHeight > choppedHeight) {
+              /////LONG IMAGE SET
+              const newArr = [...itemheight];
+              newArr[index] = `${choppedHeight}px`;
+              setitemheight(newArr);
+              ///////////////////////////////
+              const newArrx = [...itemheighthold];
+              var newh = choppedHeight / 1.032 - postbackheighthold;
+              newArrx[index] = `${newh}`;
+              setitemheighthold(newArrx);
+              ////////////////////////////////
+              ///////////////////////////////
+              const newArrxq = [...itemcroptype];
+              newArrxq[index] = 2;
+              setitemcroptype(newArrxq);
+              ///////////////////////////////
+              const newArrayFinalPostHeight = [...itemFinalPostHeight];
+              newArrayFinalPostHeight[index] = choppedHeight;
+              setitemFinalPostHeight(newArrayFinalPostHeight);
+              ///////////////////////////////
+            } else {
+              var imageWidth = postItemsRef.current[index].clientWidth;
+              if (imageWidth > imageHeight) {
+                ///////////////////////////////
+                const newArrx = [...itemheighthold];
+                var newh = imageHeight / 1.066 - postbackheighthold;
+                newArrx[index] = `${newh}`;
+                setitemheighthold(newArrx);
+                ///////////////////////////////
+              }
+            }
+            ///////////////////////////////
+            const newArrxy = [...onLoadDataOnce];
+            newArrxy[index] = true;
+            setonLoadDataOnce(newArrxy);
+            ///////////////////////////////
+          }
         }
       }
     },
@@ -271,22 +407,72 @@ function ProfileOutter() {
   );
 
   const scrollToPost = (index: any) => {
-    postItemsRef.current[index].scrollIntoView();
+    postDivRef.current[index].scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   };
+
   const postitemSHOWFULLHEIGHT = (index: any, type: number) => {
     if (itemcroptype[index] === 1 || itemcroptype[index] === 2) {
       if (type === 0) {
         const newitemHeight = [...itemheight];
         newitemHeight[index] = `auto`;
         setitemheight(newitemHeight);
-        scrollToPost(index);
       } else {
         const newitemHeight = [...itemheight];
         newitemHeight[index] = `${itemFinalPostHeight[index]}px`;
         setitemheight(newitemHeight);
-        scrollToPost(index);
       }
     }
+  };
+
+  const scrollTypeTimerx = useRef<ReturnType<typeof setTimeout> | null>(null);
+  var scrollchangeDuration = 25000;
+
+  const scrollLongPicTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scrollLongPicTimerx = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+
+  const AUTOSlideLongImages = (index: number) => {
+    if (itemcroptype[index] === 2) {
+      scrollLongPicTimerx.current = setTimeout(() => {
+        if (paperPostScrollRef.current) {
+          paperPostScrollRef.current.scrollTo({
+            top:
+              paperPostScrollRef.current.scrollTop +
+              itemOriginalPostHeight[index] / 3,
+            behavior: "smooth",
+          });
+        }
+      }, 500);
+      scrollLongPicTimer.current = setTimeout(() => {
+        postDivRef.current[index].scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 1300);
+    }
+  };
+
+  ///
+  ///
+  ///
+  /// SLIDER DISPATCH
+  const ScrolltypeChange = () => {
+    if (scrollTypeTimer.current) {
+      clearTimeout(scrollTypeTimer.current);
+    }
+
+    if (scrollTypeTimerx.current) {
+      clearTimeout(scrollTypeTimerx.current);
+    }
+
+    dispatch(ScrollerAction("none"));
+    scrollTypeTimerx.current = setTimeout(() => {
+      dispatch(ScrollerAction("y mandatory"));
+    }, scrollchangeDuration);
   };
 
   const onPostsItemClicked = (index: number) => {
@@ -295,16 +481,25 @@ function ProfileOutter() {
       newclickArray[index] = false;
       setitemCLICKED(newclickArray);
       postitemSHOWFULLHEIGHT(index, 1);
+      scrollToPost(index);
     } else {
+      AUTOSlideLongImages(index);
+      if (scrollTypeTimer.current) {
+        clearTimeout(scrollTypeTimer.current);
+      }
+
+      dispatch(ScrollerAction("none"));
+      scrollTypeTimer.current = setTimeout(() => {
+        dispatch(ScrollerAction("y mandatory"));
+      }, scrollchangeDuration);
+
       const newclickArray = [...itemCLICKED];
       newclickArray[index] = true;
       setitemCLICKED(newclickArray);
       postitemSHOWFULLHEIGHT(index, 0);
+      scrollToPost(index);
     }
   };
-
-  console.log(postData);
-  /// {menu[i]}
 
   const breakPoints = {
     default: 2,
@@ -344,75 +539,101 @@ function ProfileOutter() {
   const colorReducer = color;
   const colorReducerdark = colordark;
 
-  var g = "y mandatory";
+  const paperPostScrollRef = useRef<any>(null);
+
+  console.log(postData);
+
   return (
     <>
       {loggedInReducer ? (
         <>
           {matchPc ? (
-            <Paper
-              className={
-                darkmodeReducer ? "postscroll-dark" : "postscroll-light"
-              }
-              style={{
-                backgroundImage: PaperStyleReducer,
-                borderRadius: "0px",
-                height: "100vh",
-                overflowY: "scroll",
-                overflowX: "hidden",
-                scrollSnapType: g,
-              }}
-            >
-              <Profile
-                getSliderWidthRef={getSliderWidthRef}
-                OpenModalForm={OpenModalForm}
-                getSliderWidth={getSliderWidth}
-                postData={postData}
-                addPostItemsRef={addPostItemsRef}
-                onPostsItemload={onPostsItemload}
-                itemheight={itemheight}
-                itemheighthold={itemheighthold}
-                postbackheight={postbackheight}
-                formtype={formtype}
-                showModalForm={showModalForm}
-                CloseModalForm={CloseModalForm}
-                aboutTemplateGo={aboutTemplateGo}
-                commentTemplateGo={commentTemplateGo}
-                itemcroptype={itemcroptype}
-                itemFinalPostHeight={itemFinalPostHeight}
-                onPostsItemClicked={onPostsItemClicked}
-                itemCLICKED={itemCLICKED}
-              />
-            </Paper>
+            <>
+              {" "}
+              <Paper
+                ref={paperPostScrollRef}
+                className={
+                  darkmodeReducer ? "postscroll-dark" : "postscroll-light"
+                }
+                style={{
+                  backgroundImage: PaperStyleReducer,
+                  borderRadius: "0px",
+                  height: "100vh",
+                  overflowY: "scroll",
+                  scrollSnapType: scrollerReducer,
+                }}
+              >
+                <Profile
+                  getSliderWidthRef={getSliderWidthRef}
+                  OpenModalForm={OpenModalForm}
+                  getSliderWidth={getSliderWidth}
+                  postData={postData}
+                  addPostItemsRef={addPostItemsRef}
+                  postDivRef={postDivRef}
+                  onPostsItemload={onPostsItemload}
+                  itemheight={itemheight}
+                  itemheighthold={itemheighthold}
+                  postbackheight={postbackheight}
+                  formtype={formtype}
+                  showModalForm={showModalForm}
+                  CloseModalForm={CloseModalForm}
+                  aboutTemplateGo={aboutTemplateGo}
+                  commentTemplateGo={commentTemplateGo}
+                  itemcroptype={itemcroptype}
+                  itemFinalPostHeight={itemFinalPostHeight}
+                  onPostsItemClicked={onPostsItemClicked}
+                  itemCLICKED={itemCLICKED}
+                  addpostDivRef={addpostDivRef}
+                  postDatainner={postDatainner}
+                  itemOriginalPostHeight={itemOriginalPostHeight}
+                  ScrolltypeChange={ScrolltypeChange}
+                  ActiveAutoPlay={ActiveAutoPlay}
+                  setActiveAutoPlay={setActiveAutoPlay}
+                  AUTOSlideLongImages={AUTOSlideLongImages}
+                />
+              </Paper>
+            </>
           ) : (
-            <Paper
-              style={{
-                backgroundImage: PaperStyleReducer,
-                borderRadius: "0px",
-                height: "auto",
-              }}
-            >
-              <Profile
-                getSliderWidthRef={getSliderWidthRef}
-                OpenModalForm={OpenModalForm}
-                getSliderWidth={getSliderWidth}
-                postData={postData}
-                addPostItemsRef={addPostItemsRef}
-                onPostsItemload={onPostsItemload}
-                itemheight={itemheight}
-                itemheighthold={itemheighthold}
-                postbackheight={postbackheight}
-                formtype={formtype}
-                showModalForm={showModalForm}
-                CloseModalForm={CloseModalForm}
-                aboutTemplateGo={aboutTemplateGo}
-                commentTemplateGo={commentTemplateGo}
-                itemcroptype={itemcroptype}
-                itemFinalPostHeight={itemFinalPostHeight}
-                onPostsItemClicked={onPostsItemClicked}
-                itemCLICKED={itemCLICKED}
-              />
-            </Paper>
+            <>
+              {" "}
+              <Paper
+                ref={paperPostScrollRef}
+                style={{
+                  backgroundImage: PaperStyleReducer,
+                  borderRadius: "0px",
+                  height: "100vh",
+                }}
+              >
+                <Profile
+                  getSliderWidthRef={getSliderWidthRef}
+                  OpenModalForm={OpenModalForm}
+                  getSliderWidth={getSliderWidth}
+                  postData={postData}
+                  addPostItemsRef={addPostItemsRef}
+                  postDivRef={postDivRef}
+                  onPostsItemload={onPostsItemload}
+                  itemheight={itemheight}
+                  itemheighthold={itemheighthold}
+                  postbackheight={postbackheight}
+                  formtype={formtype}
+                  showModalForm={showModalForm}
+                  CloseModalForm={CloseModalForm}
+                  aboutTemplateGo={aboutTemplateGo}
+                  commentTemplateGo={commentTemplateGo}
+                  itemcroptype={itemcroptype}
+                  itemFinalPostHeight={itemFinalPostHeight}
+                  onPostsItemClicked={onPostsItemClicked}
+                  itemCLICKED={itemCLICKED}
+                  addpostDivRef={addpostDivRef}
+                  postDatainner={postDatainner}
+                  itemOriginalPostHeight={itemOriginalPostHeight}
+                  ScrolltypeChange={ScrolltypeChange}
+                  ActiveAutoPlay={ActiveAutoPlay}
+                  setActiveAutoPlay={setActiveAutoPlay}
+                  AUTOSlideLongImages={AUTOSlideLongImages}
+                />
+              </Paper>
+            </>
           )}
         </>
       ) : null}

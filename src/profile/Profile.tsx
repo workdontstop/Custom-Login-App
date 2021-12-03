@@ -5,12 +5,12 @@ import { Post } from "./Post";
 import { OptionsSlider } from "./OptionsSlider";
 import { CommentTemplate } from "../CommentTemplate";
 import { matchPc, matchTablet } from "../DetectDevice";
-import { RootStateOrAny, useSelector } from "react-redux";
+import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
 import { Paper, Grid, Box } from "@material-ui/core";
 import ImagePhotoSizeSelectSmall from "material-ui/svg-icons/image/photo-size-select-small";
 import Masonry from "@mui/lab/Masonry";
 import AddIcon from "@mui/icons-material/Add";
-
+import { ScrollerAction } from "../GlobalActions";
 function Profilex({
   OpenModalForm,
   getSliderWidthRef,
@@ -30,7 +30,16 @@ function Profilex({
   itemFinalPostHeight,
   onPostsItemClicked,
   itemCLICKED,
+  addpostDivRef,
+  postDatainner,
+  itemOriginalPostHeight,
+  ScrolltypeChange,
+  ActiveAutoPlay,
+  setActiveAutoPlay,
+  AUTOSlideLongImages,
+  postDivRef,
 }: any) {
+  const dispatch = useDispatch();
   ///
   ///
   ///TYPES FOR ISLOGGEDIN
@@ -93,9 +102,9 @@ function Profilex({
   const colorReducer = color;
   const colorReducerdark = colordark;
 
-  var widthProfilePic = matchPc ? "72%" : matchTablet ? "42%" : "44vw";
-  var topProfilePic = matchPc ? "-20vh" : matchTablet ? "31em" : "10.2em";
-  var leftProfilePic = matchPc ? "1vw" : matchTablet ? "3vw" : "2.6vw";
+  var widthProfilePic = matchPc ? "72%" : matchTablet ? "85%" : "44vw";
+  var topProfilePic = matchPc ? "-20vh" : matchTablet ? "-12vh" : "-8vh";
+  var leftProfilePic = matchPc ? "1vw" : matchTablet ? "3.5vw" : "2.7vw";
 
   var optionsClass = "";
   var fontOptions = "";
@@ -124,8 +133,6 @@ function Profilex({
     ...state.UserdataReducer,
   }));
   const imageReducer = image;
-
-  ///
 
   return (
     <>
@@ -237,7 +244,7 @@ function Profilex({
             position: "relative",
             height: "19.5vh",
             paddingLeft: matchPc ? "20px" : matchTablet ? "42px" : "24px",
-            marginTop: "-4px",
+            marginTop: matchTablet ? "10px" : "-4px",
             zIndex: 1,
           }}
         >
@@ -247,32 +254,44 @@ function Profilex({
         <Grid
           item
           xs={12}
-          style={{ padding: "0px", height: "0px", marginTop: "-15vh" }}
+          style={{
+            padding: "0px",
+            height: "0px",
+            marginTop: matchPc ? "-13.5vh" : matchTablet ? "-5vh" : "-4vh",
+          }}
         >
-          <Masonry columns={2} spacing={0}>
-            {postData.map((post: any, i: any) => (
-              <div key={i}>
-                <Post
-                  key={i}
-                  pey={i}
-                  refy={addPostItemsRef}
-                  onPostsItemload={onPostsItemload}
-                  post={post}
-                  itemheight={itemheight}
-                  itemheighthold={itemheighthold}
-                  postbackheight={postbackheight}
-                  itemcroptype={itemcroptype}
-                  length={postData.length}
-                  itemFinalPostHeight={itemFinalPostHeight}
-                  onPostsItemClicked={onPostsItemClicked}
-                  itemCLICKED={itemCLICKED}
-                />
-              </div>
-            ))}
-          </Masonry>
+          {postData ? (
+            <Masonry columns={matchPc ? 2 : 1} spacing={0}>
+              {postData.map((post: any, i: any) => (
+                <div key={i} style={{ position: "relative" }}>
+                  <Post
+                    key={i}
+                    pey={i}
+                    addPostItemsRef={addPostItemsRef}
+                    postDivRef={postDivRef}
+                    onPostsItemload={onPostsItemload}
+                    post={post}
+                    itemheight={itemheight}
+                    itemheighthold={itemheighthold}
+                    postbackheight={postbackheight}
+                    itemcroptype={itemcroptype}
+                    length={postData.length}
+                    itemFinalPostHeight={itemFinalPostHeight}
+                    onPostsItemClicked={onPostsItemClicked}
+                    itemCLICKED={itemCLICKED}
+                    addpostDivRef={addpostDivRef}
+                    postDatainner={postDatainner}
+                    itemOriginalPostHeight={itemOriginalPostHeight}
+                    ScrolltypeChange={ScrolltypeChange}
+                    ActiveAutoPlay={ActiveAutoPlay}
+                    setActiveAutoPlay={setActiveAutoPlay}
+                    AUTOSlideLongImages={AUTOSlideLongImages}
+                  />
+                </div>
+              ))}
+            </Masonry>
+          ) : null}
         </Grid>
-
-        <Grid item xs={12} style={{ padding: "0px", height: "20px" }}></Grid>
       </Grid>
       <CommentTemplate
         formtype={formtype}

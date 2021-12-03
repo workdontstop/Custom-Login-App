@@ -1,3 +1,21 @@
+.emotionspostPC {
+  width: 3%;
+  opacity: 0.7;
+  margin-left: 92.8%;
+}
+
+.emotionspostTablet {
+  width: 4.4%;
+  opacity: 0.7;
+  margin-left: 92.45%;
+}
+
+.emotionspostMOBILE {
+  width: 5.8%;
+  opacity: 0.7;
+  margin-left: 90.45%;
+}
+
 .usernamePc {
   padding: 10px;
   border-radius: 7px;
@@ -9,14 +27,13 @@
   padding: 7px;
   border-radius: 4.5px;
   font-weight: bolder;
-  font-size: 2.8vh;
+  font-size: 3vh;
 }
 
 .usernameTablet {
   padding: 12px;
   border-radius: 9px;
   font-weight: bolder;
-
   font-size: 3.6vh;
 }
 
@@ -78,4 +95,46 @@
   margin-left: -31vw;
   border-radius: 4px;
   color: #ffffff;
+}
+
+.profile-optionsImagePc {
+  position: absolute;
+  margin: auto;
+  margin-left: -0.5vw;
+  top: 0.9vh;
+  height: 68px;
+  width: 68px;
+  border-radius: 50%;
+  text-align: center;
+  align-items: center;
+  display: grid;
+  justify-content: center;
+}
+
+.profile-optionsImageTablet {
+  position: absolute;
+  margin: auto;
+  left: -3.1vw;
+  top: 1vh;
+  height: 98px;
+  width: 98px;
+  border-radius: 50%;
+  text-align: center;
+  align-items: center;
+  display: grid;
+  justify-content: center;
+}
+
+.profile-optionsImageMobile {
+  position: absolute;
+  margin: auto;
+  left: -1.8vw;
+  top: -1vh;
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  text-align: center;
+  align-items: center;
+  display: grid;
+  justify-content: center;
 }

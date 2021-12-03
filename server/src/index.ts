@@ -41,7 +41,34 @@ const loginId = `SELECT username,id,password,color,profile_image,first_name,sur_
 const checkpassword = `SELECT id FROM members WHERE  username =?`;
 
 ///checkIsLogged
-const posts = `SELECT members.profile_image,members.username,posts.id,sender,post_count,topic,caption,item1,itemtype1,item2,itemtype2,item3,itemtype3,item4,itemtype4,item5,itemtype5,item6,itemtype6,item7,itemtype7,item8,itemtype8,item9,itemtype9,item10,itemtype10,item11,itemtype11,item12,itemtype12,item13,itemtype13,item14,itemtype14,item15,itemtype15,item16,itemtype16,time  FROM posts inner join members on posts.sender = members.id  ORDER BY posts.id DESC  LIMIT 15  `;
+
+const posts = `SELECT  (SELECT COUNT(*) 
+          FROM comments 
+         WHERE post = posts.id)commentCount,
+
+
+      (SELECT COUNT(*) 
+          FROM emotions
+         WHERE post = posts.id and type=1)funny, 
+         
+      (SELECT COUNT(*) 
+          FROM emotions
+         WHERE post = posts.id and type=2)care, 
+
+            (SELECT COUNT(*) 
+          FROM emotions
+         WHERE post = posts.id and type=3)cool, 
+
+            (SELECT COUNT(*) 
+          FROM emotions
+         WHERE post = posts.id and type=4)lovely, 
+         
+         
+         members.profile_image,members.username,color,posts.id,sender,post_count,topic,
+caption,item1,itemtype1,item2,itemtype2,item3,itemtype3,item4,itemtype4,item5,itemtype5,item6,itemtype6,
+item7,itemtype7,item8,itemtype8,item9,itemtype9,item10,itemtype10,item11,itemtype11,item12,itemtype12,item13,itemtype13,
+item14,itemtype14,item15,itemtype15,item16,itemtype16,time  FROM posts inner join members on
+ posts.sender = members.id   ORDER BY posts.id DESC  LIMIT 15  `;
 
 app.post("/feeds_chronological", async (req: Request, res: Response) => {
   const connection = mysql.createConnection(CONNECTION_CONFIG);

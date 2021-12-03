@@ -6,7 +6,31 @@ import {
   UPDATE_GLOBAL_COLOR,
   ACTIVATE_GLOBAL_LOADER,
   HIDE_GLOBAL_LOADER,
+  UPDATE_ScrollType,
 } from "./global_ActionTypes";
+
+///
+///
+///
+////////////SCROLLTYPE DATA////////////////
+const initialStateScrollType = {
+  scroller: "",
+  ////For example const initialState = { person: null as Person };
+};
+type MyScrollTypeReducer = typeof initialStateScrollType;
+
+export const ScrollTypeReducer = (
+  state = initialStateScrollType,
+  action: any
+): MyScrollTypeReducer => {
+  switch (action.type) {
+    case UPDATE_ScrollType:
+      return { ...state, scroller: action.payload };
+    default:
+      return state;
+  }
+};
+///// SCROLLTYPE REDUCER //////////////////////
 
 /////////////////////////BUTTON///////////////////////////////////////////////
 ///
