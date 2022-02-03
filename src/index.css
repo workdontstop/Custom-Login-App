@@ -16,7 +16,7 @@ body::-webkit-scrollbar {
 }
 
 .postscroll-light::-webkit-scrollbar {
-  width: 0.8vw;
+  width: 1vw;
 }
 
 .postscroll-light::-webkit-scrollbar-track {
@@ -40,7 +40,7 @@ body::-webkit-scrollbar {
 }
 
 .postscroll-dark::-webkit-scrollbar {
-  width: 0.8vw;
+  width: 1vw;
 }
 
 .postscroll-dark::-webkit-scrollbar-track {

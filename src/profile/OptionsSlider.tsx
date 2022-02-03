@@ -1,11 +1,36 @@
 import React, { useRef, useState } from "react";
-import { Grid } from "@material-ui/core";
+
 import { matchPc, matchTablet } from "../DetectDevice";
 import { useSpring, animated } from "react-spring";
-import { useSelector } from "react-redux";
-import CircleIcon from "@mui/icons-material/Circle";
 
-function OptionsSliderx({ getSliderWidth }: any) {
+import CircleIcon from "@mui/icons-material/Circle";
+import { useSelector, useDispatch } from "react-redux";
+import { UpdateOptionsTop } from ".././GlobalActions";
+import { UploadMenu } from "../upload/UploadMenu";
+import { MenuInner } from "./MenuInner";
+import AddIcon from "@mui/icons-material/Add";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+
+function OptionsSliderx({
+  getSliderWidth,
+  typeTop,
+  sethaltedTop,
+  OpenUploadModal,
+  showModalUpload,
+  typeUpload,
+  cropTOPLEVELScrollRef,
+  refWithimageData,
+}: any) {
+  ///
+  ///
+  ///
+
+  ///
+  ///
+  ///
+  /// USE DISPATCH
+  const dispatch = useDispatch();
+
   var getSliderWidthNew = matchPc
     ? getSliderWidth / 1.5
     : matchTablet
@@ -15,7 +40,7 @@ function OptionsSliderx({ getSliderWidth }: any) {
   var optionsClickType: number = matchPc ? 1 : 0;
 
   const optionsCollectImageRef = useRef<HTMLDivElement>(null);
-  const optionsImages = ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg"];
+
   const [translate, setTranslate] = useState(0);
   const [stalestate] = useState(1);
 
@@ -38,29 +63,64 @@ function OptionsSliderx({ getSliderWidth }: any) {
   ///
   ///
   ///DARKMODE FROM REDUX
-  interface RootStateGlobalReducer {
-    GlobalReducer: {
-      darkmode: boolean;
+  interface RootoptinstopshowingReducer {
+    OptionsTopShowReducer: {
+      optinstopshowing: boolean;
     };
   }
-  const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
-    ...state.GlobalReducer,
-  }));
-
-  const darkmodeReducer = darkmode;
+  const { optinstopshowing } = useSelector(
+    (state: RootoptinstopshowingReducer) => ({
+      ...state.OptionsTopShowReducer,
+    })
+  );
+  const optinstopshowingReducer = optinstopshowing;
 
   ///
   ///
   ///
   ///OPTIONS SLIDER VARIABLES DISCRIBING ITEMS
-  var optionsNameData = [
-    "filter feeds",
-    "albums",
-    "playlist",
-    "showroom",
-    "posts  today",
-    "settings",
-  ];
+  var optionsNameData = typeTop
+    ? ["settings", "upload", "filter feeds", "albums", "playlist", "showroom"]
+    : ["filter feeds", "albums", "playlist", "showroom", "settings", "upload"];
+
+  ///
+  ///
+  ///OPTIONS SLIDER VARIABLES DISCRIBING ITEMS
+  const [CropSaved, setCropSaved] = useState(false);
+
+  var UploadOptionsNameData = ["audio", "images", "gifs", "Continue"];
+
+  const optionsImages = typeUpload
+    ? ["1", "2", "3", "4"]
+    : typeTop
+    ? ["5", "6", "1.jpg", "2.jpg", "3.jpg", "4.jpg"]
+    : ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5", "6"];
+  ///
+
+  ///
+  ///
+  ///
+  ///CREATE OPTIONS SLIDER ANIMATION WITH  REACT SPRING
+
+  const animationop = useSpring({
+    config: {
+      duration: typeTop ? 100 : 300,
+    },
+    opacity: typeTop
+      ? optinstopshowingReducer
+        ? 1
+        : 0
+      : optinstopshowingReducer
+      ? 0
+      : 1,
+    transform: typeTop
+      ? optinstopshowingReducer
+        ? `translateY(0%)`
+        : "translateY(-100%)"
+      : optinstopshowingReducer
+      ? `translateY(-100%)`
+      : "translateY(0%)",
+  });
 
   ///
   ///
@@ -77,14 +137,22 @@ function OptionsSliderx({ getSliderWidth }: any) {
     height: "auto",
     display: "flex",
     width: `auto`,
+    padding: "0px",
     margin: "auto",
+    paddingLeft: typeTop
+      ? matchPc
+        ? "0px"
+        : matchTablet
+        ? "22px"
+        : "9px"
+      : "0px",
   });
 
   ///
   ///
   ///
   /// ACTIVATES SLIDER ITEM TO BE VIEWED ON CLICK
-  const clickOptions = (i: number, type: number) => {
+  const clickOptions = (i: number, type: number, source: string) => {
     if (type === 1) {
       setTranslate(stalestate + i);
       setActiveSlide(i);
@@ -92,23 +160,11 @@ function OptionsSliderx({ getSliderWidth }: any) {
       setTranslate(getSliderWidthNew * i + 1.5 * i);
       setActiveSlide(i);
     }
-  };
 
-  ///
-  ///
-  ///
-  /// GET COLOR FROM REDUX STORE
-  interface RootStateReducerColor {
-    GlobalReducerColor: {
-      color: string;
-      colordark: string;
-    };
-  }
-  const { color, colordark } = useSelector((state: RootStateReducerColor) => ({
-    ...state.GlobalReducerColor,
-  }));
-  const colorReducer = color;
-  const colorDarkReducer = colordark;
+    if (ActiveSlide === i && source === "upload") {
+      OpenUploadModal();
+    }
+  };
 
   ///
   ///
@@ -149,17 +205,21 @@ function OptionsSliderx({ getSliderWidth }: any) {
   ///
   /// NEXT SLIDE  FOR PC
   const nextSlidePc = () => {
-    var i = ActiveSlide + 1;
-    setShowHideNegativeValue("-");
-    ///set((state) => (state + 1) % slides.length)
-    if (ActiveSlide === optionsImages.length - 1) {
-      settransitionFast(true);
-      setTranslate(0);
-      setActiveSlide(0);
+    if (typeTop) {
+      closeoptionsslide();
     } else {
-      settransitionFast(false);
-      setTranslate(stalestate + i);
-      setActiveSlide(i);
+      var i = ActiveSlide + 1;
+      setShowHideNegativeValue("-");
+      ///set((state) => (state + 1) % slides.length)
+      if (ActiveSlide === optionsImages.length - 1) {
+        settransitionFast(true);
+        setTranslate(0);
+        setActiveSlide(0);
+      } else {
+        settransitionFast(false);
+        setTranslate(stalestate + i);
+        setActiveSlide(i);
+      }
     }
   };
 
@@ -195,7 +255,11 @@ function OptionsSliderx({ getSliderWidth }: any) {
     var colorPaddingAllowance = 1.67 + i / 10;
     if (ActiveSlide === 0) {
       settransitionFast(true);
-      TouchJoltOnLastPREV();
+      if (typeTop) {
+        closeoptionsslide();
+      } else {
+        TouchJoltOnLastPREV();
+      }
     } else {
       if (prevJoltTimer.current) {
         clearTimeout(prevJoltTimer.current);
@@ -250,141 +314,55 @@ function OptionsSliderx({ getSliderWidth }: any) {
     return false;
   };
 
+  const closeoptionsslide = () => {
+    sethaltedTop(false);
+    dispatch(UpdateOptionsTop(false));
+  };
+
   return (
     <>
-      {optionsShow ? (
-        <>
-          {" "}
-          <Grid
-            container
-            onTouchStart={handleTouchStartOptions}
-            onTouchMove={handleTouchMoveOptions}
-            style={{
-              scrollSnapAlign: "start",
-              position: "relative",
-              margin: "0 auto",
-              overflow: "hidden",
-              left: "0px",
-              paddingBottom: "19px",
-            }}
-          >
-            <animated.div ref={optionsCollectImageRef} style={modalanimation}>
-              <Grid
-                item
-                style={{
-                  margin: "auto",
-                  textAlign: "center",
-                  position: "relative",
-                  bottom: "0.2em",
-                  left: "-4px",
-                }}
-              >
-                <CircleIcon
-                  onClick={() => {
-                    nextSlidePc();
-                  }}
-                  className="buttonshake"
-                  style={{
-                    fontSize: "1.2vw",
-                    cursor: "pointer",
-                    color: darkmodeReducer
-                      ? "rgba(200, 200, 200, 0.1)"
-                      : "rgba(005, 005, 005, 0.2)",
-                    display: matchPc ? "block" : "none",
-                  }}
-                />
-              </Grid>
-              {optionsImages.map((im: any, i: any) => (
-                <Grid key={i} item xs={12}>
-                  <img
-                    alt={` ${optionsNameData[i]}  option`}
-                    onClick={() => {
-                      clickOptions(i, optionsClickType);
-                    }}
-                    style={{
-                      cursor: ActiveSlide === i ? "pointer" : "alias",
-                      width: `${getSliderWidthNew}px`,
-                      height: `${getSliderWidthNew}px`,
-                      borderRadius: "50%",
-                      padding: "0px",
-                      objectFit: "cover",
-                      marginLeft: "2px",
-                      marginTop: "14px",
-                      boxShadow: darkmodeReducer
-                        ? ActiveSlide === i
-                          ? `0 0 5px ${colorDarkReducer}`
-                          : ""
-                        : ActiveSlide === i
-                        ? `0 0 3.5px ${colorReducer}`
-                        : "",
-
-                      marginBottom: "2.2px",
-                    }}
-                    src={`./images/options/${im}`}
-                  />
-                  <Grid
-                    item
-                    xs={12}
-                    style={{
-                      margin: "auto",
-                      textAlign: "center",
-                      position: "relative",
-                      bottom: "0.2em",
-                    }}
-                  >
-                    <Grid
-                      item
-                      xs={12}
-                      style={{
-                        fontSize: matchPc ? "1.1vw" : "2vh",
-                        fontWeight: "bolder",
-                        fontFamily: "Arial, Helvetica, sans-serif",
-                        display: ActiveSlide === i ? "block" : "none",
-                        color: darkmodeReducer ? "#dddddd" : "#0b111b",
-                      }}
-                    >
-                      {" "}
-                      {optionsNameData[i]}
-                    </Grid>
-                  </Grid>
-                </Grid>
-              ))}
-            </animated.div>
-          </Grid>
-        </>
+      {typeUpload ? (
+        <UploadMenu
+          optionsShow={optionsShow}
+          optinstopshowingReducer={optinstopshowingReducer}
+          typeTop={false}
+          closeoptionsslide={closeoptionsslide}
+          animationop={animationop}
+          optionsCollectImageRef={optionsCollectImageRef}
+          handleTouchStartOptions={handleTouchStartOptions}
+          handleTouchMoveOptions={handleTouchMoveOptions}
+          modalanimation={modalanimation}
+          nextSlidePc={nextSlidePc}
+          optionsImages={optionsImages}
+          ActiveSlide={ActiveSlide}
+          optionsNameData={UploadOptionsNameData}
+          clickOptions={clickOptions}
+          optionsClickType={optionsClickType}
+          getSliderWidthNew={getSliderWidthNew}
+          cropTOPLEVELScrollRef={cropTOPLEVELScrollRef}
+          refWithimageData={refWithimageData}
+          CropSaved={CropSaved}
+          setCropSaved={setCropSaved}
+        />
       ) : (
-        <>
-          <Grid container>
-            <Grid
-              item
-              xs={9}
-              style={{
-                textAlign: "right",
-                marginTop: matchPc ? "6.4vh" : matchTablet ? "8.8vh" : "8.3vh",
-              }}
-            >
-              <span
-                style={{
-                  padding: "16px",
-                  cursor: "pointer",
-                }}
-              >
-                <CircleIcon
-                  style={{
-                    fontSize: matchPc
-                      ? "1.2vw"
-                      : matchTablet
-                      ? "2.5vh"
-                      : "2.3vh",
-                    color: darkmodeReducer
-                      ? "rgba(200, 200, 200, 0.1)"
-                      : "rgba(005, 005, 005, 0.2)",
-                  }}
-                />
-              </span>
-            </Grid>
-          </Grid>
-        </>
+        <MenuInner
+          optionsShow={optionsShow}
+          optinstopshowingReducer={optinstopshowingReducer}
+          typeTop={typeTop}
+          closeoptionsslide={closeoptionsslide}
+          animationop={animationop}
+          optionsCollectImageRef={optionsCollectImageRef}
+          handleTouchStartOptions={handleTouchStartOptions}
+          handleTouchMoveOptions={handleTouchMoveOptions}
+          modalanimation={modalanimation}
+          nextSlidePc={nextSlidePc}
+          optionsImages={optionsImages}
+          ActiveSlide={ActiveSlide}
+          optionsNameData={optionsNameData}
+          clickOptions={clickOptions}
+          optionsClickType={optionsClickType}
+          getSliderWidthNew={getSliderWidthNew}
+        />
       )}
     </>
   );

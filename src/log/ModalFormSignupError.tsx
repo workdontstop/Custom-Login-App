@@ -59,7 +59,7 @@ function ModalFormSignupErrorx({
     errorwidth = WidthHolder;
     iconfont = "1vw";
     textfont = "0.95vw";
-    emojiFont = "1.8vw";
+    emojiFont = "1.5vw";
     emojiLeft = "0px";
     spinnersize = 13;
     spinnermarg = "-10px";

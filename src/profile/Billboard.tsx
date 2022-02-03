@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+
 import { Grid, Box } from "@material-ui/core";
 import { DarkmodeToggleAction } from ".././GlobalActions";
 import { matchPc, matchTablet } from "../DetectDevice";
@@ -46,20 +47,6 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
   ///
   ///
   ///
-  /// REACT PALLETTE (VIBRANTCOLOR DETECTION)
-  ////  const { data, loading, error } = usePalette(`./images/profile/${imageReducer}`);
-  const { data } = usePalette(`./images/profile/${imageReducer}`);
-  useEffect(() => {
-    var colorboy = {
-      color1: data.lightVibrant,
-      color2: data.darkVibrant,
-    };
-    dispatch(UpdateColorAction(colorboy));
-  }, [data, dispatch]);
-
-  ///
-  ///
-  ///
   /// GET DARKMODE FROM REDUX STORE
   interface RootStateGlobalReducer {
     GlobalReducer: {
@@ -90,8 +77,8 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
   var favclass = matchPc ? "favPc" : matchTablet ? "favTablet" : "favMobile";
   var fanclass = matchPc ? "fanPc" : matchTablet ? "fanTablet" : "fanMobile";
 
-  var fontConnectText = matchPc ? "1.03vw" : matchTablet ? "2.5vw" : "1.73vh";
-  var fontConnectnum = matchPc ? "1.75vw" : matchTablet ? "3.9vw" : "2.4vh";
+  var fontConnectText = matchPc ? "1.03vw" : matchTablet ? "2.5vw" : "1.72vh";
+  var fontConnectnum = matchPc ? "1.75vw" : matchTablet ? "3.9vw" : "2.3vh";
 
   var billboardDynamicHeight = matchPc ? "70vh" : matchTablet ? "57vw" : "34vh";
 

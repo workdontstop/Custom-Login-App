@@ -146,7 +146,7 @@ function Home(): JSX.Element {
   let themeGeneralSettings = createTheme({
     palette: {
       primary: {
-        main: `${appVariables.maincolor}`,
+        main: `${appVariables.secondarymaincolor}`,
       },
       secondary: {
         main: `${appVariables.secondarymaincolor}`,

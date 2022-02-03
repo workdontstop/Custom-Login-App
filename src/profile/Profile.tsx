@@ -1,16 +1,24 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
-import { Scrollbars } from "react-custom-scrollbars-2";
+import { Menu } from "./Menu";
 import { Billboard } from "./Billboard";
 import { Post } from "./Post";
 import { OptionsSlider } from "./OptionsSlider";
-import { CommentTemplate } from "../CommentTemplate";
+
 import { matchPc, matchTablet } from "../DetectDevice";
 import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
-import { Paper, Grid, Box } from "@material-ui/core";
+import {
+  Paper,
+  Grid,
+  Typography,
+  createTheme,
+  MuiThemeProvider,
+  Box,
+} from "@material-ui/core";
 import ImagePhotoSizeSelectSmall from "material-ui/svg-icons/image/photo-size-select-small";
 import Masonry from "@mui/lab/Masonry";
 import AddIcon from "@mui/icons-material/Add";
-import { ScrollerAction } from "../GlobalActions";
+import { Upload } from "../upload/Upload";
+
 function Profilex({
   OpenModalForm,
   getSliderWidthRef,
@@ -33,13 +41,15 @@ function Profilex({
   addpostDivRef,
   postDatainner,
   itemOriginalPostHeight,
-  ScrolltypeChange,
   ActiveAutoPlay,
   setActiveAutoPlay,
   AUTOSlideLongImages,
   postDivRef,
+  paperPostScrollRef,
+  onLoadDataOnce,
 }: any) {
   const dispatch = useDispatch();
+
   ///
   ///
   ///TYPES FOR ISLOGGEDIN
@@ -94,13 +104,17 @@ function Profilex({
     GlobalReducerColor: {
       color: string;
       colordark: string;
+      colortype: number;
     };
   }
-  const { color, colordark } = useSelector((state: RootStateReducerColor) => ({
-    ...state.GlobalReducerColor,
-  }));
+  const { color, colordark, colortype } = useSelector(
+    (state: RootStateReducerColor) => ({
+      ...state.GlobalReducerColor,
+    })
+  );
   const colorReducer = color;
   const colorReducerdark = colordark;
+  const colortypeReducer = colortype;
 
   var widthProfilePic = matchPc ? "72%" : matchTablet ? "85%" : "44vw";
   var topProfilePic = matchPc ? "-20vh" : matchTablet ? "-12vh" : "-8vh";
@@ -134,137 +148,70 @@ function Profilex({
   }));
   const imageReducer = image;
 
+  const blank = () => {};
+
+  const [showModalUpload, setShowModalUpload] = useState<boolean>(false);
+
+  ///
+  ///
+  ///
+  /// CLOSE MODAL (STARTS AN ONPOPSTATE EVENT)
+  const closeUploadModal = useCallback((backbutton: number) => {
+    //pop states fires when back and forward buttons used
+    if (backbutton === 1) {
+      window.onpopstate = () => {
+        window.history.pushState(null, "", window.location.href);
+        window.onpopstate = null;
+        setShowModalUpload(false);
+      };
+    } else {
+      window.history.pushState(null, "", ".");
+      window.onpopstate = null;
+      setShowModalUpload(false);
+    }
+  }, []);
+
+  ///
+  ///
+  ///
+  ///OPEN MODAL THEN CALL CLOSEMODAL FUNCTION WHICH WAITS FOR A POP EVENT(for closing modal)
+  const OpenUploadModal = useCallback(() => {
+    setShowModalUpload(!showModalUpload);
+    //pushstate add enteries to your history
+    window.history.pushState(null, "", "Options");
+    closeUploadModal(1);
+  }, [showModalUpload, closeUploadModal]);
+
+  const [allowPosition, setallowPosition] = useState<boolean>(false);
+
   return (
     <>
-      {" "}
-      <Billboard OpenModalForm={OpenModalForm} />
       <Grid container className="dontallowhighlighting">
-        <Grid item xs={12} style={{ padding: "0px", height: "0px" }}></Grid>
-        <Grid
-          item
-          ref={getSliderWidthRef}
-          xs={2}
-          md={1}
-          style={{ padding: "0px" }}
-        ></Grid>
-        <Grid item xs={12} style={{ padding: "0px", height: "0px" }}></Grid>
-        <Grid
-          item
-          component={Box}
-          display={{ xs: "none", md: "block" }}
-          md={2}
-        ></Grid>
-
-        <Grid item xs={5} md={3} style={{ padding: "0px" }}>
-          {" "}
-          <Grid
-            item
-            xs={12}
-            style={{
-              position: "relative",
-              width: widthProfilePic,
-              height: "auto",
-              marginLeft: leftProfilePic,
-              top: topProfilePic,
-              zIndex: 3,
-            }}
-          >
-            <Grid
-              className={`  ${optionsClass}   `}
-              style={{
-                zIndex: 2,
-                backgroundColor: darkmodeReducer
-                  ? colorReducerdark
-                  : colorReducer,
-                opacity: 0.7,
-              }}
-            >
-              <AddIcon
-                style={{
-                  fontSize: fontOptions,
-                  color: "#ffffff",
-                }}
-                className="zuperkinginfo"
-              />
-            </Grid>
-            <img
-              onClick={OpenModalForm}
-              className={
-                darkmodeReducer
-                  ? `turprofileDark image-zoom-on-click`
-                  : ` turprofileLight image-zoom-on-click`
-              }
-              style={{
-                cursor: "pointer",
-                position: "absolute",
-                zIndex: 0,
-                textAlign: "left",
-                objectFit: "contain",
-                width: "100%",
-                borderRadius: "50%",
-                margin: "auto",
-                filter: "blur(1.3px)",
-              }}
-              src={`./images/profilethumb/${imageReducer}`}
-              alt="Superstarz Billboard "
-            />{" "}
-            <img
-              onClick={OpenModalForm}
-              className={
-                darkmodeReducer
-                  ? `turprofileDark image-gray-on-click`
-                  : ` turprofileLight image-gray-on-click`
-              }
-              style={{
-                cursor: "pointer",
-                position: "relative",
-                zIndex: 1,
-                objectFit: "contain",
-                width: "100%",
-                borderRadius: "50%",
-                margin: "auto",
-              }}
-              src={`./images/profile/${imageReducer}`}
-              alt="Superstarz Billboard "
-            />
-          </Grid>
-        </Grid>
-        <Grid
-          item
-          component={Box}
-          display={{ xs: "none", md: "block" }}
-          md={1}
-        ></Grid>
-
-        <Grid
-          item
-          xs={7}
-          md={4}
-          style={{
-            position: "relative",
-            height: "19.5vh",
-            paddingLeft: matchPc ? "20px" : matchTablet ? "42px" : "24px",
-            marginTop: matchTablet ? "10px" : "-4px",
-            zIndex: 1,
-          }}
-        >
-          <OptionsSlider getSliderWidth={getSliderWidth} />
-        </Grid>
-
         <Grid
           item
           xs={12}
           style={{
             padding: "0px",
-            height: "0px",
-            marginTop: matchPc ? "-13.5vh" : matchTablet ? "-5vh" : "-4vh",
+            height: "auto",
           }}
         >
-          {postData ? (
-            <Masonry columns={matchPc ? 2 : 1} spacing={0}>
+          {postData.length > 0 ? (
+            <Masonry
+              columns={matchPc ? 2 : 1}
+              spacing={0}
+              style={{
+                marginTop: matchPc ? "-13.5vh" : matchTablet ? "-5vh" : "-4vh",
+              }}
+            >
               {postData.map((post: any, i: any) => (
-                <div key={i} style={{ position: "relative" }}>
+                <div
+                  key={i}
+                  style={{
+                    position: "relative",
+                  }}
+                >
                   <Post
+                    onLoadDataOnce={onLoadDataOnce}
                     key={i}
                     pey={i}
                     addPostItemsRef={addPostItemsRef}
@@ -282,7 +229,6 @@ function Profilex({
                     addpostDivRef={addpostDivRef}
                     postDatainner={postDatainner}
                     itemOriginalPostHeight={itemOriginalPostHeight}
-                    ScrolltypeChange={ScrolltypeChange}
                     ActiveAutoPlay={ActiveAutoPlay}
                     setActiveAutoPlay={setActiveAutoPlay}
                     AUTOSlideLongImages={AUTOSlideLongImages}
@@ -293,13 +239,6 @@ function Profilex({
           ) : null}
         </Grid>
       </Grid>
-      <CommentTemplate
-        formtype={formtype}
-        showModalForm={showModalForm}
-        CloseModalForm={CloseModalForm}
-        aboutTemp={aboutTemplateGo}
-        commentTemp={commentTemplateGo}
-      />
     </>
   );
 }

@@ -98,12 +98,9 @@ export interface ItextfIeldLogin {
 }
 
 export interface ItextfIeldSignup {
+  sourceType: string;
   updateSignvalues: (e: any) => void;
-  rawSignupValues: {
-    inputedUsername: string;
-    inputedPassword: string;
-    inputedEmail: string;
-  };
+  rawSignupValues: any;
   ShowSignupPasswordForaWhile: any;
   signupShowPassword: boolean;
   size: any;

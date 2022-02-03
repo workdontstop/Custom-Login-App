@@ -21,6 +21,7 @@ function TextFieldSignupx({
   showFocusTextFieldByHidePadding,
   setShowFocusTextFieldByHidePadding,
   checkSignupPasswordACTIVATE,
+  sourceType,
 }: ItextfIeldSignup): JSX.Element {
   var width = " ";
   var sizex: "small" | "medium" | undefined = undefined;
@@ -75,8 +76,8 @@ function TextFieldSignupx({
       paddingBottomP = "27px";
       paddingBottomU = "55px";
       zIndex = 1;
-      font1 = "2.7vh";
-      font2 = "1.9vh";
+      font1 = "1.35vw";
+      font2 = "1vw";
   }
 
   ///
@@ -167,125 +168,318 @@ function TextFieldSignupx({
       TextFieldOpacity = "1";
     }
   }
+
+  ///
+  ///
+  ///
+  /// GET LOGGED USER DATA FROM REDUX STORE
+  interface RootStateReducerImage {
+    UserdataReducer: {
+      id: number;
+      username: string;
+      quote: string;
+      biography: string;
+    };
+  }
+  const { id, username, quote, biography } = useSelector(
+    (state: RootStateReducerImage) => ({
+      ...state.UserdataReducer,
+    })
+  );
+  const idReducer = id;
+  const usernameReducer = username;
+  const quoteReducer = quote;
+  const biographyReducer = biography;
+
+  var usernameReducerx = "";
+  if (usernameReducer === " " || usernameReducer === null) {
+    usernameReducerx = "username";
+  } else {
+    usernameReducerx = usernameReducer;
+  }
+
+  var quoteReducerx = "";
+  if (quoteReducer === " " || quoteReducer === null) {
+    quoteReducerx = "quote";
+  } else {
+    quoteReducerx = quoteReducer;
+  }
+
+  var biographyReducerx = "";
+  if (biographyReducer === " " || biographyReducer === null) {
+    biographyReducerx = "describe yourself";
+  } else {
+    biographyReducerx = biographyReducer;
+  }
   return (
     <>
-      {emailType ? (
+      {sourceType === "LOG" ? (
         <>
-          {" "}
-          <DialogContent
-            className={
-              darkmodeReducer
-                ? "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorDark"
-                : "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorLight "
-            }
-            style={{ zIndex: zindexBackPlateE, display: displayBackPlateE }}
-          ></DialogContent>
-          <TextField
-            onFocus={() => focusTextfield(1)}
-            onBlur={() => focusTextfield(0)}
-            size={sizex}
-            inputProps={{ style: { fontSize: font1 } }}
-            InputLabelProps={{ style: { fontSize: font2 } }}
-            style={{
-              transform: transform,
-              width: width,
-              paddingBottom: showFocusTextFieldByHidePadding
-                ? "0px"
-                : paddingBottomE,
-              zIndex: zindexE,
-              opacity: TextFieldOpacity,
-            }}
-            label="Email"
-            type="email"
-            onChange={updateSignvalues}
-            name="inputedEmail"
-            value={rawSignupValues.inputedEmail}
-            variant="standard"
-          />
-        </>
-      ) : passwordType ? (
-        <>
-          {" "}
-          <DialogContent
-            className={
-              darkmodeReducer
-                ? "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorDark"
-                : "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorLight"
-            }
-            style={{ zIndex: zindexBackPlateP, display: displayBackPlateP }}
-          ></DialogContent>
-          <TextField
-            onFocus={() => focusTextfield(1)}
-            onBlur={() => focusTextfield(0)}
-            size={sizex}
-            inputProps={{ style: { fontSize: font1 } }}
-            InputLabelProps={{ style: { fontSize: font2 } }}
-            style={{
-              transform: transform,
-              width: width,
-              paddingBottom: showFocusTextFieldByHidePadding
-                ? "0px"
-                : paddingBottomP,
-              zIndex: zIndex,
-              opacity: TextFieldOpacity,
-            }}
-            label="Password"
-            type={signupShowPassword ? "text" : "password"}
-            onChange={updateSignvalues}
-            name="inputedPassword"
-            value={rawSignupValues.inputedPassword}
-            variant="standard"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onMouseDown={ShowSignupPasswordForaWhile}
-                    aria-label="toggle password visibility"
-                  >
-                    {signupShowPassword ? (
-                      <VisibilityIcon />
-                    ) : (
-                      <VisibilityOffIcon />
-                    )}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
+          {emailType ? (
+            <>
+              {" "}
+              <DialogContent
+                className={
+                  darkmodeReducer
+                    ? "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorDark"
+                    : "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorLight "
+                }
+                style={{
+                  zIndex: zindexBackPlateE,
+                  display: displayBackPlateE,
+                }}
+              ></DialogContent>
+              <TextField
+                onFocus={() => focusTextfield(1)}
+                onBlur={() => focusTextfield(0)}
+                size={sizex}
+                inputProps={{ style: { fontSize: font1 } }}
+                InputLabelProps={{ style: { fontSize: font2 } }}
+                style={{
+                  transform: transform,
+                  width: width,
+                  paddingBottom: showFocusTextFieldByHidePadding
+                    ? "0px"
+                    : paddingBottomE,
+                  zIndex: zindexE,
+                  opacity: TextFieldOpacity,
+                }}
+                label="Email"
+                type="email"
+                onChange={updateSignvalues}
+                name="inputedEmail"
+                value={rawSignupValues.inputedEmail}
+                variant="standard"
+              />
+            </>
+          ) : passwordType ? (
+            <>
+              {" "}
+              <DialogContent
+                className={
+                  darkmodeReducer
+                    ? "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorDark"
+                    : "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorLight"
+                }
+                style={{
+                  zIndex: zindexBackPlateP,
+                  display: displayBackPlateP,
+                }}
+              ></DialogContent>
+              <TextField
+                onFocus={() => focusTextfield(1)}
+                onBlur={() => focusTextfield(0)}
+                size={sizex}
+                inputProps={{ style: { fontSize: font1 } }}
+                InputLabelProps={{ style: { fontSize: font2 } }}
+                style={{
+                  transform: transform,
+                  width: width,
+                  paddingBottom: showFocusTextFieldByHidePadding
+                    ? "0px"
+                    : paddingBottomP,
+                  zIndex: zIndex,
+                  opacity: TextFieldOpacity,
+                }}
+                label="Password"
+                type={signupShowPassword ? "text" : "password"}
+                onChange={updateSignvalues}
+                name="inputedPassword"
+                value={rawSignupValues.inputedPassword}
+                variant="standard"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onMouseDown={ShowSignupPasswordForaWhile}
+                        aria-label="toggle password visibility"
+                      >
+                        {signupShowPassword ? (
+                          <VisibilityIcon />
+                        ) : (
+                          <VisibilityOffIcon />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </>
+          ) : (
+            <>
+              {" "}
+              <DialogContent
+                className={
+                  darkmodeReducer
+                    ? "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorDark"
+                    : "mobileTextfield-backplate dontallowhighlighting   mobileTextfield-backplateColorLight"
+                }
+                style={{
+                  zIndex: zindexBackPlateU,
+                  display: displayBackPlateU,
+                }}
+              ></DialogContent>
+              <TextField
+                onFocus={() => focusTextfield(1)}
+                onBlur={() => focusTextfield(0)}
+                size={sizex}
+                inputProps={{ style: { fontSize: font1 } }}
+                InputLabelProps={{ style: { fontSize: font2 } }}
+                style={{
+                  transform: transform,
+                  width: width,
+                  paddingBottom: showFocusTextFieldByHidePadding
+                    ? "0px"
+                    : paddingBottomU,
+                  zIndex: zindexU,
+                  opacity: TextFieldOpacity,
+                }}
+                label="Username"
+                type="text"
+                onChange={updateSignvalues}
+                name="inputedUsername"
+                value={rawSignupValues.inputedUsername}
+                variant="standard"
+              />
+            </>
+          )}
         </>
       ) : (
         <>
           {" "}
-          <DialogContent
-            className={
-              darkmodeReducer
-                ? "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorDark"
-                : "mobileTextfield-backplate dontallowhighlighting   mobileTextfield-backplateColorLight"
-            }
-            style={{ zIndex: zindexBackPlateU, display: displayBackPlateU }}
-          ></DialogContent>
-          <TextField
-            onFocus={() => focusTextfield(1)}
-            onBlur={() => focusTextfield(0)}
-            size={sizex}
-            inputProps={{ style: { fontSize: font1 } }}
-            InputLabelProps={{ style: { fontSize: font2 } }}
-            style={{
-              transform: transform,
-              width: width,
-              paddingBottom: showFocusTextFieldByHidePadding
-                ? "0px"
-                : paddingBottomU,
-              zIndex: zindexU,
-              opacity: TextFieldOpacity,
-            }}
-            label="Username"
-            type="text"
-            onChange={updateSignvalues}
-            name="inputedUsername"
-            value={rawSignupValues.inputedUsername}
-            variant="standard"
-          />
+          {emailType ? (
+            <>
+              {" "}
+              <DialogContent
+                className={
+                  darkmodeReducer
+                    ? "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorDark"
+                    : "mobileTextfield-backplate dontallowhighlighting   mobileTextfield-backplateColorLight"
+                }
+                style={{
+                  zIndex: zindexBackPlateU,
+                  display: displayBackPlateU,
+                }}
+              ></DialogContent>
+              <TextField
+                onFocus={() => focusTextfield(1)}
+                onBlur={() => focusTextfield(0)}
+                size={sizex}
+                inputProps={{ style: { fontSize: font1 } }}
+                InputLabelProps={{ style: { fontSize: font2 } }}
+                style={{
+                  transform: transform,
+                  width: width,
+                  paddingBottom: showFocusTextFieldByHidePadding
+                    ? "0px"
+                    : "0px",
+                  zIndex: zindexU,
+                  opacity: TextFieldOpacity,
+                }}
+                label={quoteReducerx}
+                type="text"
+                onChange={updateSignvalues}
+                name="inputedQuote"
+                value={rawSignupValues.inputedQuote}
+                variant="standard"
+              />
+              <TextField
+                inputProps={{ style: { fontSize: font1 } }}
+                InputLabelProps={{ style: { fontSize: font2 } }}
+                style={{
+                  opacity: 0,
+                }}
+              />
+            </>
+          ) : passwordType ? (
+            <>
+              {" "}
+              <DialogContent
+                className={
+                  darkmodeReducer
+                    ? "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorDark"
+                    : "mobileTextfield-backplate dontallowhighlighting   mobileTextfield-backplateColorLight"
+                }
+                style={{
+                  zIndex: zindexBackPlateU,
+                  display: displayBackPlateU,
+                }}
+              ></DialogContent>
+              <TextField
+                onFocus={() => focusTextfield(1)}
+                onBlur={() => focusTextfield(0)}
+                size={sizex}
+                inputProps={{ style: { fontSize: font1 } }}
+                InputLabelProps={{ style: { fontSize: font2 } }}
+                style={{
+                  transform: transform,
+                  width: width,
+                  paddingBottom: showFocusTextFieldByHidePadding
+                    ? "0px"
+                    : "0px",
+                  zIndex: zindexU,
+                  opacity: TextFieldOpacity,
+                }}
+                label={biographyReducerx}
+                type="text"
+                onChange={updateSignvalues}
+                name="inputedDescription"
+                value={rawSignupValues.inputedDescription}
+                variant="standard"
+              />
+              <TextField
+                inputProps={{ style: { fontSize: font1 } }}
+                InputLabelProps={{ style: { fontSize: font2 } }}
+                style={{
+                  opacity: 0,
+                }}
+              />
+            </>
+          ) : (
+            <>
+              {" "}
+              <DialogContent
+                className={
+                  darkmodeReducer
+                    ? "mobileTextfield-backplate dontallowhighlighting  mobileTextfield-backplateColorDark"
+                    : "mobileTextfield-backplate dontallowhighlighting   mobileTextfield-backplateColorLight"
+                }
+                style={{
+                  zIndex: zindexBackPlateU,
+                  display: displayBackPlateU,
+                }}
+              ></DialogContent>
+              <TextField
+                onFocus={() => focusTextfield(1)}
+                onBlur={() => focusTextfield(0)}
+                size={sizex}
+                inputProps={{ style: { fontSize: font1 } }}
+                InputLabelProps={{ style: { fontSize: font2 } }}
+                style={{
+                  transform: transform,
+                  width: width,
+                  paddingBottom: showFocusTextFieldByHidePadding
+                    ? "0px"
+                    : "0px",
+                  zIndex: zindexU,
+                  opacity: TextFieldOpacity,
+                }}
+                label={usernameReducerx}
+                type="text"
+                onChange={updateSignvalues}
+                name="inputedUsername"
+                value={rawSignupValues.inputedUsername}
+                variant="standard"
+              />
+              <TextField
+                inputProps={{ style: { fontSize: font1 } }}
+                InputLabelProps={{ style: { fontSize: font2 } }}
+                style={{
+                  opacity: 0,
+                }}
+              />
+            </>
+          )}{" "}
         </>
       )}
     </>

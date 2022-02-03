@@ -290,7 +290,6 @@ function ModalLogLayoutx({
                           className="center-content-vertically"
                           style={{ marginTop: "3px", padding: "0px" }}
                         >
-                          {" "}
                           <FormHolder
                             setServerErrorDisplay={setServerErrorDisplay}
                             setserverEmojiplain={setserverEmojiplain}

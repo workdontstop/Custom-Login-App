@@ -1,12 +1,23 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import { Paper, Grid, Box } from "@material-ui/core";
 import { matchMobile, matchPc, matchTablet } from "../DetectDevice";
 import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
-import { ScrollerAction } from "../GlobalActions";
-
+import { Menu } from "./Menu";
+import { Billboard } from "./Billboard";
 import "./profile.css";
 import { Profile } from "./Profile";
 import Axios from "axios";
+import { CommentTemplate } from "../CommentTemplate";
+import { Upload } from "../upload/Upload";
+import AddIcon from "@mui/icons-material/Add";
+import { OptionsSlider } from "./OptionsSlider";
+import {
+  Paper,
+  Grid,
+  Typography,
+  createTheme,
+  MuiThemeProvider,
+  Box,
+} from "@material-ui/core";
 
 function ProfileOutter() {
   const { REACT_APP_SUPERSTARZ_URL } = process.env;
@@ -35,6 +46,7 @@ function ProfileOutter() {
   const [itemOriginalPostHeight, setitemOriginalPostHeight] = useState<
     Array<number>
   >([]);
+
   const [itemCLICKED, setitemCLICKED] = useState<Array<boolean>>([]);
   const [onLoadDataOnce, setonLoadDataOnce] = useState<Array<boolean>>([]);
   const [ActiveAutoPlay, setActiveAutoPlay] = useState<Array<boolean>>([]);
@@ -43,7 +55,7 @@ function ProfileOutter() {
 
   const postItemsRef = useRef<any>([]);
 
-  var heightplus = matchPc ? 0.33 : matchTablet ? 0.27 : 0.21;
+  var heightplus = matchPc ? 0.33 : matchTablet ? 0.23 : 0.23;
   var postbackheighthold = document.documentElement.clientHeight * heightplus;
 
   const [postbackheight] = useState<number>(postbackheighthold);
@@ -88,21 +100,18 @@ function ProfileOutter() {
     }
   }, []);
 
-  const OpenModalForm = useCallback(
-    (formtypedata: number) => {
-      setShowModalForm(true);
-      ///Replace current history state (since opening a modal Level 2 grid)...
-      /// if this was a level 1 grid (profile-info page use Pushstate to create new history state)
-      let modalName = "Biography";
+  const OpenModalForm = useCallback(() => {
+    setShowModalForm(true);
+    ///Replace current history state (since opening a modal Level 2 grid)...
+    /// if this was a level 1 grid (profile-info page use Pushstate to create new history state)
+    let modalName = "Biography";
 
-      if (!OpenModalFormOnce) {
-        window.history.pushState(null, "", modalName);
-        setOpenModalFormOnce(true);
-        CloseModalForm(1);
-      }
-    },
-    [OpenModalFormOnce, CloseModalForm]
-  );
+    if (!OpenModalFormOnce) {
+      window.history.pushState(null, "", modalName);
+      setOpenModalFormOnce(true);
+      CloseModalForm(1);
+    }
+  }, [OpenModalFormOnce, CloseModalForm]);
 
   ///
   ///
@@ -260,10 +269,12 @@ function ProfileOutter() {
 
           setPostData(postdataRep);
         } else if (response.data.message === "error in fetching feeds") {
-          alert("Connection malfunction");
+          alert("Connection malfunction profile outter");
         }
       })
-      .catch(function (error) {});
+      .catch(function (error) {
+        alert("Connection malfunction profile outter 2");
+      });
   }, [REACT_APP_SUPERSTARZ_URL]);
 
   useEffect(() => {
@@ -340,7 +351,7 @@ function ProfileOutter() {
 
             var choppedwidth = percentage(
               screenHeightReducer,
-              matchPc ? 60 : matchTablet ? 52 : 42
+              matchPc ? 55 : matchTablet ? 52 : 40
             );
 
             if (imageHeight < choppedwidth) {
@@ -350,7 +361,7 @@ function ProfileOutter() {
               setitemheight(newArr);
               ///////////////////////////////
               const newArrx = [...itemheighthold];
-              var newh = choppedwidth / 1.055 - postbackheighthold;
+              var newh = choppedwidth / 1.015 - postbackheighthold;
               newArrx[index] = `${newh}`;
               setitemheighthold(newArrx);
               ////////////////////////////
@@ -370,7 +381,7 @@ function ProfileOutter() {
               setitemheight(newArr);
               ///////////////////////////////
               const newArrx = [...itemheighthold];
-              var newh = choppedHeight / 1.032 - postbackheighthold;
+              var newh = choppedHeight / 1 - postbackheighthold;
               newArrx[index] = `${newh}`;
               setitemheighthold(newArrx);
               ////////////////////////////////
@@ -391,6 +402,17 @@ function ProfileOutter() {
                 var newh = imageHeight / 1.066 - postbackheighthold;
                 newArrx[index] = `${newh}`;
                 setitemheighthold(newArrx);
+                ///////////////////////////////
+                ///////////////////////////////
+                const newArrxq = [...itemcroptype];
+                newArrxq[index] = 3;
+                setitemcroptype(newArrxq);
+                ///////////////////////////////
+              } else {
+                ///////////////////////////////
+                const newArrxq = [...itemcroptype];
+                newArrxq[index] = 4;
+                setitemcroptype(newArrxq);
                 ///////////////////////////////
               }
             }
@@ -427,9 +449,6 @@ function ProfileOutter() {
     }
   };
 
-  const scrollTypeTimerx = useRef<ReturnType<typeof setTimeout> | null>(null);
-  var scrollchangeDuration = 25000;
-
   const scrollLongPicTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const scrollLongPicTimerx = useRef<ReturnType<typeof setTimeout> | null>(
     null
@@ -460,20 +479,6 @@ function ProfileOutter() {
   ///
   ///
   /// SLIDER DISPATCH
-  const ScrolltypeChange = () => {
-    if (scrollTypeTimer.current) {
-      clearTimeout(scrollTypeTimer.current);
-    }
-
-    if (scrollTypeTimerx.current) {
-      clearTimeout(scrollTypeTimerx.current);
-    }
-
-    dispatch(ScrollerAction("none"));
-    scrollTypeTimerx.current = setTimeout(() => {
-      dispatch(ScrollerAction("y mandatory"));
-    }, scrollchangeDuration);
-  };
 
   const onPostsItemClicked = (index: number) => {
     if (itemCLICKED[index]) {
@@ -487,11 +492,6 @@ function ProfileOutter() {
       if (scrollTypeTimer.current) {
         clearTimeout(scrollTypeTimer.current);
       }
-
-      dispatch(ScrollerAction("none"));
-      scrollTypeTimer.current = setTimeout(() => {
-        dispatch(ScrollerAction("y mandatory"));
-      }, scrollchangeDuration);
 
       const newclickArray = [...itemCLICKED];
       newclickArray[index] = true;
@@ -523,7 +523,58 @@ function ProfileOutter() {
   }));
   const loggedInReducer = loggedIn;
 
+  const paperPostScrollRef = useRef<any>(null);
+
+  const [showModalUpload, setShowModalUpload] = useState<boolean>(false);
+
   ///
+  ///
+  ///
+  /// CLOSE MODAL (STARTS AN ONPOPSTATE EVENT)
+  const closeUploadModal = useCallback((backbutton: number) => {
+    //pop states fires when back and forward buttons used
+    if (backbutton === 1) {
+      window.onpopstate = () => {
+        window.history.pushState(null, "", window.location.href);
+        window.onpopstate = null;
+        setShowModalUpload(false);
+      };
+    } else {
+      window.history.pushState(null, "", ".");
+      window.onpopstate = null;
+      setShowModalUpload(false);
+    }
+  }, []);
+
+  ///
+  ///
+  ///
+  ///OPEN MODAL THEN CALL CLOSEMODAL FUNCTION WHICH WAITS FOR A POP EVENT(for closing modal)
+  const OpenUploadModal = useCallback(() => {
+    setShowModalUpload(!showModalUpload);
+    //pushstate add enteries to your history
+    window.history.pushState(null, "", "Options");
+    closeUploadModal(1);
+  }, [showModalUpload, closeUploadModal]);
+
+  var widthProfilePic = matchPc ? "72%" : matchTablet ? "85%" : "44vw";
+  var topProfilePic = matchPc ? "-20vh" : matchTablet ? "-12vh" : "-8vh";
+  var leftProfilePic = matchPc ? "1vw" : matchTablet ? "3.5vw" : "2.7vw";
+
+  var optionsClass = "";
+  var fontOptions = "";
+
+  if (matchPc) {
+    optionsClass = "profile-optionsImagePc";
+    fontOptions = "2.7vw";
+  } else if (matchTablet) {
+    optionsClass = "profile-optionsImageTablet";
+    fontOptions = "5rem";
+  } else {
+    optionsClass = "profile-optionsImageMobile";
+    fontOptions = "1.9rem";
+  }
+
   ///
   ///
   /// GET COLOR FROM REDUX STORE
@@ -531,110 +582,312 @@ function ProfileOutter() {
     GlobalReducerColor: {
       color: string;
       colordark: string;
+      colortype: number;
     };
   }
-  const { color, colordark } = useSelector((state: RootStateReducerColor) => ({
-    ...state.GlobalReducerColor,
-  }));
+  const { color, colordark, colortype } = useSelector(
+    (state: RootStateReducerColor) => ({
+      ...state.GlobalReducerColor,
+    })
+  );
   const colorReducer = color;
   const colorReducerdark = colordark;
+  const colortypeReducer = colortype;
 
-  const paperPostScrollRef = useRef<any>(null);
+  ///
+  ///
+  ///
+  /// GET LOGGED USER DATA FROM REDUX STORE
+  interface RootStateReducerImage {
+    UserdataReducer: {
+      image: string;
+    };
+  }
+  const { image } = useSelector((state: RootStateReducerImage) => ({
+    ...state.UserdataReducer,
+  }));
+  const imageReducer = image;
 
-  console.log(postData);
+  const blank = () => {};
+
+  interface IappVariables {
+    shade: string;
+    shade2: string;
+    shade2num: string;
+    shade2nump: string;
+    secondarymaincolor: string;
+    maincolor: string;
+    shade2nump22: string;
+    littleTextColor: string;
+  }
+
+  var appVariables: IappVariables = {
+    shade: "",
+    shade2: "",
+    shade2num: "",
+    shade2nump: "",
+    secondarymaincolor: "",
+    maincolor: "",
+    shade2nump22: "",
+    littleTextColor: "",
+  };
+
+  var appVariablesDARK: IappVariables = {
+    shade: "#cccccc",
+    shade2: "#ffffff",
+    shade2num: "1.1",
+    shade2nump: "1.8",
+    secondarymaincolor: "#dddddd",
+    maincolor: "#dddddd",
+    shade2nump22: "5.5",
+    littleTextColor: "#dddddd",
+  };
+
+  var appVariablesLIGHT: IappVariables = {
+    shade: "#0b111b",
+    shade2: "#0b111b",
+    shade2num: "1.5",
+    shade2nump: "1.5",
+    secondarymaincolor: "#0b111b",
+    maincolor: "#0b111b",
+    shade2nump22: "8",
+    littleTextColor: "#0b111b",
+  };
+
+  ///
+  ///
+  ///
+  ///CONDITIONAL STATEMENT FOR DARKMODE
+  if (darkmodeReducer) {
+    appVariables = appVariablesDARK;
+  } else {
+    appVariables = appVariablesLIGHT;
+  }
+  ///
+  ///
+  ///
+  ///MATERIAL UI  THEME CUSTOMIZATAION
+  let themeGeneralSettings = createTheme({
+    palette: {
+      primary: {
+        main: `${appVariables.secondarymaincolor}`,
+      },
+      secondary: {
+        main: `${appVariables.secondarymaincolor}`,
+      },
+      type: darkmodeReducer ? "dark" : "light",
+    },
+  });
 
   return (
     <>
       {loggedInReducer ? (
         <>
-          {matchPc ? (
-            <>
-              {" "}
-              <Paper
-                ref={paperPostScrollRef}
-                className={
-                  darkmodeReducer ? "postscroll-dark" : "postscroll-light"
-                }
-                style={{
-                  backgroundImage: PaperStyleReducer,
-                  borderRadius: "0px",
-                  height: "100vh",
-                  overflowY: "scroll",
-                  scrollSnapType: scrollerReducer,
-                }}
-              >
-                <Profile
-                  getSliderWidthRef={getSliderWidthRef}
-                  OpenModalForm={OpenModalForm}
+          <Paper
+            ref={paperPostScrollRef}
+            className={
+              matchPc
+                ? darkmodeReducer
+                  ? "postscroll-dark"
+                  : "postscroll-light"
+                : ""
+            }
+            style={{
+              backgroundImage: PaperStyleReducer,
+              borderRadius: "0px",
+              minHeight: matchPc ? "" : "100vh",
+              height: matchPc ? "100vh" : "",
+              overflowY: "auto",
+              overflowX: "hidden",
+              paddingBottom: matchPc ? "20px" : "9px",
+            }}
+          >
+            <MuiThemeProvider theme={themeGeneralSettings}>
+              <Grid container className="dontallowhighlighting">
+                <Menu
+                  showModalUpload={showModalUpload}
+                  OpenUploadModal={OpenUploadModal}
                   getSliderWidth={getSliderWidth}
-                  postData={postData}
-                  addPostItemsRef={addPostItemsRef}
-                  postDivRef={postDivRef}
-                  onPostsItemload={onPostsItemload}
-                  itemheight={itemheight}
-                  itemheighthold={itemheighthold}
-                  postbackheight={postbackheight}
-                  formtype={formtype}
-                  showModalForm={showModalForm}
-                  CloseModalForm={CloseModalForm}
-                  aboutTemplateGo={aboutTemplateGo}
-                  commentTemplateGo={commentTemplateGo}
-                  itemcroptype={itemcroptype}
-                  itemFinalPostHeight={itemFinalPostHeight}
-                  onPostsItemClicked={onPostsItemClicked}
-                  itemCLICKED={itemCLICKED}
-                  addpostDivRef={addpostDivRef}
-                  postDatainner={postDatainner}
-                  itemOriginalPostHeight={itemOriginalPostHeight}
-                  ScrolltypeChange={ScrolltypeChange}
-                  ActiveAutoPlay={ActiveAutoPlay}
-                  setActiveAutoPlay={setActiveAutoPlay}
-                  AUTOSlideLongImages={AUTOSlideLongImages}
+                  paperPostScrollRef={paperPostScrollRef}
                 />
-              </Paper>
-            </>
-          ) : (
-            <>
-              {" "}
-              <Paper
-                ref={paperPostScrollRef}
-                style={{
-                  backgroundImage: PaperStyleReducer,
-                  borderRadius: "0px",
-                  height: "100vh",
-                }}
-              >
-                <Profile
-                  getSliderWidthRef={getSliderWidthRef}
-                  OpenModalForm={OpenModalForm}
-                  getSliderWidth={getSliderWidth}
-                  postData={postData}
-                  addPostItemsRef={addPostItemsRef}
-                  postDivRef={postDivRef}
-                  onPostsItemload={onPostsItemload}
-                  itemheight={itemheight}
-                  itemheighthold={itemheighthold}
-                  postbackheight={postbackheight}
-                  formtype={formtype}
-                  showModalForm={showModalForm}
-                  CloseModalForm={CloseModalForm}
-                  aboutTemplateGo={aboutTemplateGo}
-                  commentTemplateGo={commentTemplateGo}
-                  itemcroptype={itemcroptype}
-                  itemFinalPostHeight={itemFinalPostHeight}
-                  onPostsItemClicked={onPostsItemClicked}
-                  itemCLICKED={itemCLICKED}
-                  addpostDivRef={addpostDivRef}
-                  postDatainner={postDatainner}
-                  itemOriginalPostHeight={itemOriginalPostHeight}
-                  ScrolltypeChange={ScrolltypeChange}
-                  ActiveAutoPlay={ActiveAutoPlay}
-                  setActiveAutoPlay={setActiveAutoPlay}
-                  AUTOSlideLongImages={AUTOSlideLongImages}
-                />
-              </Paper>
-            </>
-          )}
+                <Billboard OpenModalForm={OpenModalForm} />
+
+                <Grid
+                  item
+                  xs={12}
+                  style={{ padding: "0px", height: "0px" }}
+                ></Grid>
+                <Grid
+                  item
+                  ref={getSliderWidthRef}
+                  xs={2}
+                  md={1}
+                  style={{ padding: "0px" }}
+                ></Grid>
+                <Grid
+                  item
+                  xs={12}
+                  style={{ padding: "0px", height: "0px" }}
+                ></Grid>
+                <Grid
+                  item
+                  component={Box}
+                  display={{ xs: "none", md: "block" }}
+                  md={2}
+                ></Grid>
+
+                <Grid item xs={5} md={3} style={{ padding: "0px" }}>
+                  {" "}
+                  <Grid
+                    item
+                    xs={12}
+                    style={{
+                      position: "relative",
+                      width: widthProfilePic,
+                      height: "auto",
+                      marginLeft: leftProfilePic,
+                      top: topProfilePic,
+                      zIndex: 3,
+                    }}
+                  >
+                    <Grid
+                      className={`  ${optionsClass}   `}
+                      style={{
+                        zIndex: 2,
+                        backgroundColor:
+                          colortypeReducer === 0
+                            ? darkmodeReducer
+                              ? colorReducerdark
+                              : colorReducer
+                            : colorReducer,
+
+                        opacity: 0.7,
+                      }}
+                    >
+                      <AddIcon
+                        style={{
+                          fontSize: fontOptions,
+                          color: "#ffffff",
+                        }}
+                        className="zuperkinginfo"
+                      />
+                    </Grid>
+                    <img
+                      onClick={OpenModalForm}
+                      className={
+                        darkmodeReducer
+                          ? `turprofileDark image-zoom-on-click`
+                          : ` turprofileLight image-zoom-on-click`
+                      }
+                      style={{
+                        cursor: "pointer",
+                        position: "absolute",
+                        zIndex: 0,
+                        textAlign: "left",
+                        objectFit: "contain",
+                        width: "100%",
+                        borderRadius: "50%",
+                        margin: "auto",
+                        filter: "blur(1.3px)",
+                      }}
+                      src={`./images/profilethumb/${imageReducer}`}
+                      alt="Superstarz Billboard "
+                    />{" "}
+                    <img
+                      onClick={OpenModalForm}
+                      className={
+                        darkmodeReducer
+                          ? `turprofileDark image-gray-on-click`
+                          : ` turprofileLight image-gray-on-click`
+                      }
+                      style={{
+                        cursor: "pointer",
+                        position: "relative",
+                        zIndex: 1,
+                        objectFit: "contain",
+                        width: "100%",
+                        borderRadius: "50%",
+                        margin: "auto",
+                      }}
+                      src={`./images/profile/${imageReducer}`}
+                      alt="Superstarz Billboard "
+                    />
+                  </Grid>
+                </Grid>
+
+                <Grid
+                  item
+                  xs={7}
+                  md={5}
+                  style={{
+                    position: "relative",
+                    height: "19.5vh",
+                    paddingLeft: matchPc
+                      ? "25px"
+                      : matchTablet
+                      ? "42px"
+                      : "24px",
+                    marginTop: matchTablet ? "10px" : "-4px",
+                    zIndex: 1,
+                  }}
+                >
+                  <OptionsSlider
+                    typeUpload={false}
+                    showModalUpload={showModalUpload}
+                    OpenUploadModal={OpenUploadModal}
+                    sethaltedTop={blank}
+                    typeTop={false}
+                    getSliderWidth={getSliderWidth}
+                  />
+                </Grid>
+              </Grid>
+
+              <Profile
+                getSliderWidthRef={getSliderWidthRef}
+                OpenModalForm={OpenModalForm}
+                getSliderWidth={getSliderWidth}
+                postData={postData}
+                addPostItemsRef={addPostItemsRef}
+                postDivRef={postDivRef}
+                onPostsItemload={onPostsItemload}
+                itemheight={itemheight}
+                itemheighthold={itemheighthold}
+                postbackheight={postbackheight}
+                formtype={formtype}
+                showModalForm={showModalForm}
+                CloseModalForm={CloseModalForm}
+                aboutTemplateGo={aboutTemplateGo}
+                commentTemplateGo={commentTemplateGo}
+                itemcroptype={itemcroptype}
+                itemFinalPostHeight={itemFinalPostHeight}
+                onPostsItemClicked={onPostsItemClicked}
+                itemCLICKED={itemCLICKED}
+                addpostDivRef={addpostDivRef}
+                postDatainner={postDatainner}
+                itemOriginalPostHeight={itemOriginalPostHeight}
+                ActiveAutoPlay={ActiveAutoPlay}
+                setActiveAutoPlay={setActiveAutoPlay}
+                AUTOSlideLongImages={AUTOSlideLongImages}
+                paperPostScrollRef={paperPostScrollRef}
+                onLoadDataOnce={onLoadDataOnce}
+              />
+
+              <CommentTemplate
+                formtype={formtype}
+                showModalForm={showModalForm}
+                CloseModalForm={CloseModalForm}
+                aboutTemp={aboutTemplateGo}
+                commentTemp={commentTemplateGo}
+              />
+
+              <Upload
+                showModalUpload={showModalUpload}
+                closeUploadModal={closeUploadModal}
+                OpenUploadModal={OpenUploadModal}
+                getSliderWidth={getSliderWidth}
+              />
+            </MuiThemeProvider>
+          </Paper>
         </>
       ) : null}
     </>

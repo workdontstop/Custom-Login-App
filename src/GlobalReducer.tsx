@@ -6,31 +6,29 @@ import {
   UPDATE_GLOBAL_COLOR,
   ACTIVATE_GLOBAL_LOADER,
   HIDE_GLOBAL_LOADER,
-  UPDATE_ScrollType,
+  CHANGE_OPTIONS_TOP,
 } from "./global_ActionTypes";
 
-///
-///
-///
-////////////SCROLLTYPE DATA////////////////
-const initialStateScrollType = {
-  scroller: "",
+////////////OPTIONS TOP SHOW  DATA////////////////
+const initialOptionsTopshow = {
+  optinstopshowing: false,
+
   ////For example const initialState = { person: null as Person };
 };
-type MyScrollTypeReducer = typeof initialStateScrollType;
+type MyOptionsTopShowReducer = typeof initialOptionsTopshow;
 
-export const ScrollTypeReducer = (
-  state = initialStateScrollType,
+export const OptionsTopShowReducer = (
+  state = initialOptionsTopshow,
   action: any
-): MyScrollTypeReducer => {
+): MyOptionsTopShowReducer => {
   switch (action.type) {
-    case UPDATE_ScrollType:
-      return { ...state, scroller: action.payload };
+    case CHANGE_OPTIONS_TOP:
+      return { ...state, optinstopshowing: action.payload };
     default:
       return state;
   }
 };
-///// SCROLLTYPE REDUCER //////////////////////
+//////OPTIONS TOP SHOW  REDUCER //////////////////////
 
 /////////////////////////BUTTON///////////////////////////////////////////////
 ///
@@ -183,6 +181,7 @@ export const GlobalReducerKeepMeLoggedIn = (
 const initialStateColorDark = {
   color: "#cccccc",
   colordark: "#cccccc",
+  colortype: 0,
 };
 
 export const GlobalReducerColor = (
@@ -195,6 +194,7 @@ export const GlobalReducerColor = (
         ...state,
         color: action.payload.color1,
         colordark: action.payload.color2,
+        colortype: action.payload.colortype,
       };
 
     default:

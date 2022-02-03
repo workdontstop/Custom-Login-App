@@ -15,6 +15,7 @@ import { UserdataAction } from "./actions/UserdataAction";
 import { ActivateLoaderAction, HideLoaderAction } from "../GlobalActions";
 //////import { useHistory } from "react-router-dom";
 import { PasswordCheck } from "./PasswordCheck";
+import { UpdateColorAction } from "../GlobalActions";
 
 Axios.defaults.withCredentials = true;
 
@@ -249,6 +250,12 @@ function FormHolderx({
               /// alert(loggedIn);
               dispatch(HideLoaderAction());
               dispatch(UserdataAction(response.data.payload));
+              var colorboy = {
+                color1: response.data.payload.usercolor1,
+                color2: response.data.payload.usercolor2,
+                colortype: response.data.payload.usercolortype,
+              };
+              dispatch(UpdateColorAction(colorboy));
               dispatch(IsLoggedAction());
             } else {
               setServerErrorData("user info could not be retrieved");
@@ -730,6 +737,13 @@ function FormHolderx({
                         /// alert(loggedIn);
                         dispatch(HideLoaderAction());
                         dispatch(UserdataAction(response.data.payload));
+
+                        var colorboy = {
+                          color1: response.data.payload.usercolor1,
+                          color2: response.data.payload.usercolor2,
+                          colortype: response.data.payload.usercolortype,
+                        };
+                        dispatch(UpdateColorAction(colorboy));
                         dispatch(IsLoggedAction());
                       } else {
                         setServerErrorData("something went wrong");
@@ -1046,6 +1060,7 @@ function FormHolderx({
             checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
           <TextFieldSignup
+            sourceType="LOG"
             showFocusTextFieldByHidePadding={showFocusTextFieldByHidePadding}
             setShowFocusTextFieldByHidePadding={
               setShowFocusTextFieldByHidePadding
@@ -1076,6 +1091,7 @@ function FormHolderx({
             checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
           <TextFieldSignup
+            sourceType="LOG"
             showFocusTextFieldByHidePadding={showFocusTextFieldByHidePadding}
             setShowFocusTextFieldByHidePadding={
               setShowFocusTextFieldByHidePadding
@@ -1093,6 +1109,7 @@ function FormHolderx({
             checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
           <TextFieldSignup
+            sourceType="LOG"
             showFocusTextFieldByHidePadding={showFocusTextFieldByHidePadding}
             setShowFocusTextFieldByHidePadding={
               setShowFocusTextFieldByHidePadding
@@ -1174,6 +1191,7 @@ function FormHolderx({
             checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
           <TextFieldSignup
+            sourceType="LOG"
             showFocusTextFieldByHidePadding={showFocusTextFieldByHidePadding}
             setShowFocusTextFieldByHidePadding={
               setShowFocusTextFieldByHidePadding
@@ -1204,6 +1222,7 @@ function FormHolderx({
             checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
           <TextFieldSignup
+            sourceType="LOG"
             showFocusTextFieldByHidePadding={showFocusTextFieldByHidePadding}
             setShowFocusTextFieldByHidePadding={
               setShowFocusTextFieldByHidePadding
@@ -1221,6 +1240,7 @@ function FormHolderx({
             checkSignupPasswordACTIVATE={checkSignupPasswordACTIVATE}
           />
           <TextFieldSignup
+            sourceType="LOG"
             showFocusTextFieldByHidePadding={showFocusTextFieldByHidePadding}
             setShowFocusTextFieldByHidePadding={
               setShowFocusTextFieldByHidePadding

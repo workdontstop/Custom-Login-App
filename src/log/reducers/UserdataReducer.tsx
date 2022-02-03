@@ -1,4 +1,8 @@
-import { REQUEST_USERDATA, REQUEST_USERDATA_ONLOAD } from "../log_ActionTypes";
+import {
+  REQUEST_USERDATA,
+  REQUEST_USERDATA_ONLOAD,
+  REQUEST_USER_INFO_UPDATE,
+} from "../log_ActionTypes";
 
 ///
 ///
@@ -26,6 +30,13 @@ export const UserdataReducer = (
   action: any
 ): MyUserdataReducer => {
   switch (action.type) {
+    case REQUEST_USER_INFO_UPDATE:
+      return {
+        ...state,
+        username: action.payload.username,
+        quote: action.payload.quote,
+        biography: action.payload.describe,
+      };
     case REQUEST_USERDATA:
       return {
         ...state,

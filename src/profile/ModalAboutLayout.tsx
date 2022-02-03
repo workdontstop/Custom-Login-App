@@ -7,6 +7,11 @@ import { Scrollbars } from "react-custom-scrollbars-2";
 
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 
+import { AboutColor } from "./AboutColor";
+
+import { AboutFormHolder } from "./AboutFormHolder";
+import { ServerError } from "../log/ServerError";
+
 import { RootStateOrAny, useSelector } from "react-redux";
 import "./../log/logCss.css";
 
@@ -46,6 +51,14 @@ function ModalAboutLayoutx({
   setZoomedModal,
 }: any): JSX.Element {
   const [showlogo, setshowlogo] = useState<boolean>(true);
+
+  ///
+  ///
+  ///
+  /// SENDING LOGIN  DATA TO SERVER SIDE
+  const [serverErrorData, setServerErrorData] = useState<string | null>(null);
+  const [serverErrorDisplay, setServerErrorDisplay] = useState<number>(4);
+  const [serverEmojiplain, setserverEmojiplain] = useState<boolean>(true);
 
   ///
   ///
@@ -181,6 +194,14 @@ function ModalAboutLayoutx({
               zIndex: 100,
             }}
           >
+            <ServerError
+              device="pc"
+              serverEmojiplain={serverEmojiplain}
+              setServerErrorData={setServerErrorData}
+              serverErrorDisplay={serverErrorDisplay}
+              serverErrorData={serverErrorData}
+            />
+
             <DialogContent
               className={`${fadeSlidingimage} modalImageCustomSlider FormDialog-containerx dontallowhighlighting`}
               onClick={onBackgroundFocus}
@@ -220,7 +241,7 @@ function ModalAboutLayoutx({
                   : "fadermodal FormDialog-container modal-containerLight dontallowhighlighting"
               }
               onClick={onBackgroundFocus}
-              style={{ overflow: "hidden", cursor: "pointer" }}
+              style={{ overflow: "hidden", cursor: "pointer", height: "101%" }}
               ref={ModalBackgroundRef}
             >
               <animated.div style={modalanimation}>
@@ -282,11 +303,11 @@ function ModalAboutLayoutx({
                         }
                         style={{
                           color: "#ffffff",
-                          fontSize: "3.5vw",
+                          fontSize: "2.9vw",
                           position: "fixed",
                           top: zoomedModal ? "4vh" : "4vh",
                           right: zoomedModal ? "1.5vw" : "",
-                          left: zoomedModal ? "" : "1vw",
+                          left: zoomedModal ? "" : "1.8vw",
                         }}
                       />{" "}
                       <img
@@ -302,29 +323,36 @@ function ModalAboutLayoutx({
                       />
                     </Grid>
 
-                    {formtype ? (
-                      <Grid item xs={GridHolderB}>
-                        <Grid xs={12} item className="formholder">
-                          <Grid
-                            item
-                            xs={12}
-                            className="center-content-vertically"
-                            style={{ marginTop: "10px", padding: "0px" }}
-                          ></Grid>
-                        </Grid>
-                      </Grid>
-                    ) : (
-                      <Grid xs={GridHolderB} item className="formholder">
+                    <Grid item xs={GridHolderB}>
+                      <AboutColor zoomed={zoomedModal} />
+                      <Grid xs={12} item className="formholder">
                         <Grid
                           item
                           xs={12}
                           className="center-content-vertically"
-                          style={{ marginTop: "3px", padding: "0px" }}
+                          style={{
+                            marginTop: "10px",
+                            padding: "0px",
+                            paddingTop: "10vh",
+                          }}
                         >
-                          {" "}
+                          <AboutFormHolder
+                            zoomedModal={zoomedModal}
+                            WidthHolder={WidthHolder}
+                            loginForm={false}
+                            setServerErrorData={setServerErrorData}
+                            setServerErrorDisplay={setServerErrorDisplay}
+                            setserverEmojiplain={setserverEmojiplain}
+                            checkSignupPasswordACTIVATE={
+                              checkSignupPasswordACTIVATE
+                            }
+                            setcheckSignupPasswordACTIVATE={
+                              setcheckSignupPasswordACTIVATE
+                            }
+                          />
                         </Grid>
                       </Grid>
-                    )}
+                    </Grid>
                   </Grid>
                 </Paper>
               </animated.div>
@@ -441,23 +469,9 @@ function ModalAboutLayoutx({
                       />{" "}
                       <Grid item xs={12} style={{ height: "6vh" }}></Grid>{" "}
                       <Grid xs={12} item className={formHolder}>
-                        {formtype ? (
-                          <Grid
-                            item
-                            xs={12}
-                            className=""
-                            style={{ marginTop: "24px" }}
-                          ></Grid>
-                        ) : (
-                          <Grid
-                            item
-                            xs={12}
-                            className=""
-                            style={{ marginTop: "-10x" }}
-                          >
-                            {" "}
-                          </Grid>
-                        )}
+                        <Grid item xs={12}>
+                          <AboutColor zoomed={mobileZoom} />
+                        </Grid>
                       </Grid>
                       <Grid item xs={12} style={{ height: "60vh" }}></Grid>{" "}
                     </Paper>

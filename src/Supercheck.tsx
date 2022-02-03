@@ -165,6 +165,7 @@ function Supercheck() {
   } else {
     superFont = "super-starz-text-Mobile";
   }
+
   var imageWidth = "";
   var optionsClass = "";
 

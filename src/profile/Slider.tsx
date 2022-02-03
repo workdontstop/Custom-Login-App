@@ -5,6 +5,7 @@ import { SliderNumber } from "./SliderNumber";
 import { Grid } from "@material-ui/core";
 import { animated, useTransition } from "react-spring";
 import { RootStateOrAny, useSelector } from "react-redux";
+import { matchMobile, matchPc, matchTablet } from "../DetectDevice";
 
 function Sliderx({
   slides,
@@ -18,7 +19,6 @@ function Sliderx({
   itemOriginalPostHeight,
   itemcroptype,
   itemCLICKED,
-  ScrolltypeChange,
   ActiveAutoPlay,
   setActiveAutoPlay,
   AUTOSlideLongImages,
@@ -32,6 +32,7 @@ function Sliderx({
   setSliderIndex,
   sliderIndexSlow,
   setSliderIndexSlow,
+  length,
 }: any): JSX.Element {
   const [sliderDuration] = useState(1500);
 
@@ -148,10 +149,12 @@ function Sliderx({
   ///
   /// HANDLE TOUCH START EVENT
   const handleTouchStart = (e: any) => {
-    ////onMouseDown onMouseMove
-    ////touchDown = e.clientX
-    const touchDown = e.touches[0].clientX;
-    setTouchPosition(touchDown);
+    if (itemCLICKED[pey]) {
+      ////onMouseDown onMouseMove
+      ////touchDown = e.clientX
+      const touchDown = e.touches[0].clientX;
+      setTouchPosition(touchDown);
+    }
   };
 
   ///
@@ -159,31 +162,33 @@ function Sliderx({
   ///
   /// HANDLE TOUCH MOVE EVENT
   const handleTouchMove = (e: any) => {
-    if (handleTouchMoveTimer.current) {
-      clearTimeout(handleTouchMoveTimer.current);
-    }
-    handleTouchMoveTimer.current = setTimeout(function () {
-      const touchDown = touchPosition;
-
-      if (touchDown === null) {
-        return;
+    if (itemCLICKED[pey]) {
+      if (handleTouchMoveTimer.current) {
+        clearTimeout(handleTouchMoveTimer.current);
       }
-      ////currentTouch = e.clientX
-      const currentTouch = e.touches[0].clientX;
-      const diff = touchDown - currentTouch;
+      handleTouchMoveTimer.current = setTimeout(function () {
+        const touchDown = touchPosition;
 
-      if (diff > 40) {
-        nextSlide();
-      } else if (diff < -40) {
-        prevSlide();
-      } else {
-      }
+        if (touchDown === null) {
+          return;
+        }
+        ////currentTouch = e.clientX
+        const currentTouch = e.touches[0].clientX;
+        const diff = touchDown - currentTouch;
 
-      setTouchPosition(null);
+        if (diff > 40) {
+          nextSlide();
+        } else if (diff < -40) {
+          prevSlide();
+        } else {
+        }
+
+        setTouchPosition(null);
+        return false;
+      }, 200);
+
       return false;
-    }, 200);
-
-    return false;
+    }
   };
 
   ///
@@ -204,7 +209,6 @@ function Sliderx({
   ///
   /// NEXT SLIDE
   const nextSlide = () => {
-    ScrolltypeChange();
     AUTOSlideLongImages(pey);
 
     if (ActiveAutoPlay[pey]) {
@@ -240,7 +244,6 @@ function Sliderx({
   ///
   /// PREV SLIDE
   const prevSlide = () => {
-    ScrolltypeChange();
     AUTOSlideLongImages(pey);
     if (ActiveAutoPlay[pey]) {
     } else {
@@ -273,7 +276,6 @@ function Sliderx({
   ///
   /// CHANGE SLIDER CONTENT USING  DOTS
   const GotoDots = (clickedDot: number) => {
-    ScrolltypeChange();
     setSliderIndex((sliderIndex: any) => clickedDot);
     waitChangeIndex(clickedDot, sliderIndex);
   };
@@ -328,9 +330,6 @@ function Sliderx({
         {transitions((style, i) => (
           <>
             <animated.img
-              className={
-                darkmodeReducer ? "turlightpostdark" : "turlightpostlight"
-              }
               src={`./images/posts/${slides[i]}`}
               alt="a superstarz post "
               style={{
@@ -342,6 +341,14 @@ function Sliderx({
                 position: "absolute",
                 filter: "blur(3px)",
                 padding: "0px",
+                marginTop:
+                  pey === length - 1
+                    ? matchPc
+                      ? "0px"
+                      : matchTablet
+                      ? "0px"
+                      : "-2.5px"
+                    : "0px",
                 objectFit:
                   itemcroptype[pey] === 1 || itemcroptype[pey] === 2
                     ? "cover"

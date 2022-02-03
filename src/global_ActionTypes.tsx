@@ -12,4 +12,4 @@ export const ACTIVATE_GLOBAL_LOADER = "ACTIVATE_GLOBAL_LOADER";
 
 export const HIDE_GLOBAL_LOADER = "HIDE_GLOBAL_LOADER";
 
-export const UPDATE_ScrollType = "UPDATE_ScrollType";
+export const CHANGE_OPTIONS_TOP = "CHANGE_OPTIONS_TOP";

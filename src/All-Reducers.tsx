@@ -14,7 +14,7 @@ import {
   GlobalReducerKeepMeLoggedIn,
   GlobalReducerColor,
   GlobalReducerLoader,
-  ScrollTypeReducer,
+  OptionsTopShowReducer,
 } from "./GlobalReducer";
 //////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////
@@ -37,7 +37,7 @@ const AllReducers = combineReducers({
   GlobalReducerColor,
   IsLoggedProfileReducer,
   GlobalReducerLoader,
-  ScrollTypeReducer,
+  OptionsTopShowReducer,
 });
 
 export default AllReducers;

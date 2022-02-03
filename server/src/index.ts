@@ -4,12 +4,15 @@ const cookieParser = require("cookie-parser");
 import express = require("express");
 var app: Application = express();
 var cors = require("cors");
+const path = require("path");
+const multer = require("multer");
 
 app.use(
   cors({
     credentials: true,
     origin: "http://192.168.43.136:3000",
     ////origin: "http://localhost:3000",
+    //// origin: "http://192.168.43.136:3000",
   })
 );
 
@@ -27,15 +30,21 @@ const CONNECTION_CONFIG = {
   password: "password",
   database: "superdata",
 };
+
+///
+///
+///
+///
+///
 ///
 ///reg
-const register = `INSERT INTO members (username,password,email,color,status,notification,tutorial,date,reg) VALUES (?,?,?,?,?,?,?,?,?)`;
+const register = `INSERT INTO members (username,password,email,color1,color2,color_type,status,notification,tutorial,date,reg) VALUES (?,?,?,?,?,?,?,?,?,?,?)`;
 ///
 ///login
-const login = `SELECT username,id,password,color,profile_image,first_name,sur_name,quote,reg,billboard1,billboard2,biography FROM members WHERE username =?`;
+const login = `SELECT username,id,password,color1,color2,color_type,profile_image,first_name,sur_name,quote,reg,billboard1,billboard2,biography FROM members WHERE username =?`;
 ///
 ///checkIsLogged
-const loginId = `SELECT username,id,password,color,profile_image,first_name,sur_name,quote,reg,billboard1,billboard2,biography  FROM members WHERE id =?`;
+const loginId = `SELECT username,id,password,color1,color2,color_type,profile_image,first_name,sur_name,quote,reg,billboard1,billboard2,biography  FROM members WHERE id =?`;
 ///
 ///usernamecheck
 const checkpassword = `SELECT id FROM members WHERE  username =?`;
@@ -64,11 +73,72 @@ const posts = `SELECT  (SELECT COUNT(*)
          WHERE post = posts.id and type=4)lovely, 
          
          
-         members.profile_image,members.username,color,posts.id,sender,post_count,topic,
+         members.profile_image,members.username,color1,posts.id,sender,post_count,topic,
 caption,item1,itemtype1,item2,itemtype2,item3,itemtype3,item4,itemtype4,item5,itemtype5,item6,itemtype6,
 item7,itemtype7,item8,itemtype8,item9,itemtype9,item10,itemtype10,item11,itemtype11,item12,itemtype12,item13,itemtype13,
 item14,itemtype14,item15,itemtype15,item16,itemtype16,time  FROM posts inner join members on
  posts.sender = members.id   ORDER BY posts.id DESC  LIMIT 15  `;
+
+const updateColor = `UPDATE members SET  color1 = ?, color2 = ?, color_type = ? WHERE (id = ?)`;
+
+const updateBasicpage = `UPDATE members SET username = ?, quote=?, biography=?   WHERE (id = ?)`;
+
+const storage = multer.diskStorage({
+  destination: function (req: any, file: any, callback: any) {
+    var dir = "../public/images/upload";
+    callback(null, dir);
+  },
+  filename: function (req: any, file: any, callback: any) {
+    callback(null, file.originalname);
+  },
+});
+
+var upload = multer({ storage: storage });
+
+app.post(
+  "/upload",
+  upload.array("superImages"),
+  (req: any, res: any, next: any) => {
+    console.log(req.files);
+    return res.send({ message: "ok" });
+  }
+);
+
+app.put("/update_basic", async (req: Request, res: Response) => {
+  const { values } = req.body;
+  const connection = mysql.createConnection(CONNECTION_CONFIG);
+  const execQuery = util.promisify(connection.query.bind(connection));
+
+  try {
+    await execQuery(updateBasicpage, [
+      values.inputedUsername,
+      values.inputedQuote,
+      values.inputedDescription,
+      values.id,
+    ]);
+    return res.send({ message: "username updated" });
+  } catch {
+    return res.send({ message: "usernameFailed" });
+  }
+});
+
+app.put("/update_color", async (req: Request, res: Response) => {
+  const { values } = req.body;
+  const connection = mysql.createConnection(CONNECTION_CONFIG);
+  const execQuery = util.promisify(connection.query.bind(connection));
+
+  try {
+    await execQuery(updateColor, [
+      values.color1,
+      values.color2,
+      values.colortype,
+      values.id,
+    ]);
+    return res.send({ message: "color updated" });
+  } catch {
+    return res.send({ message: "colorFailed" });
+  }
+});
 
 app.post("/feeds_chronological", async (req: Request, res: Response) => {
   const connection = mysql.createConnection(CONNECTION_CONFIG);
@@ -127,14 +197,6 @@ app.post(
   }
 );
 
-app.post("/logout", async (req: Request, res: Response) => {
-  if (req.cookies.accesst) {
-    return res.clearCookie("accesst").send({ message: "cookie deleted" });
-  } else {
-    return res.send({ message: "cookie null" });
-  }
-});
-
 app.post(
   "/checkIsLogged",
   validateToken,
@@ -151,7 +213,9 @@ app.post(
           id: logindata[0].id,
           username: logindata[0].username,
           userimage: logindata[0].profile_image,
-          usercolor: logindata[0].color,
+          usercolor1: logindata[0].color1,
+          usercolor2: logindata[0].color2,
+          usercolortype: logindata[0].color_type,
           userfirstname: logindata[0].first_name,
           usersurname: logindata[0].sur_name,
           userquote: logindata[0].quote,
@@ -249,7 +313,9 @@ app.post(
             id: logindata[0].id,
             username: logindata[0].username,
             userimage: logindata[0].profile_image,
-            usercolor: logindata[0].color,
+            usercolor1: logindata[0].color1,
+            usercolor2: logindata[0].color2,
+            usercolortype: logindata[0].color_type,
             userfirstname: logindata[0].first_name,
             usersurname: logindata[0].sur_name,
             userquote: logindata[0].quote,
@@ -317,6 +383,8 @@ app.post(
             hash,
             values.inputedEmail,
             color,
+            color,
+            0,
             1,
             0,
             1,
@@ -329,7 +397,9 @@ app.post(
             id: signupData.insertId,
             username: values.inputedUsername,
             userimage: "",
-            usercolor: color,
+            usercolor1: color,
+            usercolor2: color,
+            usercolortype: 0,
             userfirstname: "",
             usersurname: "",
             userquote: " ",

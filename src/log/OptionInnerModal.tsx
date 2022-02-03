@@ -3,6 +3,7 @@ import ControlPointDuplicateIcon from "@mui/icons-material/ControlPointDuplicate
 import { Grid, Switch, DialogContent } from "@material-ui/core";
 import { matchPc, matchTablet } from "../DetectDevice";
 import { useSpring, animated } from "react-spring";
+
 import { IOptionInnerModal } from "./log-Interfaces";
 import { useSelector, useDispatch } from "react-redux";
 
