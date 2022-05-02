@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { Grid, Box } from "@material-ui/core";
+
 import { DarkmodeToggleAction } from ".././GlobalActions";
 import { matchPc, matchTablet } from "../DetectDevice";
 import { SliderBillboard } from "./SliderBillboard";
@@ -61,7 +62,7 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
 
   //////////////////////////////////BILLBOARD VARIABLES FOR DEVICE TYPES
   var widthh = matchPc ? "65vw" : "98.5vw";
-  var topp = matchPc ? "5.9vh" : matchTablet ? "4.3em" : "1.55em";
+  var topp = matchPc ? "5.9vh" : matchTablet ? "5.5vh" : "3.5vh";
   var usernameClass = matchPc
     ? "usernamePc"
     : matchTablet
@@ -69,7 +70,7 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
     : "usernameMobile";
 
   var widthName = matchPc ? "65vw" : "98.5vw";
-  var topName = matchPc ? "13.5vh" : matchTablet ? "11.9em" : "4em";
+  var topName = matchPc ? "13.5vh" : matchTablet ? "12.5vh" : "9vh";
   var name = matchPc ? "namePc" : matchTablet ? "nameTablet" : "nameMobile";
 
   var widthConnect = matchPc ? "65vw" : "98.5vw";

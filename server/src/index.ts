@@ -10,9 +10,9 @@ const multer = require("multer");
 app.use(
   cors({
     credentials: true,
+    /////origin: "http://192.168.43.137:3000",
+    //// origin: "http://localhost:3000",
     origin: "http://192.168.43.136:3000",
-    ////origin: "http://localhost:3000",
-    //// origin: "http://192.168.43.136:3000",
   })
 );
 
@@ -77,7 +77,7 @@ const posts = `SELECT  (SELECT COUNT(*)
 caption,item1,itemtype1,item2,itemtype2,item3,itemtype3,item4,itemtype4,item5,itemtype5,item6,itemtype6,
 item7,itemtype7,item8,itemtype8,item9,itemtype9,item10,itemtype10,item11,itemtype11,item12,itemtype12,item13,itemtype13,
 item14,itemtype14,item15,itemtype15,item16,itemtype16,time  FROM posts inner join members on
- posts.sender = members.id   ORDER BY posts.id DESC  LIMIT 15  `;
+ posts.sender = members.id   ORDER BY posts.id DESC  LIMIT 12  `;
 
 const updateColor = `UPDATE members SET  color1 = ?, color2 = ?, color_type = ? WHERE (id = ?)`;
 

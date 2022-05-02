@@ -132,7 +132,7 @@ function MenuInnerx({
                     margin: "auto",
                     textAlign: "center",
                     position: "relative",
-                    bottom: typeTop ? "-1.4em" : "0.2em",
+                    bottom: typeTop ? "-2.6vh" : "0.2em",
                     left: typeTop ? "-3px" : matchPc ? "-2px" : "0px",
                   }}
                 >
@@ -165,13 +165,14 @@ function MenuInnerx({
                           margin: "auto",
                           textAlign: "center",
                           position: "relative",
-                          top: matchPc ? "0.9em" : "0.54em",
+                          top: "2.2vh",
                         }}
                       >
                         <Grid
                           item
                           xs={12}
                           style={{
+                            paddingBottom: "10px",
                             fontSize: matchPc
                               ? "1.1vw"
                               : matchTablet
@@ -213,7 +214,6 @@ function MenuInnerx({
                                 textAlign: "center",
                                 alignItems: "center",
                                 display: "grid",
-
                                 justifyContent: "center",
                                 boxShadow: darkmodeReducer
                                   ? ActiveSlide === i

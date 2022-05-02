@@ -116,7 +116,7 @@ function Profilex({
   const colorReducerdark = colordark;
   const colortypeReducer = colortype;
 
-  var widthProfilePic = matchPc ? "72%" : matchTablet ? "85%" : "44vw";
+  var widthProfilePic = matchPc ? "72%" : matchTablet ? "84%" : "44vw";
   var topProfilePic = matchPc ? "-20vh" : matchTablet ? "-12vh" : "-8vh";
   var leftProfilePic = matchPc ? "1vw" : matchTablet ? "3.5vw" : "2.7vw";
 

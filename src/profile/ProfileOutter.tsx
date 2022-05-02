@@ -10,6 +10,9 @@ import { CommentTemplate } from "../CommentTemplate";
 import { Upload } from "../upload/Upload";
 import AddIcon from "@mui/icons-material/Add";
 import { OptionsSlider } from "./OptionsSlider";
+import { UpdateNavFilterReducer } from "../GlobalActions";
+import { UpdateNavCropReducer } from "../GlobalActions";
+
 import {
   Paper,
   Grid,
@@ -55,12 +58,16 @@ function ProfileOutter() {
 
   const postItemsRef = useRef<any>([]);
 
-  var heightplus = matchPc ? 0.33 : matchTablet ? 0.23 : 0.23;
+  var heightplus = matchPc ? 0.38 : matchTablet ? 0.3 : 0.265;
   var postbackheighthold = document.documentElement.clientHeight * heightplus;
 
   const [postbackheight] = useState<number>(postbackheighthold);
 
   const scrollTypeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [navigateUpload, setnavigateUpload] = useState<any>(0);
+
+  const [stopBodyScroll, setStopBodyScroll] = useState<boolean>(false);
 
   ///
   ///
@@ -86,8 +93,8 @@ function ProfileOutter() {
   ///CLOSE LOG MODAL
   const [OpenModalFormOnce, setOpenModalFormOnce] = useState<boolean>(false);
   const CloseModalForm = useCallback((DeviceBackButtonClicked: number) => {
-    ///onpopstate fires when back and forward buttons used
     if (DeviceBackButtonClicked === 1) {
+      ///onpopstate fires when back and forward buttons used
       window.onpopstate = () => {
         setShowModalForm(false);
         setOpenModalFormOnce(false);
@@ -102,6 +109,7 @@ function ProfileOutter() {
 
   const OpenModalForm = useCallback(() => {
     setShowModalForm(true);
+
     ///Replace current history state (since opening a modal Level 2 grid)...
     /// if this was a level 1 grid (profile-info page use Pushstate to create new history state)
     let modalName = "Biography";
@@ -122,6 +130,69 @@ function ProfileOutter() {
       setgetSliderWidth(getSliderWidthRef.current.clientWidth);
     }
   }, []);
+
+  ///
+  ///
+  ///
+  /// GET GLOBAL INNER NAVIGATION VARIABLE
+  const { activatefilterImage, activatecropImage } = useSelector(
+    (state: RootStateOrAny) => ({
+      ...state.GlobalNavuploadReducer,
+    })
+  );
+  const activatefilterImageReducer = activatefilterImage;
+  const activatecropImageReducer = activatecropImage;
+
+  const uploadClose = (DeviceBackButtonClicked: number) => {
+    if (DeviceBackButtonClicked === 1) {
+      ///onpopstate fires when back and forward buttons used
+      window.onpopstate = () => {
+        if (activatefilterImageReducer) {
+          dispatch(UpdateNavFilterReducer(false));
+        } else if (activatecropImageReducer) {
+          dispatch(UpdateNavCropReducer(false));
+        } else {
+          setStopBodyScroll(false);
+          setShowModalUpload(false);
+        }
+      };
+    } else {
+      if (activatefilterImageReducer) {
+        dispatch(UpdateNavFilterReducer(false));
+      } else {
+        setStopBodyScroll(false);
+        setShowModalUpload(false);
+      }
+      ///Replace modal history state with previous history state
+      window.history.back();
+    }
+  };
+
+  ///
+  ///
+  ///
+  /// CLOSE MODAL (STARTS AN ONPOPSTATE EVENT)
+  const closeboy = useCallback(
+    (DeviceBackButtonClicked: number, navigateUploadx: number) => {
+      //pop states fires when back and forward buttons used
+      if (showModalUpload) {
+        uploadClose(DeviceBackButtonClicked);
+      }
+    },
+    [window.onpopstate, uploadClose]
+  );
+
+  ///
+  ///
+  ///
+  ///GET OPTIONS SLIDER IMAGE WID TH FROM MATERIAL UI GRID
+  useEffect(() => {
+    closeboy(1, 0);
+    ///
+    if (getSliderWidthRef.current && getSliderWidthRef.current.clientWidth) {
+      setgetSliderWidth(getSliderWidthRef.current.clientWidth);
+    }
+  }, [closeboy]);
   ///
   ///
   ///
@@ -530,35 +601,16 @@ function ProfileOutter() {
   ///
   ///
   ///
-  /// CLOSE MODAL (STARTS AN ONPOPSTATE EVENT)
-  const closeUploadModal = useCallback((backbutton: number) => {
-    //pop states fires when back and forward buttons used
-    if (backbutton === 1) {
-      window.onpopstate = () => {
-        window.history.pushState(null, "", window.location.href);
-        window.onpopstate = null;
-        setShowModalUpload(false);
-      };
-    } else {
-      window.history.pushState(null, "", ".");
-      window.onpopstate = null;
-      setShowModalUpload(false);
-    }
-  }, []);
-
-  ///
-  ///
-  ///
   ///OPEN MODAL THEN CALL CLOSEMODAL FUNCTION WHICH WAITS FOR A POP EVENT(for closing modal)
   const OpenUploadModal = useCallback(() => {
+    setStopBodyScroll(true);
     setShowModalUpload(!showModalUpload);
     //pushstate add enteries to your history
-    window.history.pushState(null, "", "Options");
-    closeUploadModal(1);
-  }, [showModalUpload, closeUploadModal]);
+    window.history.pushState(null, "", "Upload");
+  }, [showModalUpload]);
 
-  var widthProfilePic = matchPc ? "72%" : matchTablet ? "85%" : "44vw";
-  var topProfilePic = matchPc ? "-20vh" : matchTablet ? "-12vh" : "-8vh";
+  var widthProfilePic = matchPc ? "70%" : matchTablet ? "85%" : "42vw";
+  var topProfilePic = matchPc ? "-20vh" : matchTablet ? "-13vh" : "-9vh";
   var leftProfilePic = matchPc ? "1vw" : matchTablet ? "3.5vw" : "2.7vw";
 
   var optionsClass = "";
@@ -663,6 +715,12 @@ function ProfileOutter() {
   } else {
     appVariables = appVariablesLIGHT;
   }
+  var colorx =
+    colortypeReducer === 0
+      ? darkmodeReducer
+        ? colorReducerdark
+        : colorReducer
+      : colorReducer;
   ///
   ///
   ///
@@ -676,6 +734,26 @@ function ProfileOutter() {
         main: `${appVariables.secondarymaincolor}`,
       },
       type: darkmodeReducer ? "dark" : "light",
+    },
+    overrides: {
+      MuiSlider: {
+        thumb: {
+          height: "4vh",
+          width: "4vh",
+          marginTop: "-1.8vh",
+          boxShadow: darkmodeReducer ? "0 0 5.5px#dddddd" : " 0 0 3.1px#444444",
+          color: colorx,
+        },
+        track: {
+          color: colorx,
+          height: "4px",
+        },
+        rail: {
+          boxShadow: darkmodeReducer ? "0 0 5.5px#dddddd" : " 0 0 3.1px#444444",
+          color: darkmodeReducer ? "black" : "white",
+          height: "4px",
+        },
+      },
     },
   });
 
@@ -695,9 +773,23 @@ function ProfileOutter() {
             style={{
               backgroundImage: PaperStyleReducer,
               borderRadius: "0px",
-              minHeight: matchPc ? "" : "100vh",
-              height: matchPc ? "100vh" : "",
-              overflowY: "auto",
+              minHeight: matchPc
+                ? ""
+                : (stopBodyScroll && matchMobile) ||
+                  (stopBodyScroll && matchTablet)
+                ? " "
+                : "100vh",
+              height: matchPc
+                ? "100vh"
+                : (stopBodyScroll && matchMobile) ||
+                  (stopBodyScroll && matchTablet)
+                ? "100vh"
+                : "",
+              overflowY:
+                (stopBodyScroll && matchMobile) ||
+                (stopBodyScroll && matchTablet)
+                  ? "hidden"
+                  : "auto",
               overflowX: "hidden",
               paddingBottom: matchPc ? "20px" : "9px",
             }}
@@ -832,7 +924,7 @@ function ProfileOutter() {
                   }}
                 >
                   <OptionsSlider
-                    typeUpload={false}
+                    typeUpload={0}
                     showModalUpload={showModalUpload}
                     OpenUploadModal={OpenUploadModal}
                     sethaltedTop={blank}
@@ -882,7 +974,6 @@ function ProfileOutter() {
 
               <Upload
                 showModalUpload={showModalUpload}
-                closeUploadModal={closeUploadModal}
                 OpenUploadModal={OpenUploadModal}
                 getSliderWidth={getSliderWidth}
               />

@@ -235,7 +235,7 @@ function Menux({
                     }}
                   >
                     <OptionsSlider
-                      typeUpload={false}
+                      typeUpload={0}
                       showModalUpload={showModalUpload}
                       OpenUploadModal={OpenUploadModal}
                       sethaltedTop={sethaltedTop}
@@ -289,6 +289,7 @@ function Menux({
                         borderBottomRightRadius: "15px",
                         verticalAlign: "middle",
                         cursor: "pointer",
+                        fontWeight: "bolder",
                       }}
                     >
                       <span

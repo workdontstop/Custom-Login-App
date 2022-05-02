@@ -383,28 +383,6 @@
   margin-top: -3px;
 }
 
-.modal-containerDark {
-  background-image: linear-gradient(
-    to bottom,
-    rgb(108, 112, 122, 0.954),
-    rgb(108, 112, 122, 0.956),
-    rgb(108, 112, 122, 0.96),
-    rgb(108, 112, 122, 0.955),
-    rgb(108, 112, 122, 0.955)
-  );
-}
-
-.modal-containerLight {
-  background-image: linear-gradient(
-    to bottom,
-    rgb(219, 219, 219, 0.999),
-    rgb(219, 219, 219, 0.95),
-    rgb(219, 219, 219, 0.955),
-    rgb(219, 219, 219, 0.95),
-    rgb(219, 219, 219, 0.95)
-  );
-}
-
 .mobileTextfield-backplateColorDark {
   background-image: linear-gradient(
     to bottom,

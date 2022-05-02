@@ -1,10 +1,10 @@
 import React, { useRef, useEffect, useCallback, useState } from "react";
 import ControlPointDuplicateIcon from "@mui/icons-material/ControlPointDuplicate";
 import { Grid, Switch, DialogContent } from "@material-ui/core";
-import { matchPc, matchTablet } from "../DetectDevice";
+import { matchPc, matchTablet, matchMobile } from "../DetectDevice";
 import { useSpring, animated } from "react-spring";
 import { OptionsSlider } from "../profile/OptionsSlider";
-import { useSelector, useDispatch } from "react-redux";
+import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
 import Masonry from "@mui/lab/Masonry";
 import Axios from "axios";
 
@@ -18,6 +18,8 @@ function Uploadx({
   //
   //
 
+  const [allowOverflow, setallowOverflow] = useState(true);
+
   //
   //
   //
@@ -28,6 +30,7 @@ function Uploadx({
     },
     opacity: showModalUpload ? 1 : 0,
     transform: showModalUpload ? `translateY(0%)` : `translateY(-100%)`,
+    padding: "0px",
   });
 
   ///
@@ -44,6 +47,15 @@ function Uploadx({
   }));
 
   const darkmodeReducer = darkmode;
+
+  ///
+  ///
+  ///
+  /// GET GLOBAL INNER NAVIGATION VARIABLE
+  const { activatecropImage } = useSelector((state: RootStateOrAny) => ({
+    ...state.GlobalNavuploadReducer,
+  }));
+  const activatecropImageReducer = activatecropImage;
 
   const blank = () => {};
 
@@ -64,6 +76,8 @@ function Uploadx({
     ////console.log(postItemsRef.current[1]);
   };
 
+  const cropscrollRef = useRef<any>(null);
+
   return (
     <>
       {showModalUpload ? (
@@ -75,23 +89,35 @@ function Uploadx({
             position: "fixed",
             zIndex: 100,
             cursor: "default",
+            overflow: "hidden",
           }}
         >
-          <animated.div style={animation}>
+          <animated.div ref={cropscrollRef} style={animation}>
             <DialogContent
               ref={cropTOPLEVELScrollRef}
               className={
-                darkmodeReducer
+                matchMobile || matchTablet
+                  ? activatecropImageReducer
+                    ? darkmodeReducer
+                      ? " dontallowhighlighting modal-containerDarkmob"
+                      : " dontallowhighlighting  modal-containerLightmob "
+                    : darkmodeReducer
+                    ? " dontallowhighlighting modal-containerDark"
+                    : " dontallowhighlighting  modal-containerLight "
+                  : darkmodeReducer
                   ? " dontallowhighlighting modal-containerDark  postscroll-dark "
                   : " dontallowhighlighting  modal-containerLight  postscroll-light "
               }
               style={{
                 padding: "0px",
                 height: "100vh",
+                overflow: allowOverflow ? "auto" : "hidden",
               }}
             >
               <OptionsSlider
-                typeUpload="false"
+                allowOverflow={allowOverflow}
+                cropscrollRef={cropscrollRef}
+                typeUpload={1}
                 showModalUpload={showModalUpload}
                 OpenUploadModal={OpenUploadModal}
                 sethaltedTop={blank}
@@ -99,6 +125,7 @@ function Uploadx({
                 getSliderWidth={getSliderWidth}
                 cropTOPLEVELScrollRef={cropTOPLEVELScrollRef}
                 refWithimageData={refWithimageData}
+                setallowOverflow={setallowOverflow}
               />
             </DialogContent>
           </animated.div>

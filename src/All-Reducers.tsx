@@ -6,6 +6,7 @@ import {
 import { UserdataReducer } from "./log/reducers/UserdataReducer";
 import {
   GlobalReducer,
+  GlobalNavuploadReducer,
   ButtonsLoginReducerLight,
   ButtonsLoginReducerDark,
   ButtonsSignUpReducerLight,
@@ -27,6 +28,7 @@ import {
 const AllReducers = combineReducers({
   IsLoggedReducer,
   GlobalReducer,
+  GlobalNavuploadReducer,
   ButtonsLoginReducerLight,
   ButtonsLoginReducerDark,
   ButtonsSignUpReducerLight,

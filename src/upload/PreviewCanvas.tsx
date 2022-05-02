@@ -21,6 +21,12 @@ function PreviewCanvasx({
   setcrop,
   crop,
   cropTOPLEVELScrollRef,
+  allowCropAllCanvas,
+  cutOffLoader,
+  setwaitONLOAD,
+  setsuperCropLoadFade,
+  setcutOffLoader,
+  length,
 }: any): JSX.Element {
   ///
   ///
@@ -33,17 +39,34 @@ function PreviewCanvasx({
     });
   };
 
+  const loader = () => {
+    if (allowCropAllCanvas) {
+      if (length - 1 === index) {
+        if (cutOffLoader === 0) {
+          setwaitONLOAD(false);
+        } else {
+        }
+      }
+    }
+  };
+
   return (
     <>
       <img
+        onLoad={loader}
         onClick={changeCrop}
         src={image}
         style={{
-          padding: "0px",
           width: "100%",
           height: "auto",
           cursor: "pointer",
-          marginTop: index === 0 || index === 1 || index === 2 ? "0px" : "-3px",
+          marginTop: matchPc
+            ? index === 0 || index === 1 || index === 2
+              ? "0px"
+              : "-5px"
+            : index === 0 || index === 1
+            ? "0px"
+            : "-5px",
         }}
       />
     </>

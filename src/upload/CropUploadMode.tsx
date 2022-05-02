@@ -5,10 +5,9 @@ import React, {
   useEffect,
   useLayoutEffect,
 } from "react";
-import { matchPc, matchTablet } from "../DetectDevice";
-import { Grid } from "@material-ui/core";
+import { matchPc, matchTablet, matchMobile } from "../DetectDevice";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import { useSelector, useDispatch } from "react-redux";
+import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
 import { useSpring, animated } from "react-spring";
 import Masonry from "@mui/lab/Masonry";
 import CircleIcon from "@mui/icons-material/Circle";
@@ -20,8 +19,14 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Axios from "axios";
 import CropIcon from "@mui/icons-material/Crop";
 import CheckIcon from "@mui/icons-material/Check";
-import { PreviewCanvasCropAll } from "./PreviewCanvasCropAll";
+import { PreviewCanvasHolder } from "./PreviewCanvasHolder";
+
 import { PreviewCanvas } from "./PreviewCanvas";
+import Slider from "@material-ui/core/Slider";
+import { UpdateNavFilterReducer } from "../GlobalActions";
+import { UpdateNavCropReducer } from "../GlobalActions";
+import { styled } from "@mui/system";
+import { Grid, Box } from "@material-ui/core";
 
 function CropUploadModex({
   CropSaved,
@@ -40,28 +45,78 @@ function CropUploadModex({
   filterImage,
   setfilterImage,
   setActivatefilterImage,
+  selectedImage,
+  setselectedImage,
+  itemUploadRef,
+  closeUploadModalx,
+  cropscrollRef,
+  setallowOverflow,
+  allowOverflow,
+  itemUploadRefSD,
+  itemUploadRefThumb,
 }: any): JSX.Element {
-  const [selectedImage, setselectedImage] = useState<Array<any>>([]);
+  const [matchTabletMobile, setmatchTabletMobile] = useState<boolean>(false);
+
+  const dispatch = useDispatch();
+  var extendxy = 1;
+  extendxy = matchTabletMobile ? 2.5 : 2.4;
+
+  ///
+  ///
+
+  const allowscrolltimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [zoom, setzoom] = useState<any>(1);
+
+  const [zoomActivated, setzoomActivated] = useState<boolean>(false);
+
   const [superCropLoadFade, setsuperCropLoadFade] = useState<boolean>(false);
 
   const [allowFilters, setallowFilters] = useState<boolean>(false);
 
+  const [showCropper, setshowCropper] = useState<boolean>(false);
+
+  const [allowCropAllCanvas, setallowCropAllCanvas] = useState<boolean>(true);
+
+  const [pushcanvasdown, setpushcanvasdown] = useState<boolean>(false);
+
+  const [centercropperMargin, setcentercropperMargin] = useState(0);
+
+  const [waitONLOAD, setwaitONLOAD] = useState<boolean>(true);
+
   var k1 = CropSaved ? 3 : 2;
+
   var k2 = CropSaved ? 4 : 3;
+
+  const [cutOffLoader, setcutOffLoader] = useState<number>(0);
+
+  const [widelongboxmobileimage, setwidelongboxmobileimage] =
+    useState<boolean>(false);
+
+  const [widelongboxmobileimagex, setwidelongboxmobileimagex] =
+    useState<boolean>(false);
 
   ///
   ///
   ///
-  ///DARKMODE FROM REDUX
+  /// INTERFACE/TYPES FOR SCREENHEIGHT AND DARKMODE
   interface RootStateGlobalReducer {
     GlobalReducer: {
       darkmode: boolean;
+      screenHeight: number;
     };
   }
-  const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
-    ...state.GlobalReducer,
-  }));
 
+  ///
+  ///
+  ///
+  /// GET SCREENHEIGHT FROM REDUX STORE
+  const { screenHeight, darkmode } = useSelector(
+    (state: RootStateGlobalReducer) => ({
+      ...state.GlobalReducer,
+    })
+  );
+  const screenHeightReducer = screenHeight;
   const darkmodeReducer = darkmode;
 
   const { REACT_APP_SUPERSTARZ_URL } = process.env;
@@ -85,10 +140,19 @@ function CropUploadModex({
   const colorReducerdark = colordark;
   const colortypeReducer = colortype;
 
-  const [cropimage, setcropimage] = useState<string | undefined>("");
+  const [cropimage, setcropimage] = useState<any>(null);
   const [showCrop, setshowCrop] = useState<boolean>(false);
 
   const [selectedImageUpload, setselectedImageUpload] = useState<any>(null);
+
+  ///
+  ///
+  ///
+  /// GET GLOBAL INNER NAVIGATION VARIABLE
+  const { activatecropImage } = useSelector((state: RootStateOrAny) => ({
+    ...state.GlobalNavuploadReducer,
+  }));
+  const activatecropImageReducer = activatecropImage;
 
   const updateColor = useCallback(
     (formData: any) => {
@@ -104,7 +168,6 @@ function CropUploadModex({
     [REACT_APP_SUPERSTARZ_URL]
   );
 
-  const itemUploadRef = useRef<any>([]);
   ///
   ///
   ///
@@ -113,7 +176,18 @@ function CropUploadModex({
     if (UploadRef && !itemUploadRef.current.includes(UploadRef)) {
       itemUploadRef.current.push(UploadRef);
     }
-    ////console.log(postItemsRef.current[1]);
+  };
+
+  const addUploadItemsRefThumb = (UploadRef: any) => {
+    if (UploadRef && !itemUploadRefThumb.current.includes(UploadRef)) {
+      itemUploadRefThumb.current.push(UploadRef);
+    } ////console.log(postItemsRef.current[1]);
+  };
+
+  const addUploadItemsRefSD = (UploadRef: any) => {
+    if (UploadRef && !itemUploadRefSD.current.includes(UploadRef)) {
+      itemUploadRefSD.current.push(UploadRef);
+    }
   };
 
   const imageHandleChange = (e: any) => {
@@ -121,18 +195,16 @@ function CropUploadModex({
       const FileArray = Array.from(e.target.files).map((file: any) =>
         URL.createObjectURL(file)
       );
-
+      setselectedImage([]);
       setselectedImage((prevImages: any) => prevImages.concat(FileArray));
-
       setcropimage(FileArray[0]);
 
-      const formData = new FormData();
-
-      for (let i = 0; i < e.target.files.length; i++) {
-        formData.append("superImages", e.target.files[i]);
-      }
-
-      setshowCrop(true);
+      //const formData = new FormData();
+      ///for (let i = 0; i < e.target.files.length; i++) {
+      //formData.append("superImages", e.target.files[i]);}
+      ////
+      window.history.pushState(null, "", "Crop");
+      dispatch(UpdateNavCropReducer(true));
     }
   };
 
@@ -161,6 +233,7 @@ function CropUploadModex({
   const [SourceWidthForCropY, setSourceWidthForCropY] = useState(0);
 
   const [cropwidth, setcropwidth] = useState(0);
+
   const [cropheight, setcropheight] = useState(0);
 
   const [canvasToimage, setcanvasToimage] = useState<boolean>(false);
@@ -169,9 +242,26 @@ function CropUploadModex({
 
   const getCropHeightRef: any = useRef<HTMLDivElement>(null);
 
+  const getCropWidthMobileRef: any = useRef<HTMLDivElement>(null);
+
+  const getCropWidthMobileReflong: any = useRef<HTMLDivElement>(null);
+
+  const getCropWidthMobileRefHD: any = useRef<HTMLDivElement>(null);
+
+  const getCropHeightRefsingle: any = useRef<HTMLDivElement>(null);
+
   const getFixedCropWidthRef: any = useRef<HTMLDivElement>(null);
 
+  const [myCropWidth, setmyCropWidth] = useState(0);
+  const [myCropHeight, setmyCropHeight] = useState(0);
+
   const [getCropHeight, setgetCropHeight] = useState(0);
+
+  const [getCropWidthMobile, setgetCropWidthMobile] = useState(0);
+
+  const [getCropWidthMobileHD, setgetCropWidthMobileHD] = useState(0);
+
+  const [getCropHeightsingle, setgetCropHeightsingle] = useState(0);
 
   const [getCropHeightRealImageRatio, setgetCropHeightRealImageRatio] =
     useState(0);
@@ -180,6 +270,10 @@ function CropUploadModex({
 
   const [getpreviewFixedWidth, setgetpreviewFixedWidth] = useState(0);
 
+  const [screenH, setscreenH] = useState(0);
+
+  const [screenHx, setscreenHx] = useState(0);
+
   const [CropImageHolder, setCropImageHolder] = useState<any>(null);
 
   const [OriginalImageWidth, setOriginalImageWidth] = useState<number>(0);
@@ -187,17 +281,24 @@ function CropUploadModex({
 
   const [WideImageCheck, setWideImageCheck] = useState<boolean>(false);
 
-  const hdcanvasvalue = 2;
+  const hdcanvasvalue = 1;
 
-  const [BoxCropActivated, setBoxCropActivated] = useState<boolean>(true);
+  const [BoxCropActivated, setBoxCropActivated] = useState<boolean>(false);
+
+  const [optionscropshow, setoptionscropshow] = useState<boolean>(true);
 
   const cropScrollRef: any = useRef(null);
+
+  const [widecheckhold, setwidecheckhold] = useState<boolean>(true);
 
   ///
   ///
   ///
   ///GET OPTIONS SLIDER IMAGE WIDTH FROM MATERIAL UI GRID
-  useEffect(() => {
+  useLayoutEffect(() => {
+    if (matchTablet || matchMobile) {
+      setmatchTabletMobile(true);
+    }
     if (
       getpreviewFixedWidthRef.current &&
       getpreviewFixedWidthRef.current.clientWidth
@@ -205,37 +306,114 @@ function CropUploadModex({
       setgetpreviewFixedWidth(getpreviewFixedWidthRef.current.clientWidth);
     }
 
-    if (getCropHeightRef.current && getCropHeightRef.current.clientWidth) {
-      setgetCropHeight(getCropHeightRef.current.clientHeight * hdcanvasvalue);
-      setgetCropHeightRealImageRatio(getCropHeightRef.current.clientHeight);
+    if (
+      getCropHeightRefsingle.current &&
+      getCropHeightRefsingle.current.clientHeight
+    ) {
+      setscreenH(getCropHeightRefsingle.current.clientHeight);
+    }
+
+    if (selectedImage.length === 1) {
+      setwaitONLOAD(false);
+      if (
+        (getCropHeightRefsingle.current &&
+          getCropHeightRefsingle.current.clientHeight) ||
+        getCropHeightRef.current
+      ) {
+        if (matchTabletMobile) {
+          setmyCropHeight(
+            getCropWidthMobileRef.current.clientWidth * hdcanvasvalue
+          );
+          setmyCropWidth(
+            getCropWidthMobileRef.current.clientWidth * hdcanvasvalue
+          );
+        } else {
+          setmyCropWidth(
+            getCropHeightRefsingle.current.clientHeight * hdcanvasvalue
+          );
+
+          setmyCropHeight(
+            getCropHeightRefsingle.current.clientHeight * hdcanvasvalue
+          );
+        }
+
+        setgetCropHeightRealImageRatio(
+          getCropHeightRefsingle.current.clientHeight
+        );
+      }
+    } else {
+      if (getCropHeightRef.current && getCropHeightRef.current.clientHeight) {
+        if (matchTabletMobile) {
+          setmyCropHeight(
+            getCropWidthMobileRef.current.clientWidth * hdcanvasvalue
+          );
+          setmyCropWidth(
+            getCropWidthMobileRef.current.clientWidth * hdcanvasvalue
+          );
+        } else {
+          setmyCropHeight(
+            getCropHeightRef.current.clientHeight * hdcanvasvalue
+          );
+          setmyCropWidth(getCropHeightRef.current.clientHeight * hdcanvasvalue);
+        }
+
+        setgetCropHeightRealImageRatio(getCropHeightRef.current.clientHeight);
+      }
     }
 
     if (
-      getFixedCropWidthRef.current &&
-      getFixedCropWidthRef.current.clientWidth
+      getCropWidthMobileRef.current &&
+      getCropWidthMobileRef.current.clientWidth
     ) {
-      setgetFixedCropWidth(getFixedCropWidthRef.current.clientWidth);
+      setgetCropWidthMobile(getCropWidthMobileRef.current.clientWidth);
     }
-  }, []);
+
+    if (
+      getCropWidthMobileRefHD.current &&
+      getCropWidthMobileRefHD.current.clientWidth
+    ) {
+      setgetCropWidthMobileHD(getCropWidthMobileRefHD.current.clientWidth);
+    }
+  }, [selectedImage]);
   ///
 
   ///
   ///
   ///
   /// HANDLE TOUCH START EVENT
+
+  const mouseover = (type: number) => {
+    if (matchTabletMobile && BoxCropActivated) {
+      if (type === 1) {
+        if (allowOverflow) {
+        } else {
+          setallowOverflow(true);
+        }
+      } else {
+        if (allowOverflow) {
+          setallowOverflow(false);
+        } else {
+        }
+      }
+    }
+  };
+
   const handleTouchStart = (e: any, type: any) => {
     if (BoxCropActivated) {
+      mouseover(0);
+
+      setoptionscropshow(false);
       if (type === 0) {
         setcropInitial({
           ...cropInitial,
-          x: e.clientX * 1.6 - cropOffset.x,
-          y: e.clientY * 1.6 - cropOffset.y,
+          x: e.clientX * extendxy - cropOffset.x,
+          y: e.clientY * extendxy - cropOffset.y,
         });
       } else {
         setcropInitial({
           ...cropInitial,
-          x: e.touches[0].clientX * 1.6 - cropOffset.x,
-          y: e.touches[0].clientY * 1.6 - cropOffset.y,
+          x: e.touches[0].clientX * extendxy - cropOffset.x,
+          y: e.touches[0].clientY * extendxy - cropOffset.y,
         });
       }
       if (e.target) {
@@ -247,6 +425,15 @@ function CropUploadModex({
   };
 
   const handleTouchEnd = () => {
+    if (allowscrolltimer.current) {
+      clearTimeout(allowscrolltimer.current);
+    }
+
+    allowscrolltimer.current = setTimeout(function () {
+      mouseover(1);
+    }, 1200);
+
+    setoptionscropshow(true);
     setcropInitial({
       ...cropInitial,
       x: crop.x,
@@ -260,14 +447,14 @@ function CropUploadModex({
       if (type === 0) {
         setcrop({
           ...crop,
-          x: e.clientX * 1.6 - cropInitial.x,
-          y: e.clientY * 1.6 - cropInitial.y,
+          x: e.clientX * extendxy - cropInitial.x,
+          y: e.clientY * extendxy - cropInitial.y,
         });
       } else {
         setcrop({
           ...crop,
-          x: e.touches[0].clientX * 1.6 - cropInitial.x,
-          y: e.touches[0].clientY * 1.6 - cropInitial.y,
+          x: e.touches[0].clientX * extendxy - cropInitial.x,
+          y: e.touches[0].clientY * extendxy - cropInitial.y,
         });
       }
 
@@ -278,13 +465,37 @@ function CropUploadModex({
       });
     }
   };
-
   const draw = useCallback(
-    (ctx: any, dimensions: any, type: number, axis: number) => {
+    (
+      ctx: any,
+      dimensions: any,
+      type: number,
+      axis: number,
+      allowZoomedAxis: number
+    ) => {
+      var allowZoomedaxis;
+
+      if (zoom === 1) {
+        allowZoomedaxis = 0;
+      } else {
+        allowZoomedaxis = allowZoomedAxis;
+      }
       if (type === 1) {
-        ctx.drawImage(CropImageHolder, axis, 0, dimensions, getCropHeight);
+        ctx.drawImage(
+          CropImageHolder,
+          axis,
+          allowZoomedaxis,
+          dimensions * zoom,
+          myCropHeight * zoom
+        );
       } else if (type === 2) {
-        ctx.drawImage(CropImageHolder, 0, axis, getCropHeight, dimensions);
+        ctx.drawImage(
+          CropImageHolder,
+          allowZoomedaxis,
+          axis,
+          myCropWidth * zoom,
+          dimensions * zoom
+        );
       } else {
         ctx.drawImage(
           CropImageHolder,
@@ -294,20 +505,79 @@ function CropUploadModex({
           OriginalImageHeight
         );
       }
+      setshowCropper(true);
     },
-    [OriginalImageWidth, OriginalImageHeight, CropImageHolder, getCropHeight]
+    [
+      OriginalImageWidth,
+      OriginalImageHeight,
+      CropImageHolder,
+      myCropHeight,
+      myCropWidth,
+      zoom,
+    ]
   );
 
   useLayoutEffect(() => {
     const Newcropimage: any = new Image();
+
     Newcropimage.src = cropimage;
     Newcropimage.onload = function () {
-      setCropImageHolder(Newcropimage);
+      if (CropImageHolder === Newcropimage) {
+      } else {
+        setCropImageHolder(Newcropimage);
+      }
 
-      var data1 = Newcropimage.naturalWidth;
-      var data2 = Newcropimage.naturalHeight;
-      setOriginalImageWidth(data1);
-      setOriginalImageHeight(data2);
+      var data1: number = 0;
+      var data2: number = 0;
+
+      var RatioNewcropimageNaturalHeight =
+        Newcropimage.naturalHeight / myCropHeight;
+      var NewcropimageWidth =
+        Newcropimage.naturalWidth / RatioNewcropimageNaturalHeight;
+
+      var RatioNewcropimageNaturalWidth =
+        Newcropimage.naturalWidth / getCropWidthMobileHD;
+      var NewcropimageHeight =
+        Newcropimage.naturalHeight / RatioNewcropimageNaturalWidth;
+
+      var RatioNewcropimageNaturalWidthxx =
+        Newcropimage.naturalWidth / getCropWidthMobile;
+      var NewcropimageHeightxx =
+        Newcropimage.naturalHeight / RatioNewcropimageNaturalWidthxx;
+
+      ////// CANVAS  CROPPER DIMENSIONS  PC MOBILE(canvaswidth)
+
+      if (matchTabletMobile && NewcropimageHeightxx < screenH) {
+        setwidelongboxmobileimage(true);
+        setwidelongboxmobileimagex(true);
+
+        if (OriginalImageHeight === NewcropimageHeight) {
+        } else {
+          setOriginalImageHeight(NewcropimageHeight);
+          data2 = NewcropimageHeight;
+        }
+        //
+        if (OriginalImageWidth === getCropWidthMobileHD) {
+        } else {
+          setOriginalImageWidth(getCropWidthMobileHD);
+          data1 = getCropWidthMobileHD;
+        }
+      } else {
+        setwidelongboxmobileimage(false);
+        setwidelongboxmobileimagex(false);
+        if (OriginalImageWidth === NewcropimageWidth) {
+        } else {
+          setOriginalImageWidth(NewcropimageWidth);
+          data1 = NewcropimageWidth;
+        }
+        ///
+        if (OriginalImageHeight === myCropHeight) {
+        } else {
+          setOriginalImageHeight(myCropHeight);
+          data2 = myCropHeight;
+        }
+      }
+      ////// CANVAS  CROPPER DIMENSIONS  PC MOBILE(canvaswidth)
 
       if (Newcropimage.naturalWidth > Newcropimage.naturalHeight) {
         setWideImageCheck(true);
@@ -315,33 +585,46 @@ function CropUploadModex({
         setWideImageCheck(false);
       }
 
-      setcropwidth(data1);
-      setcropheight(data2);
+      if (cropwidth === data1) {
+      } else {
+        setcropwidth(data1);
+      }
+
+      if (cropheight === data2) {
+      } else {
+        setcropheight(data2);
+      }
     };
-  }, [cropimage, BoxCropActivated, showCrop]);
+  }, [activatecropImageReducer, cropimage]);
 
   useLayoutEffect(() => {
     if (CropImageHolder && cropCanvasRef.current) {
       const ctx = cropCanvasRef.current.getContext("2d");
 
-      var RatiofromOriginalandfixedHeight = OriginalImageHeight / getCropHeight;
+      var RatiofromOriginalandfixedHeight = OriginalImageHeight / myCropHeight;
       var NewBoxRatioWidth_WIDEIMAGE =
         OriginalImageWidth / RatiofromOriginalandfixedHeight;
 
-      setSourceWidthForCropX(NewBoxRatioWidth_WIDEIMAGE);
+      if (SourceWidthForCropX === NewBoxRatioWidth_WIDEIMAGE) {
+      } else {
+        setSourceWidthForCropX(NewBoxRatioWidth_WIDEIMAGE);
+      }
 
-      var RatiofromOriginalandfixedHeightx = OriginalImageWidth / getCropHeight;
+      var RatiofromOriginalandfixedHeightx = OriginalImageWidth / myCropWidth;
       var NewBoxRatioWidth_LONGIMAGE =
         OriginalImageHeight / RatiofromOriginalandfixedHeightx;
 
-      setSourceWidthForCropY(NewBoxRatioWidth_LONGIMAGE);
+      if (SourceWidthForCropY === NewBoxRatioWidth_LONGIMAGE) {
+      } else {
+        setSourceWidthForCropY(NewBoxRatioWidth_LONGIMAGE);
+      }
 
       var ratioh = (OriginalImageWidth * 3) / OriginalImageWidth;
       var ratiow = (OriginalImageHeight * 3) / OriginalImageHeight;
 
       if (BoxCropActivated) {
-        cropCanvasRef.current.width = getCropHeight;
-        cropCanvasRef.current.height = getCropHeight;
+        cropCanvasRef.current.width = myCropWidth;
+        cropCanvasRef.current.height = myCropHeight;
       } else {
         cropCanvasRef.current.width = OriginalImageWidth;
         cropCanvasRef.current.height = OriginalImageHeight;
@@ -350,66 +633,124 @@ function CropUploadModex({
       var centerpreview =
         cropCanvasRef.current.width / 1.5 - NewBoxRatioWidth_LONGIMAGE / 1.5;
 
-      var xtraZoom = getCropHeight / NewBoxRatioWidth_WIDEIMAGE;
+      var xtraZoom = myCropHeight / NewBoxRatioWidth_WIDEIMAGE;
 
       var centerCropCanvas =
         cropCanvasRef.current.width / 2 - NewBoxRatioWidth_WIDEIMAGE / 2;
 
+      //////////////////////////CSS CALCULATION MOBILE PC
       var RatiofromOriginalandfixedHeight =
         OriginalImageHeight / getCropHeightRealImageRatio;
       var newcropCSSWidth =
         OriginalImageWidth / RatiofromOriginalandfixedHeight;
+      ///
+      var RatiofromOriginalandfixedWidth =
+        OriginalImageWidth / getCropWidthMobile;
+      var newcropCSSHeight =
+        OriginalImageHeight / RatiofromOriginalandfixedWidth;
+      //////////////////////////CSS CALCULATION MOBILE PC
 
       if (BoxCropActivated) {
-        var dragDistanceY = NewBoxRatioWidth_LONGIMAGE - getCropHeight;
-        var dragDistanceX = NewBoxRatioWidth_WIDEIMAGE - getCropHeight;
+        var xx = myCropWidth * zoom;
+        var RatiofromOriginalandfixedHeightx = OriginalImageWidth / xx;
+        var NewBoxRatioWidth_LONGIMAGEx =
+          OriginalImageHeight / RatiofromOriginalandfixedHeightx;
+
+        var xxx = NewBoxRatioWidth_LONGIMAGE * zoom;
+        var RatiofromOriginalandfixedWidthx = OriginalImageHeight / xxx;
+        var NewBoxRatioWidth_WIDEIMAGEx =
+          OriginalImageWidth / RatiofromOriginalandfixedWidthx;
+
+        var xx2 = NewBoxRatioWidth_WIDEIMAGE * zoom;
+        var RatiofromOriginalandfixedHeightx2 = OriginalImageWidth / xx2;
+        var NewBoxRatioWidth_LONGIMAGEx2 =
+          OriginalImageHeight / RatiofromOriginalandfixedHeightx2;
+
+        var xxx2 = myCropHeight * zoom;
+        var RatiofromOriginalandfixedWidthx2 = OriginalImageHeight / xxx2;
+        var NewBoxRatioWidth_WIDEIMAGEx2 =
+          OriginalImageWidth / RatiofromOriginalandfixedWidthx2;
 
         if (OriginalImageWidth > OriginalImageHeight) {
-          if (crop.x < -dragDistanceX) {
-            setcrop({ ...crop, x: -dragDistanceX });
-          } else if (crop.x > 0) {
-            setcrop({ ...crop, x: 0 });
+          if (OriginalImageHeight === OriginalImageWidth) {
+            requestAnimationFrame(() => {
+              draw(ctx, NewBoxRatioWidth_WIDEIMAGE, 1, 0, crop.x);
+            });
           } else {
-          }
+            var dragDistanceY = NewBoxRatioWidth_LONGIMAGEx2 - myCropHeight;
+            var dragDistanceX = NewBoxRatioWidth_WIDEIMAGEx2 - myCropWidth;
 
-          requestAnimationFrame(() => {
-            draw(ctx, NewBoxRatioWidth_WIDEIMAGE, 1, crop.x);
-          });
+            if (crop.y < -dragDistanceY) {
+              setcrop({ ...crop, y: -dragDistanceY });
+            } else if (crop.y > 0) {
+              setcrop({ ...crop, y: 0 });
+            } else {
+            }
+            if (crop.x < -dragDistanceX) {
+              setcrop({ ...crop, x: -dragDistanceX });
+            } else if (crop.x > 0) {
+              setcrop({ ...crop, x: 0 });
+            } else {
+            }
+
+            requestAnimationFrame(() => {
+              draw(ctx, NewBoxRatioWidth_WIDEIMAGE, 1, crop.x, crop.y);
+            });
+          }
         } else {
-          if (crop.y < -dragDistanceY) {
-            setcrop({ ...crop, y: -dragDistanceY });
-          } else if (crop.y > 0) {
-            setcrop({ ...crop, y: 0 });
+          if (OriginalImageHeight === OriginalImageWidth) {
+            requestAnimationFrame(() => {
+              draw(ctx, NewBoxRatioWidth_LONGIMAGE, 2, 0, crop.x);
+            });
           } else {
-          }
+            var dragDistanceY = NewBoxRatioWidth_LONGIMAGEx - myCropHeight;
+            var dragDistanceX = NewBoxRatioWidth_WIDEIMAGEx - myCropWidth;
 
-          requestAnimationFrame(() => {
-            draw(ctx, NewBoxRatioWidth_LONGIMAGE, 2, crop.y);
-          });
+            if (crop.y < -dragDistanceY) {
+              setcrop({ ...crop, y: -dragDistanceY });
+            } else if (crop.y > 0) {
+              setcrop({ ...crop, y: 0 });
+            } else {
+            }
+            if (crop.x < -dragDistanceX) {
+              setcrop({ ...crop, x: -dragDistanceX });
+            } else if (crop.x > 0) {
+              setcrop({ ...crop, x: 0 });
+            } else {
+            }
+
+            requestAnimationFrame(() => {
+              draw(ctx, NewBoxRatioWidth_LONGIMAGE, 2, crop.y, crop.x);
+            });
+          }
         }
 
-        cropCanvasRef.current.style.width = `${
-          getCropHeight / hdcanvasvalue
-        }px`;
+        cropCanvasRef.current.style.width = `${myCropWidth / hdcanvasvalue}px`;
         cropCanvasRef.current.style.height = `${
-          getCropHeight / hdcanvasvalue
+          myCropHeight / hdcanvasvalue
         }px`;
       } else {
         requestAnimationFrame(() => {
-          draw(ctx, 0, 3, 0);
+          draw(ctx, 0, 3, 0, crop.x);
         });
 
-        cropCanvasRef.current.style.width = `${newcropCSSWidth}px`;
-        cropCanvasRef.current.style.height = `${getCropHeightRealImageRatio}px`;
+        if (matchTabletMobile && widelongboxmobileimage) {
+          cropCanvasRef.current.style.width = `${getCropWidthMobile}px`;
+          cropCanvasRef.current.style.height = `${newcropCSSHeight}px`;
+        } else {
+          cropCanvasRef.current.style.width = `${newcropCSSWidth}px`;
+          cropCanvasRef.current.style.height = `${getCropHeightRealImageRatio}px`;
+        }
       }
     }
   }, [
     CropImageHolder,
-    cropCanvasRef,
     BoxCropActivated,
     OriginalImageWidth,
     OriginalImageHeight,
+    widelongboxmobileimage,
     crop,
+    zoom,
   ]);
   const gg = () => {};
 
@@ -424,15 +765,29 @@ function CropUploadModex({
         x: crop.x,
         y: crop.y,
       });
+
       setsuperCropLoadFade(true);
       setTimeout(function () {
-        setshowCrop(false);
+        dispatch(UpdateNavCropReducer(false));
         setcanvasToimage(true);
-      }, 500);
-    }, 500);
+      }, 300);
+    }, 100);
   };
 
   const blank = () => {};
+
+  const [showModalUpload, setShowModalUpload] = useState<boolean>(false);
+
+  ///
+  ///
+  ///
+  ///OPEN MODAL THEN CALL CLOSEMODAL FUNCTION WHICH WAITS FOR A POP EVENT(for closing modal)
+  const OpenFilter = useCallback(() => {
+    window.history.pushState(null, "", "filter");
+    dispatch(UpdateNavFilterReducer(true));
+
+    //pushstate add enteries to your history
+  }, []);
 
   ///
   ///
@@ -443,12 +798,83 @@ function CropUploadModex({
       clickOptions(ii, optionsClickType, "");
       if (ActiveSlide === 3 && ii === 3) {
         if (allowFilters) {
-          setActivatefilterImage(true);
+          setallowCropAllCanvas(false);
+          OpenFilter();
         }
       }
     },
     [allowFilters, ActiveSlide, optionsClickType]
   );
+
+  //
+  //
+  //
+  //USE SLIDE DOWN ANIMATION FROM REACT SPRING
+  const animationcropx = useSpring({
+    config: {
+      duration: 250,
+    },
+    transform: showCropper ? `translateY(0%)` : `translateY(-50%)`,
+    padding: "0px",
+  });
+
+  //
+  //
+  //
+  //USE SLIDE DOWN ANIMATION FROM REACT SPRING
+  const animationcrop = useSpring({
+    config: {
+      duration: 250,
+    },
+
+    transform: showCropper
+      ? pushcanvasdown && BoxCropActivated
+        ? `translateY(30%)`
+        : `translateY(0%)`
+      : `translateY(-100%)`,
+    padding: "0px",
+  });
+
+  //
+  //
+  //
+  //USE SLIDE DOWN ANIMATION FROM REACT SPRING
+  const animation = useSpring({
+    config: {
+      duration: 2000,
+    },
+    opacity: activatecropImageReducer ? 1 : 0,
+    padding: "0px",
+  });
+
+  const [val, setval] = useState(0);
+
+  const updatezoom = (e: any, data: any) => {
+    setzoom(data);
+    setcrop({
+      ...crop,
+      x: cropInitial.x,
+      y: cropInitial.y,
+    });
+  };
+
+  useEffect(() => {
+    if (pushcanvasdown) {
+    } else {
+      if (
+        cropCanvasRef.current &&
+        matchTabletMobile &&
+        selectedImage.length === 1
+      ) {
+        var h = cropCanvasRef.current.height;
+        var w = cropCanvasRef.current.width;
+        var ww = w * 1.5;
+        if (ww > h) {
+          setpushcanvasdown(true);
+        }
+      }
+    }
+  }, [BoxCropActivated]);
 
   return (
     <>
@@ -458,8 +884,8 @@ function CropUploadModex({
             container
             style={{
               backgroundColor: darkmodeReducer
-                ? "rgba(50,50,50,0.62)"
-                : "rgba(250,250,250,0.6)",
+                ? "rgba(50,50,50,0.5)"
+                : "rgba(250,250,250,0.5)",
               position: "fixed",
               top: "0px",
               width: "100%",
@@ -470,113 +896,238 @@ function CropUploadModex({
         </>
       ) : null}
 
-      <Grid
-        container
+      <animated.div
         style={{
-          backgroundColor: "rgba(20,20,20,0.3)",
-          position: showCrop ? "relative" : "fixed",
-          top: showCrop ? "0px" : "-800vh",
+          ...animationcrop,
+          position: activatecropImageReducer ? "relative" : "fixed",
+          top: activatecropImageReducer ? "0px" : "-800vh",
+          backgroundColor: darkmodeReducer
+            ? "rgba(100,100,100,0.76)"
+            : "rgba(50,50,50,0.2)",
           width: "100%",
           height: "70%",
         }}
       >
-        <canvas
-          onMouseDown={(e: any) => {
-            handleTouchStart(e, 0);
-          }}
-          onTouchStart={(e: any) => {
-            handleTouchStart(e, 1);
-          }}
-          onMouseMove={(e: any) => {
-            handleTouchDrag(e, 0);
-          }}
-          onTouchMove={(e: any) => {
-            handleTouchDrag(e, 1);
-          }}
-          onMouseUp={handleTouchEnd}
-          onTouchEnd={handleTouchEnd}
-          className={
-            darkmodeReducer ? "turdarkCrop topcanvas" : "turdarkCrop topcanvas"
-          }
-          ref={cropCanvasRef}
-          style={{
-            padding: "0px",
-            margin: "auto",
-            cursor: "pointer",
-          }}
-        />
-
         <Grid
           container
           style={{
             padding: "0px",
-            bottom: "13.6vh",
-            margin: "auto",
-            width: `100%`,
-            height: "0px",
-            position: "absolute",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            alignContent: "center",
-            alignSelf: "center",
           }}
         >
-          <Grid
-            item
-            xs={6}
-            style={{
-              padding: "0px",
-              height: "0px",
-              margin: "auto",
-              display: "grid",
-              alignItems: "center",
-            }}
-          >
-            <CropIcon
-              onClick={cropaspectchange}
+          {" "}
+          {allowCropAllCanvas ? (
+            <canvas
+              onMouseOver={() => {
+                mouseover(0);
+              }}
+              onMouseDown={(e: any) => {
+                handleTouchStart(e, 0);
+              }}
+              onTouchStart={(e: any) => {
+                handleTouchStart(e, 1);
+              }}
+              onMouseMove={(e: any) => {
+                handleTouchDrag(e, 0);
+              }}
+              onTouchMove={(e: any) => {
+                handleTouchDrag(e, 1);
+              }}
+              onMouseUp={handleTouchEnd}
+              onTouchEnd={handleTouchEnd}
               className={
                 darkmodeReducer
-                  ? "make-small-icons-clickable-lightCrop turdark dontallowhighlighting zuperkingIcon "
-                  : "make-small-icons-clickable-darkCrop  turdark dontallowhighlighting zuperkingIcon  "
+                  ? "turdarkCrop topcanvas"
+                  : "turdarkCrop topcanvas"
               }
+              ref={cropCanvasRef}
               style={{
-                margin: "auto",
-                marginRight: "9%",
-                fontSize: "2.9vw",
-              }}
-            />
-          </Grid>
+                padding: "0px",
 
-          <Grid
-            item
-            xs={6}
-            style={{
-              padding: "0px",
-              height: "0px",
-              margin: "auto",
-              display: "grid",
-              alignItems: "center",
-            }}
-          >
-            <CheckIcon
-              onClick={complete}
-              className={
-                darkmodeReducer
-                  ? "make-small-icons-clickable-lightCrop turdark dontallowhighlighting zuperkingIcon "
-                  : "make-small-icons-clickable-darkCrop  turdark dontallowhighlighting zuperkingIcon  "
-              }
-              style={{
                 margin: "auto",
-                marginLeft: "9%",
-                fontSize: "2.9vw",
+
+                cursor: "pointer",
+                filter: showCropper ? "blur(0px)" : "blur(8px)",
+                zIndex: waitONLOAD ? 20 : 6,
               }}
             />
+          ) : null}
+          {BoxCropActivated ? (
+            <>
+              {" "}
+              <Grid
+                container
+                style={{
+                  padding: "0px",
+                  top: matchTabletMobile ? "2vh" : "4vh",
+                  margin: "auto",
+                  width: `100%`,
+                  height: "0px",
+                  position: "absolute",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  alignContent: "center",
+                  alignSelf: "center",
+                }}
+              >
+                <Grid
+                  item
+                  xs={12}
+                  md={4}
+                  style={{
+                    padding: "0px",
+                    height: "0px",
+                    margin: "auto",
+                    display: "grid",
+                    alignItems: "center",
+                  }}
+                ></Grid>
+                <Grid
+                  item
+                  xs={12}
+                  md={4}
+                  style={{
+                    paddingLeft: "2vw",
+                    padding: matchTabletMobile ? "50px" : "0px",
+                    height: "0px",
+                    margin: "auto",
+                    zIndex: 7,
+                    opacity: 0.8,
+                    display: "grid",
+                    alignItems: "center",
+                  }}
+                >
+                  {optionscropshow ? (
+                    <Slider
+                      value={zoom}
+                      onChange={updatezoom}
+                      defaultValue={1}
+                      max={3}
+                      min={1}
+                      step={0.000000001}
+                    />
+                  ) : null}
+                </Grid>
+                <Grid
+                  xs={12}
+                  md={4}
+                  item
+                  style={{
+                    padding: "0px",
+                    height: "0px",
+                    margin: "auto",
+                    display: "grid",
+                    alignItems: "center",
+                  }}
+                ></Grid>
+              </Grid>
+            </>
+          ) : null}
+          <Grid
+            container
+            style={{
+              padding: "0px",
+              bottom: matchTabletMobile
+                ? widelongboxmobileimagex
+                  ? matchTablet
+                    ? "10.3vh"
+                    : "9vh"
+                  : pushcanvasdown && BoxCropActivated
+                  ? "12.6vh"
+                  : "18.6vh"
+                : "13.6vh",
+              margin: "auto",
+              width: `100%`,
+              height: "0px",
+              position: "absolute",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              alignContent: "center",
+              zIndex: 7,
+              alignSelf: "center",
+            }}
+          >
+            <Grid
+              item
+              xs={5}
+              md={6}
+              style={{
+                padding: "0px",
+                height: "0px",
+                margin: "auto",
+                display: "grid",
+                alignItems: "center",
+              }}
+            >
+              {optionscropshow ? (
+                <CropIcon
+                  onClick={cropaspectchange}
+                  className={
+                    darkmodeReducer
+                      ? "make-small-icons-clickable-lightCrop turdark dontallowhighlighting zuperkingIcon "
+                      : "make-small-icons-clickable-darkCrop  turdark dontallowhighlighting zuperkingIcon  "
+                  }
+                  style={{
+                    margin: "auto",
+                    marginRight: "9%",
+                    fontSize: matchTabletMobile ? "4.8vh" : "2.9vw",
+                  }}
+                />
+              ) : null}
+            </Grid>
+
+            {matchTabletMobile ? (
+              <>
+                {" "}
+                <Grid
+                  item
+                  xs={2}
+                  component={Box}
+                  display={{ xs: "block", md: "none" }}
+                  style={{
+                    padding: "3px",
+                    height: "0px",
+                    margin: "auto",
+                    display: "grid",
+                    alignItems: "center",
+                  }}
+                ></Grid>
+              </>
+            ) : null}
+            <Grid
+              item
+              xs={5}
+              md={6}
+              style={{
+                padding: "0px",
+                height: "0px",
+                margin: "auto",
+                display: "grid",
+                alignItems: "center",
+              }}
+            >
+              {optionscropshow ? (
+                <CheckIcon
+                  onClick={complete}
+                  className={
+                    darkmodeReducer
+                      ? "make-small-icons-clickable-lightCrop turdark dontallowhighlighting zuperkingIcon "
+                      : "make-small-icons-clickable-darkCrop  turdark dontallowhighlighting zuperkingIcon  "
+                  }
+                  style={{
+                    margin: "auto",
+                    marginLeft: "9%",
+                    fontSize: matchTabletMobile ? "4.8vh" : "2.9vw",
+                  }}
+                />
+              ) : null}
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      </animated.div>
 
-      {showCrop ? null : (
+      {activatecropImageReducer ? null : (
         <>
           {" "}
           <input
@@ -607,6 +1158,35 @@ function CropUploadModex({
             <animated.div ref={optionsCollectImageRef} style={modalanimation}>
               {optionsImages.map((im: any, i: any) => (
                 <Grid key={i} item xs={12}>
+                  <Grid
+                    item
+                    xs={12}
+                    style={{
+                      margin: "auto",
+                      textAlign: "center",
+                      position: "relative",
+                      padding: "0px",
+                      paddingBottom: "0px",
+                      top: "1vh",
+                    }}
+                  >
+                    <Grid
+                      item
+                      xs={12}
+                      style={{
+                        padding: "0px",
+                        fontSize: matchPc ? "1.1vw" : "2vh",
+                        fontWeight: "bolder",
+                        fontFamily: "Arial, Helvetica, sans-serif",
+                        visibility: ActiveSlide === i ? "visible" : "hidden",
+                        color: darkmodeReducer ? "#dddddd" : "#0b111b",
+                      }}
+                    >
+                      {" "}
+                      {optionsNameData[i]}
+                    </Grid>
+                  </Grid>
+
                   {ActiveSlide === 1 && i === 1 ? (
                     <label htmlFor="file">
                       <div
@@ -619,7 +1199,7 @@ function CropUploadModex({
                           height: `${getSliderWidthNew}px`,
                           backgroundColor: darkmodeReducer
                             ? "rgba(010,010,010, 0.68)"
-                            : "rgba(220,220,220, 0.7)",
+                            : "rgba(211,211,211, 0.7)",
                           borderRadius: "50%",
                           marginTop: "2.15vh",
                           textAlign: "center",
@@ -631,10 +1211,10 @@ function CropUploadModex({
                               ? colortypeReducer === 0
                                 ? `0 0 5.5px ${colorReducerdark}`
                                 : `0 0 5.5px ${colorReducer}`
-                              : "0 0 5.5px#aaaaaa"
+                              : "0 0 1.5px#aaaaaa"
                             : ActiveSlide === i
                             ? `0 0 5.5px ${colorReducer}`
-                            : "0 0 5.45px#222222",
+                            : "0 0 1.45px#222222",
                         }}
                       >
                         <PhotoIcon
@@ -649,7 +1229,7 @@ function CropUploadModex({
                   ) : (
                     <>
                       {" "}
-                      <span onClick={blank}>
+                      <span>
                         <div
                           onClick={() => {
                             ClickMonster(i);
@@ -660,7 +1240,7 @@ function CropUploadModex({
                             height: `${getSliderWidthNew}px`,
                             backgroundColor: darkmodeReducer
                               ? "rgba(010,010,010, 0.68)"
-                              : "rgba(220,220,220, 0.7)",
+                              : "rgba(211,211,211, 0.7)",
                             borderRadius: "50%",
                             marginTop: "2.15vh",
                             textAlign: "center",
@@ -673,10 +1253,10 @@ function CropUploadModex({
                                 ? colortypeReducer === 0
                                   ? `0 0 5.5px ${colorReducerdark}`
                                   : `0 0 5.5px ${colorReducer}`
-                                : "0 0 5.5px#aaaaaa"
+                                : "0 0 1.5px#aaaaaa"
                               : ActiveSlide === i
                               ? `0 0 5.5px ${colorReducer}`
-                              : "0 0 5.45px#222222",
+                              : "0 0 1.45px#222222",
                           }}
                         >
                           {i === 0 ? (
@@ -720,31 +1300,6 @@ function CropUploadModex({
                       </span>
                     </>
                   )}
-                  <Grid
-                    item
-                    xs={12}
-                    style={{
-                      margin: "auto",
-                      textAlign: "center",
-                      position: "relative",
-                      bottom: "-0.5em",
-                    }}
-                  >
-                    <Grid
-                      item
-                      xs={12}
-                      style={{
-                        fontSize: matchPc ? "1.1vw" : "2vh",
-                        fontWeight: "bolder",
-                        fontFamily: "Arial, Helvetica, sans-serif",
-                        visibility: ActiveSlide === i ? "visible" : "hidden",
-                        color: darkmodeReducer ? "#dddddd" : "#0b111b",
-                      }}
-                    >
-                      {" "}
-                      {optionsNameData[i]}
-                    </Grid>
-                  </Grid>
                 </Grid>
               ))}
             </animated.div>
@@ -752,88 +1307,107 @@ function CropUploadModex({
         </>
       )}
 
-      <Grid container>
-        <Grid item xs={12}>
-          {showCrop ? (
+      <Grid container style={{ padding: "0px" }}>
+        <Grid
+          item
+          xs={12}
+          style={{
+            padding: "0px",
+            marginTop: activatecropImage
+              ? "0px"
+              : matchMobile
+              ? "2.5vh"
+              : "1.5vh",
+          }}
+        >
+          {activatecropImageReducer ? (
             <>
-              {" "}
-              {selectedImage.length > 0 ? (
-                <Masonry
-                  columns={matchPc ? (selectedImage.length > 2 ? 3 : 2) : 1}
-                  spacing={0}
-                  style={{
-                    overflowX: "hidden",
-                    position: "relative",
-                    zIndex: 2,
-                  }}
-                >
-                  {selectedImage.map((photo: any, index: any) => {
-                    return (
-                      <div key={index}>
-                        <PreviewCanvas
-                          image={photo}
-                          cropTOPLEVELScrollRef={cropTOPLEVELScrollRef}
-                          index={index}
-                          setcropimage={setcropimage}
-                          setcrop={setcrop}
-                          crop={crop}
-                        />
-                      </div>
-                    );
-                  })}{" "}
-                </Masonry>
-              ) : null}{" "}
+              <animated.div style={animationcropx}>
+                <animated.div style={animation}>
+                  {selectedImage.length > 0 ? (
+                    <Masonry
+                      columns={matchPc ? (selectedImage.length > 2 ? 3 : 2) : 2}
+                      spacing={0}
+                      style={{
+                        overflowX: "hidden",
+                        position: "relative",
+                        zIndex: 2,
+                        padding: "0px",
+                      }}
+                    >
+                      {selectedImage.length !== 1
+                        ? selectedImage.map((photo: any, index: any) => {
+                            return (
+                              <div key={index} style={{ padding: "0px" }}>
+                                <PreviewCanvas
+                                  image={photo}
+                                  cropTOPLEVELScrollRef={cropTOPLEVELScrollRef}
+                                  index={index}
+                                  setcropimage={setcropimage}
+                                  setcrop={setcrop}
+                                  crop={crop}
+                                  length={selectedImage.length}
+                                  allowCropAllCanvas={allowCropAllCanvas}
+                                  cutOffLoader={cutOffLoader}
+                                  setwaitONLOAD={setwaitONLOAD}
+                                  setsuperCropLoadFade={setsuperCropLoadFade}
+                                  setcutOffLoader={setcutOffLoader}
+                                />
+                              </div>
+                            );
+                          })
+                        : null}
+                    </Masonry>
+                  ) : null}
+                </animated.div>{" "}
+              </animated.div>
             </>
           ) : null}
 
-          <>
-            {selectedImage.length > 0 ? (
-              <Masonry
-                columns={matchPc ? 3 : 1}
-                spacing={0}
-                style={{
-                  overflowX: "hidden",
-                  zIndex: 2,
-                  position: showCrop ? "fixed" : "relative",
-                  top: showCrop ? "-800vh" : "0px",
-                }}
-              >
-                {selectedImage.map((photo: any, index: any) => {
-                  return (
-                    <div key={index}>
-                      <PreviewCanvasCropAll
-                        showCrop={showCrop}
-                        WideImageCheck={WideImageCheck}
-                        SourceWidthForCropX={SourceWidthForCropX}
-                        SourceWidthForCropY={SourceWidthForCropY}
-                        hdcanvasvalue={hdcanvasvalue}
-                        BoxCropActivated={BoxCropActivated}
-                        cropheight={cropheight}
-                        cropwidth={cropwidth}
-                        CropImageHolder={CropImageHolder}
-                        cropCanvasRef={cropCanvasRef}
-                        crop={cropToo}
-                        image={photo}
-                        index={index}
-                        getpreviewFixedWidth={getpreviewFixedWidth}
-                        getCropHeight={getCropHeight}
-                        canvasToimage={canvasToimage}
-                        refWithimageData={refWithimageData}
-                        addUploadItemsRef={addUploadItemsRef}
-                        itemUploadRef={itemUploadRef}
-                        setsuperCropLoadFade={setsuperCropLoadFade}
-                        length={selectedImage.length}
-                        filterImage={filterImage}
-                        setfilterImage={setfilterImage}
-                        setallowFilters={setallowFilters}
-                      />
-                    </div>
-                  );
-                })}{" "}
-              </Masonry>
-            ) : null}
-          </>
+          <PreviewCanvasHolder
+            selectedImage={selectedImage}
+            myCropHeight={myCropHeight}
+            cropToo={cropToo}
+            zoom={zoom}
+            setwaitONLOAD={setwaitONLOAD}
+            allowCropAllCanvas={allowCropAllCanvas}
+            WideImageCheck={WideImageCheck}
+            SourceWidthForCropX={SourceWidthForCropX}
+            SourceWidthForCropY={SourceWidthForCropY}
+            hdcanvasvalue={hdcanvasvalue}
+            BoxCropActivated={BoxCropActivated}
+            cropheight={cropheight}
+            cropwidth={cropwidth}
+            CropImageHolder={CropImageHolder}
+            cropCanvasRef={cropCanvasRef}
+            crop={cropToo}
+            getpreviewFixedWidth={getpreviewFixedWidth}
+            canvasToimage={canvasToimage}
+            refWithimageData={refWithimageData}
+            addUploadItemsRef={addUploadItemsRef}
+            itemUploadRef={itemUploadRef}
+            itemUploadRefSD={itemUploadRefSD}
+            itemUploadRefThumb={itemUploadRefThumb}
+            setsuperCropLoadFade={setsuperCropLoadFade}
+            length={selectedImage.length}
+            filterImage={filterImage}
+            setfilterImage={setfilterImage}
+            setallowFilters={setallowFilters}
+            cutOffLoader={cutOffLoader}
+            setcutOffLoader={setcutOffLoader}
+            addUploadItemsRefThumb={addUploadItemsRefThumb}
+            addUploadItemsRefSD={addUploadItemsRefSD}
+          />
         </Grid>
+        <Grid
+          className="bottomcanvas"
+          item
+          xs={12}
+          style={{
+            padding: "0px",
+            height: "0px",
+          }}
+        ></Grid>
       </Grid>
 
       <Grid
@@ -853,7 +1427,6 @@ function CropUploadModex({
             xs={5}
             style={{
               padding: "0px",
-              height: "40%",
             }}
           ></Grid>
 
@@ -863,7 +1436,6 @@ function CropUploadModex({
             xs={4}
             style={{
               padding: "0px",
-              height: "35%",
             }}
           ></Grid>
 
@@ -871,7 +1443,34 @@ function CropUploadModex({
             item
             ref={getCropHeightRef}
             xs={12}
-            style={{ height: "70%" }}
+            style={{ height: "92%" }}
+          ></Grid>
+
+          <Grid
+            item
+            ref={getCropWidthMobileRef}
+            xs={12}
+            style={{ padding: "0px", width: "100%" }}
+          ></Grid>
+
+          <Grid
+            item
+            ref={getCropWidthMobileReflong}
+            xs={12}
+            style={{ padding: "0px", width: "150%" }}
+          ></Grid>
+
+          <Grid
+            item
+            ref={getCropWidthMobileRefHD}
+            style={{ padding: "0px", width: "150%" }}
+          ></Grid>
+
+          <Grid
+            item
+            ref={getCropHeightRefsingle}
+            xs={12}
+            style={{ height: "100%" }}
           ></Grid>
         </Grid>
       </Grid>

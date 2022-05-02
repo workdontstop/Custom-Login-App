@@ -1,6 +1,7 @@
 import React from "react";
 import { Grid } from "@material-ui/core";
 import { matchPc } from "../DetectDevice";
+import { useSelector, useDispatch } from "react-redux";
 
 function ArrowBillboardx({
   clickSlideprev,
@@ -8,6 +9,21 @@ function ArrowBillboardx({
   imageHeight,
   ShowBillboard,
 }: any): JSX.Element {
+  ///
+  ///
+  ///
+  /// GET DARKMODE FROM REDUX STORE
+  interface RootStateGlobalReducer {
+    GlobalReducer: {
+      darkmode: boolean;
+    };
+  }
+  const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
+    ...state.GlobalReducer,
+  }));
+
+  const darkmodeReducer = darkmode;
+
   return (
     <>
       <>
@@ -29,9 +45,9 @@ function ArrowBillboardx({
             item
             onClick={clickSlideprev}
             className={
-              matchPc
-                ? `slider-arrow-backpad-left`
-                : `slider-arrow-backpad-leftMobile`
+              darkmodeReducer
+                ? "slider-arrow-backpad-leftDARK"
+                : "slider-arrow-backpad-leftLIGHT"
             }
             style={{
               height: `${imageHeight}px`,
@@ -49,9 +65,9 @@ function ArrowBillboardx({
             item
             onClick={clickSlidenext}
             className={
-              matchPc
-                ? `slider-arrow-backpad-right`
-                : `slider-arrow-backpad-rightMobile`
+              darkmodeReducer
+                ? "slider-arrow-backpad-rightDARK"
+                : "slider-arrow-backpad-rightLIGHT"
             }
             style={{
               height: `${imageHeight}px`,

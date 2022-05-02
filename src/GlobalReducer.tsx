@@ -7,6 +7,8 @@ import {
   ACTIVATE_GLOBAL_LOADER,
   HIDE_GLOBAL_LOADER,
   CHANGE_OPTIONS_TOP,
+  CHANGE_NAV_FILTER,
+  CHANGE_NAV_CROP,
 } from "./global_ActionTypes";
 
 ////////////OPTIONS TOP SHOW  DATA////////////////
@@ -251,6 +253,32 @@ export const GlobalReducer = (
       return { ...state, darkmode: action.payload };
     case UPDATE_DARKMODETOGGLE:
       return { ...state, darkmode: !state.darkmode };
+    default:
+      return state;
+  }
+};
+
+//////GLOBAL DARKMODE HEIGHT REDUCER
+
+///
+///
+///
+//////GLOBAL DARKMODE HEIGHT  DATA
+const initialStateNAVupload = {
+  activatefilterImage: false,
+  activatecropImage: false,
+  ////For example const initialState = { person: null as Person };
+};
+type MyGlobalNavuploadReducer = typeof initialStateNAVupload;
+export const GlobalNavuploadReducer = (
+  state = initialStateNAVupload,
+  action: any
+): MyGlobalNavuploadReducer => {
+  switch (action.type) {
+    case CHANGE_NAV_FILTER:
+      return { ...state, activatefilterImage: action.payload };
+    case CHANGE_NAV_CROP:
+      return { ...state, activatecropImage: action.payload };
     default:
       return state;
   }

@@ -259,7 +259,13 @@ function Postx({
     ? "turpostDark emotionspostTablet"
     : "turpostDark emotionspostMOBILE";
 
-  var emo = matchPc ? 12 : matchTablet ? 26 : 19;
+  var emo = matchPc
+    ? 12
+    : matchTablet
+    ? 20
+    : itemcroptype[pey] === 1
+    ? 15.5
+    : 17;
 
   var emolove = matchPc
     ? itemcroptype[pey] === 1
@@ -301,30 +307,30 @@ function Postx({
     ? 70
     : 73;
 
-  var profilewidth = matchPc ? "9.5%" : matchTablet ? "12.5%" : "14%";
-  var postprofiletop = matchPc ? "-1.7vh" : matchTablet ? "-9.8vh" : "-9.2vh";
+  var profilewidth = matchPc ? "9.5%" : matchTablet ? "12.5%" : "15%";
+  var postprofiletop = matchPc ? "-0.9vh" : matchTablet ? "-9.3vh" : "-8.7vh";
 
   var postusernametop = matchPc
-    ? "-4.7vh"
+    ? "-4.5vh"
     : matchTablet
     ? "-11.9vh"
-    : "-11.4vh";
+    : "-11.5vh";
 
-  var postusernamefont = matchPc ? "1.2vw" : matchTablet ? "2.32vh" : "2vh";
-  var postusernameleft = matchPc ? "11.1%" : matchTablet ? "15.5%" : "15.5%";
+  var postusernamefont = matchPc ? "1.2vw" : matchTablet ? "2.32vh" : "1.9vh";
+  var postusernameleft = matchPc ? "11.1%" : matchTablet ? "15.5%" : "17.5%";
 
   var postcirclefont = matchPc ? "0.7vw" : matchTablet ? "1.2vw" : "1.1vh";
-  var dotspace = matchPc ? "1.7vw" : matchTablet ? "0.8vw" : "1.9vh";
+  var dotspace = matchPc ? "1.7vw" : matchTablet ? "1.9vh" : "1.9vh";
   var dotspace2 = matchPc ? "0.4vw" : matchTablet ? "0.4vw" : "0.3vh";
 
-  var posttopicfont = matchPc ? "1vw" : matchTablet ? "1.8vh" : "1.6vh";
+  var posttopicfont = matchPc ? "0.99vw" : matchTablet ? "1.8vh" : "1.6vh";
 
-  var postcaptiontop = matchPc ? "-1.75vh" : matchTablet ? "-9.2vh" : "-9.6vh";
-  var postcaptionfont = matchPc ? "1.225vw" : matchTablet ? "2.4vh" : "2vh";
-  var postcaptionline = matchPc ? "1.54" : matchTablet ? "1.55" : "1.9";
-  var postcaptionleft = matchPc ? "11.1%" : matchTablet ? "15.5%" : "15.5%";
-  var postcaptionheight = matchPc ? "4.1vh" : matchTablet ? "3.3vh" : "4.1vh";
-  var postcaptionwidth = matchPc ? "79.4%" : matchTablet ? "76%" : "83%";
+  var postcaptiontop = matchPc ? "-1.85vh" : matchTablet ? "-9.2vh" : "-9.6vh";
+  var postcaptionfont = matchPc ? "1.2vw" : matchTablet ? "2.35vh" : "1.82vh";
+  var postcaptionline = matchPc ? "2.1" : matchTablet ? "1.9" : "1.95";
+  var postcaptionleft = matchPc ? "11.1%" : matchTablet ? "15.5%" : "17.5%";
+  var postcaptionheight = matchPc ? "10.1vh" : matchTablet ? "8.3vh" : "8.8vh";
+  var postcaptionwidth = matchPc ? "79.5%" : matchTablet ? "76%" : "84%";
 
   var postcommenttop = matchPc
     ? itemcroptype[pey] === 1 || itemcroptype[pey] === 2
@@ -342,20 +348,13 @@ function Postx({
   var postcommentfont = matchPc ? "1.8vw" : matchTablet ? "4vh" : "3.15vh";
   var postcommentwidth = matchPc ? "99.7%" : matchTablet ? "97.5%" : "95.5%";
 
-  var postoptionstop = matchPc ? "-8vh" : matchTablet ? "-15.4vh" : "-16vh";
+  var postoptionstop = matchPc ? "-9vh" : matchTablet ? "-15.4vh" : "-20.2vh";
   var postoptionsleft = matchPc ? "95.5%" : matchTablet ? "94.7%" : "93.2%";
   var postvertfont = matchPc ? "2.2vw" : matchTablet ? "3.6vh" : "3.6vh";
 
   var postdatetop = matchPc ? "2.15vh" : matchTablet ? "-7.7vh" : "-7.8vh";
   var postdatefont = matchPc ? "0.9vw" : matchTablet ? "1.25vh" : "1.25vh";
   var postdateleft = matchPc ? "98%" : matchTablet ? "98.5%" : "96.3%";
-
-  var textback = "";
-  if (darkmodeReducer) {
-    textback = "caption-darkPost";
-  } else {
-    textback = "caption-lightPost";
-  }
 
   var emocolor = "";
 
@@ -471,7 +470,7 @@ function Postx({
                   style={{
                     top: `-${emo}vh`,
                     width: matchPc ? "4vw" : matchTablet ? "5vw" : "5vw",
-                    height: matchPc ? "6.5vh" : matchTablet ? "6vh" : "6vh",
+                    height: matchPc ? "6.5vh" : matchTablet ? "7vh" : "6vh",
                     position: "relative",
                     display: "flex",
                     alignItems: "center",
@@ -479,6 +478,7 @@ function Postx({
                     zIndex: 8,
                     left: matchPc ? "91.5%" : matchTablet ? "93%" : "92.3%",
                     backgroundColor: emocolor,
+                    opacity: 0.6,
                   }}
                 >
                   <span
@@ -516,7 +516,7 @@ function Postx({
                   style={{
                     top: `-${emo}vh`,
                     width: matchPc ? "4vw" : matchTablet ? "5vw" : "5vw",
-                    height: matchPc ? "6.5vh" : matchTablet ? "6vh" : "6vh",
+                    height: matchPc ? "6.5vh" : matchTablet ? "7vh" : "6vh",
                     position: "relative",
                     display: "flex",
                     alignItems: "center",
@@ -524,6 +524,7 @@ function Postx({
                     zIndex: 8,
                     left: matchPc ? "91.5%" : matchTablet ? "93%" : "92.3%",
                     backgroundColor: emocolor,
+                    opacity: 0.6,
                   }}
                 >
                   <span
@@ -561,7 +562,7 @@ function Postx({
                   style={{
                     top: `-${emo}vh`,
                     width: matchPc ? "4vw" : matchTablet ? "5vw" : "5vw",
-                    height: matchPc ? "6.5vh" : matchTablet ? "6vh" : "6vh",
+                    height: matchPc ? "6.5vh" : matchTablet ? "7vh" : "6vh",
                     position: "relative",
                     display: "flex",
                     alignItems: "center",
@@ -569,6 +570,7 @@ function Postx({
                     zIndex: 8,
                     left: matchPc ? "91.5%" : matchTablet ? "93%" : "92.3%",
                     backgroundColor: emocolor,
+                    opacity: 0.6,
                   }}
                 >
                   <span
@@ -606,7 +608,7 @@ function Postx({
                   style={{
                     top: `-${emo}vh`,
                     width: matchPc ? "4vw" : matchTablet ? "5vw" : "5vw",
-                    height: matchPc ? "6.5vh" : matchTablet ? "6vh" : "6vh",
+                    height: matchPc ? "6.5vh" : matchTablet ? "7vh" : "6vh",
                     position: "relative",
                     display: "flex",
                     alignItems: "center",
@@ -614,6 +616,7 @@ function Postx({
                     zIndex: 8,
                     left: matchPc ? "91.5%" : matchTablet ? "93%" : "92.3%",
                     backgroundColor: emocolor,
+                    opacity: 0.6,
                   }}
                 >
                   <span
@@ -674,7 +677,11 @@ function Postx({
                     alignItems: "center",
                     justifyContent: "left",
                     zIndex: 1,
-                    paddingLeft: matchPc ? "1.4vw" : "1.8vw",
+                    paddingLeft: matchPc
+                      ? "1.4vw"
+                      : matchTablet
+                      ? "2.3vw"
+                      : "2.1vw",
                     height: "0px",
                     fontFamily: "Arial, Helvetica, sans-seri",
                   }}
@@ -722,10 +729,10 @@ function Postx({
                   <span>
                     <span
                       className={
-                        darkmodeReducer ? "zuperkingdark" : "zuperkinglight"
+                        darkmodeReducer ? "zuperkinglight" : "zuperkinglight"
                       }
                       style={{
-                        color: darkmodeReducer ? "#eeeeee" : "#ffffff",
+                        color: darkmodeReducer ? "#dddddd" : "#ffffff",
                       }}
                     >
                       <span
@@ -774,7 +781,7 @@ function Postx({
                         style={{
                           fontSize: posttopicfont,
                           fontFamily: "kaushan_scriptregular",
-                          fontWeight: "normal",
+                          fontWeight: "bold",
                         }}
                       >
                         {" "}
@@ -806,8 +813,10 @@ function Postx({
                       fontSize: postcaptionfont,
                       fontWeight: "normal",
                       margin: "0",
+                      opacity: 0.54,
+                      padding: "7px",
                       justifyContent: "center",
-                      color: darkmodeReducer ? "#dddddd" : "#333333",
+                      color: darkmodeReducer ? "#dddddd" : "#111111",
                     }}
                   >
                     {post.caption}{" "}
