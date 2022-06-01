@@ -7,29 +7,46 @@ var cors = require("cors");
 const path = require("path");
 const multer = require("multer");
 
+require("dotenv").config({ path: path.resolve(__dirname, "./.env") });
+
+const {
+  ORIGIN,
+  LISTEN,
+  USER_DATABASE,
+  HOST_DATABASE,
+  PASSWORD_DATABASE,
+  DATABASE_NAME,
+} = process.env;
+
+const host = window.location.host;
+
 app.use(
   cors({
     credentials: true,
     /////origin: "http://192.168.43.137:3000",
     //// origin: "http://localhost:3000",
-    origin: "http://192.168.43.136:3000",
+    origin: `http://${host}:3000`,
   })
 );
 
-app.use(express.json());
+app.use(express.json({ limit: "400mb" }));
+app.use(express.urlencoded({ limit: "300mb" }));
 app.use(cookieParser());
 const bcrypt = require("bcrypt");
 const { createTokens, validateToken, createTokensUpdate } = require("./jwt");
 import { Request, Response, Application } from "express";
 import { body, validationResult } from "express-validator";
-import { strict } from "node:assert";
+
 import jwt_decode from "jwt-decode";
 const CONNECTION_CONFIG = {
-  user: "root",
-  host: "localhost",
-  password: "password",
-  database: "superdata",
+  user: USER_DATABASE,
+  host: HOST_DATABASE,
+  password: PASSWORD_DATABASE,
+  database: DATABASE_NAME,
 };
+
+// Node.js program to demonstrate the
+// Date.format() method
 
 ///
 ///
@@ -83,13 +100,21 @@ const updateColor = `UPDATE members SET  color1 = ?, color2 = ?, color_type = ? 
 
 const updateBasicpage = `UPDATE members SET username = ?, quote=?, biography=?   WHERE (id = ?)`;
 
+const updateProfilePic = `UPDATE members SET profile_image = ?  WHERE (id = ?)`;
+
+const updatebillboardPic = `UPDATE members SET billboard1 = ?  WHERE (id = ?)`;
+
+const createpost = `INSERT INTO posts (sender,post_count,topic,caption,item1,itemtype1,item2,itemtype2,item3,itemtype3,item4,itemtype4,item5,itemtype5,item6,itemtype6,item7,itemtype7,item8,itemtype8,time) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+
 const storage = multer.diskStorage({
   destination: function (req: any, file: any, callback: any) {
-    var dir = "../public/images/upload";
+    var dir = "../public/images/posts";
     callback(null, dir);
   },
   filename: function (req: any, file: any, callback: any) {
-    callback(null, file.originalname);
+    var xx = `super${file.originalname}.png`;
+
+    callback(null, xx);
   },
 });
 
@@ -97,10 +122,121 @@ var upload = multer({ storage: storage });
 
 app.post(
   "/upload",
-  upload.array("superImages"),
-  (req: any, res: any, next: any) => {
-    console.log(req.files);
-    return res.send({ message: "ok" });
+  upload.array("final", 8),
+  async (req: any, res: any, next: any) => {
+    if (req.files) {
+      ////req.files.length
+      ////console.log(req.body.fiz);
+
+      var currentTime = new Date();
+      const connection = mysql.createConnection(CONNECTION_CONFIG);
+      const execQuery = util.promisify(connection.query.bind(connection));
+      try {
+        await execQuery(createpost, [
+          req.body.id,
+          req.files.length,
+          req.body.topic,
+          req.body.caption,
+          req.files[0] ? req.files[0].filename : null,
+          req.files[0] ? 1 : null,
+          req.files[1] ? req.files[1].filename : null,
+          req.files[1] ? 1 : null,
+          req.files[2] ? req.files[2].filename : null,
+          req.files[2] ? 1 : null,
+          req.files[3] ? req.files[3].filename : null,
+          req.files[3] ? 1 : null,
+          req.files[4] ? req.files[4].filename : null,
+          req.files[4] ? 1 : null,
+          req.files[5] ? req.files[5].filename : null,
+          req.files[5] ? 1 : null,
+          req.files[6] ? req.files[6].filename : null,
+          req.files[6] ? 1 : null,
+          req.files[7] ? req.files[7].filename : null,
+          req.files[7] ? 1 : null,
+          currentTime,
+        ]);
+        return res.send({ message: "images uploaded" });
+      } catch {
+        return res.send({ message: "images upload failed" });
+      }
+    } else {
+      return res.send({ message: "no images found" });
+    }
+  }
+);
+
+const storageProfile = multer.diskStorage({
+  destination: function (req: any, file: any, callback: any) {
+    var dir = "../public/images/profile";
+    callback(null, dir);
+  },
+  filename: function (req: any, file: any, callback: any) {
+    var xx = `superProfile${file.originalname}.png`;
+
+    callback(null, xx);
+  },
+});
+
+var uploadprofile = multer({ storage: storageProfile });
+
+app.post(
+  "/profile_upload",
+  uploadprofile.array("finalxx", 1),
+  async (req: any, res: any, next: any) => {
+    if (req.files) {
+      ////req.files.length
+      ////console.log(req.body.fiz);
+
+      const connection = mysql.createConnection(CONNECTION_CONFIG);
+      const execQuery = util.promisify(connection.query.bind(connection));
+      try {
+        await execQuery(updateProfilePic, [req.files[0].filename, req.body.id]);
+        return res.send({ message: "profile image uploaded" });
+      } catch {
+        return res.send({ message: "images upload failed" });
+      }
+    } else {
+      return res.send({ message: "no images found" });
+    }
+  }
+);
+
+const storagebillboard = multer.diskStorage({
+  destination: function (req: any, file: any, callback: any) {
+    var dir = "../public/images/billboard";
+    callback(null, dir);
+  },
+  filename: function (req: any, file: any, callback: any) {
+    var xx = `superbillboard${file.originalname}.png`;
+
+    callback(null, xx);
+  },
+});
+
+var uploadbillboard = multer({ storage: storagebillboard });
+
+app.post(
+  "/billboard_upload",
+  uploadbillboard.array("finalxxy", 1),
+  async (req: any, res: any, next: any) => {
+    if (req.files) {
+      ////req.files.length
+      ////console.log(req.body.fiz);
+
+      const connection = mysql.createConnection(CONNECTION_CONFIG);
+      const execQuery = util.promisify(connection.query.bind(connection));
+      try {
+        await execQuery(updatebillboardPic, [
+          req.files[0].filename,
+          req.body.id,
+        ]);
+        return res.send({ message: "billboard image uploaded" });
+      } catch {
+        return res.send({ message: "images upload failed" });
+      }
+    } else {
+      return res.send({ message: "no images found" });
+    }
   }
 );
 
@@ -172,7 +308,7 @@ app.post(
             //secure: true,
           })
           .send({ message: "session_Cookie_Activated" });
-      } else {
+      } else if (values === "forever") {
         const days30inseconds = 60 * 60 * 24 * 30 * 1000;
         const CurrentTimePlusSecs = new Date(
           new Date().getTime() + 60 * 60 * 24 * 30 * 1000
@@ -190,6 +326,22 @@ app.post(
             //secure: true,
           })
           .send({ message: "forever_Cookie_Activated" });
+      } else {
+        const days30inseconds = 2;
+        const CurrentTimePlusSecs = new Date(new Date().getTime() + 2);
+
+        const userSessionData: any = jwt_decode(req.cookies.accesst);
+        const accessToken = createTokensUpdate(userSessionData);
+
+        return res
+          .cookie("accesst", accessToken, {
+            sameSite: "strict",
+            expires: CurrentTimePlusSecs,
+            maxAge: days30inseconds,
+            httpOnly: true,
+            //secure: true,
+          })
+          .send({ message: "cookie" });
       }
     } else {
       return res.send({ message: "cookie null" });
@@ -439,6 +591,6 @@ app.post(
   }
 );
 
-app.listen("1000", (): any => {
+app.listen(LISTEN, (): any => {
   console.log("running");
 });

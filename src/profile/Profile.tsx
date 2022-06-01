@@ -24,31 +24,337 @@ function Profilex({
   getSliderWidthRef,
   getSliderWidth,
   postData,
-  addPostItemsRef,
-  onPostsItemload,
-  itemheight,
-  itemheighthold,
-  postbackheight,
   formtype,
   showModalForm,
   CloseModalForm,
   aboutTemplateGo,
   commentTemplateGo,
-  itemcroptype,
-  itemFinalPostHeight,
-  onPostsItemClicked,
-  itemCLICKED,
-  addpostDivRef,
   postDatainner,
-  itemOriginalPostHeight,
-  ActiveAutoPlay,
-  setActiveAutoPlay,
-  AUTOSlideLongImages,
-  postDivRef,
+  showProfiileData,
   paperPostScrollRef,
-  onLoadDataOnce,
+  setx,
+  x,
 }: any) {
   const dispatch = useDispatch();
+
+  const postDivRef = useRef<any>([]);
+
+  const postItemsRef = useRef<any>([]);
+  ///
+
+  const [itemheight, setitemheight] = useState<Array<string>>([]);
+  const [itemheighthold, setitemheighthold] = useState<Array<string>>([]);
+  const [itemcroptype, setitemcroptype] = useState<Array<number>>([]);
+  const [itemFinalPostHeight, setitemFinalPostHeight] = useState<Array<number>>(
+    []
+  );
+  const [itemOriginalPostHeight, setitemOriginalPostHeight] = useState<
+    Array<number>
+  >([]);
+
+  const [itemCLICKED, setitemCLICKED] = useState<Array<boolean>>([]);
+  const [onLoadDataOnce, setonLoadDataOnce] = useState<Array<boolean>>([]);
+
+  const [ActiveAutoPlay, setActiveAutoPlay] = useState<Array<boolean>>([]);
+
+  var heightplus = matchPc ? 0.38 : matchTablet ? 0.3 : 0.265;
+  var postbackheighthold = document.documentElement.clientHeight * heightplus;
+
+  const [postbackheight] = useState<number>(postbackheighthold);
+
+  const scrollTypeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  ///
+  ///
+  ///
+  /// INTERFACE/TYPES FOR SCREENHEIGHT AND DARKMODE
+  interface RootStateGlobalReducer {
+    GlobalReducer: {
+      darkmode: boolean;
+      screenHeight: number;
+    };
+  }
+
+  ///
+  ///
+  ///
+  /// GET SCREENHEIGHT FROM REDUX STORE
+  const { screenHeight, darkmode } = useSelector(
+    (state: RootStateGlobalReducer) => ({
+      ...state.GlobalReducer,
+    })
+  );
+  const screenHeightReducer = screenHeight;
+  const darkmodeReducer = darkmode;
+  ///
+  ///
+  ///CREATE REFS FROM POSTS AND ADD THEM TO ARRAY
+  const addPostItemsRef = (itemsRef: any) => {
+    if (itemsRef && !postItemsRef.current.includes(itemsRef)) {
+      postItemsRef.current.push(itemsRef);
+    }
+    ////console.log(postItemsRef.current[1]);
+  };
+
+  ///
+  ///
+  ///
+  ///CREATE div REFS FROM POSTS AND ADD THEM TO ARRAY
+  const addpostDivRef = (divRef: any) => {
+    if (divRef && !postDivRef.current.includes(divRef)) {
+      postDivRef.current.push(divRef);
+    }
+    ////console.log(postItemsRef.current[1]);
+  };
+
+  useEffect(() => {
+    if (postData.length > 0 && showProfiileData) {
+      const initialItemheight = postData.map((obj: any) => obj.itemheight);
+      setitemheight(initialItemheight);
+
+      const initialItemrealheighthold = postData.map(
+        (obj: any) => obj.itemrealheighthold
+      );
+      setitemheighthold(initialItemrealheighthold);
+
+      const initialtemcroptype = postData.map((obj: any) => obj.itemcroptype);
+      setitemcroptype(initialtemcroptype);
+
+      const initialitemFinalPostHeight = postData.map(
+        (obj: any) => obj.itemFinalPostHeight
+      );
+      setitemFinalPostHeight(initialitemFinalPostHeight);
+
+      const initialitemOriginalPostHeight = postData.map(
+        (obj: any) => obj.itemOriginalPostHeight
+      );
+      setitemOriginalPostHeight(initialitemOriginalPostHeight);
+
+      const initialitemCLICKED = postData.map((obj: any) => obj.itemCLICKED);
+      setitemCLICKED(initialitemCLICKED);
+
+      const initialsetonLoadDataOnce = postData.map(
+        (obj: any) => obj.onLoadDataOnce
+      );
+      setonLoadDataOnce(initialsetonLoadDataOnce);
+
+      const initialsetActiveAutoPlay = postData.map(
+        (obj: any) => obj.ActiveAutoPlay
+      );
+      setActiveAutoPlay(initialsetActiveAutoPlay);
+    }
+  }, [postData, showProfiileData]);
+
+  const newArraa = [...itemheight];
+
+  const newArrxy = [...onLoadDataOnce];
+  const newArrayFinalPostHeight = [...itemFinalPostHeight];
+  const newArrxq = [...itemcroptype];
+
+  const newArrayitemOriginalPostHeight = [...itemOriginalPostHeight];
+
+  const newArrx = [...itemheighthold];
+
+  const newArr = [...itemheight];
+
+  function percentage(num: number, per: number) {
+    return (num / 100) * per;
+  }
+
+  const onPostsItemload = useCallback(
+    (e: any, index: number, itemnum: number) => {
+      if (onLoadDataOnce[index]) {
+      } else {
+        if (itemnum === 0) {
+          if (postItemsRef.current[index]) {
+            var imageHeight = postItemsRef.current[index].clientHeight;
+
+            ///////////////////////////////
+
+            newArraa[index] = `${imageHeight}px`;
+            setitemheight(newArraa);
+            ///////////////////////////////
+
+            ///////////////////////////////
+
+            var newh = imageHeight / 1.042 - postbackheighthold;
+            newArrx[index] = `${newh}`;
+            setitemheighthold(newArrx);
+            ///////////////////////////////
+
+            newArrayFinalPostHeight[index] = imageHeight;
+            setitemFinalPostHeight(newArrayFinalPostHeight);
+
+            ///////////////////////////////
+
+            newArrayitemOriginalPostHeight[index] = imageHeight;
+            setitemOriginalPostHeight(newArrayitemOriginalPostHeight);
+            ///////////////////////////////
+
+            var choppedHeight = percentage(screenHeightReducer, 100);
+
+            var choppedwidth = percentage(
+              screenHeightReducer,
+              matchPc ? 55 : matchTablet ? 52 : 40
+            );
+
+            if (imageHeight < choppedwidth) {
+              /////WIDE IMAGE SET
+
+              newArr[index] = `${choppedwidth}px`;
+              setitemheight(newArr);
+              ///////////////////////////////
+
+              var newh = choppedwidth / 1.015 - postbackheighthold;
+              newArrx[index] = `${newh}`;
+              setitemheighthold(newArrx);
+              ////////////////////////////
+              ///////////////////////////////
+
+              newArrxq[index] = 1;
+              setitemcroptype(newArrxq);
+              ////////////////////////////
+              ///////////////////////////////
+
+              newArrayFinalPostHeight[index] = choppedwidth;
+              setitemFinalPostHeight(newArrayFinalPostHeight);
+            } else if (imageHeight > choppedHeight) {
+              /////LONG IMAGE SET
+
+              newArr[index] = `${choppedHeight}px`;
+              setitemheight(newArr);
+              ///////////////////////////////
+
+              var newh = choppedHeight / 1 - postbackheighthold;
+              newArrx[index] = `${newh}`;
+              setitemheighthold(newArrx);
+              ////////////////////////////////
+              ///////////////////////////////
+
+              newArrxq[index] = 2;
+              setitemcroptype(newArrxq);
+              ///////////////////////////////
+
+              newArrayFinalPostHeight[index] = choppedHeight;
+              setitemFinalPostHeight(newArrayFinalPostHeight);
+              ///////////////////////////////
+            } else {
+              var imageWidth = postItemsRef.current[index].clientWidth;
+              if (imageWidth > imageHeight) {
+                ///////////////////////////////
+
+                var newh = imageHeight / 1.066 - postbackheighthold;
+                newArrx[index] = `${newh}`;
+                setitemheighthold(newArrx);
+                ///////////////////////////////
+                ///////////////////////////////
+
+                newArrxq[index] = 3;
+                setitemcroptype(newArrxq);
+                ///////////////////////////////
+              } else {
+                ///////////////////////////////
+
+                newArrxq[index] = 4;
+                setitemcroptype(newArrxq);
+                ///////////////////////////////
+              }
+            }
+            ///////////////////////////////
+
+            newArrxy[index] = true;
+            setonLoadDataOnce(newArrxy);
+            ///////////////////////////////
+
+            if (postData.length - 1 === index) {
+              setTimeout(function () {
+                setx(true);
+              }, 3000);
+            }
+          }
+        }
+      }
+    },
+    [
+      screenHeightReducer,
+      itemheight,
+      itemheighthold,
+      itemFinalPostHeight,
+      showProfiileData,
+    ]
+  );
+
+  const scrollToPost = (index: any) => {
+    postDivRef.current[index].scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+  const postitemSHOWFULLHEIGHT = (index: any, type: number) => {
+    if (itemcroptype[index] === 1 || itemcroptype[index] === 2) {
+      if (type === 0) {
+        const newitemHeight = [...itemheight];
+        newitemHeight[index] = `auto`;
+        setitemheight(newitemHeight);
+      } else {
+        const newitemHeight = [...itemheight];
+        newitemHeight[index] = `${itemFinalPostHeight[index]}px`;
+        setitemheight(newitemHeight);
+      }
+    }
+  };
+
+  const scrollLongPicTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scrollLongPicTimerx = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+
+  const AUTOSlideLongImages = (index: number) => {
+    if (itemcroptype[index] === 2) {
+      scrollLongPicTimerx.current = setTimeout(() => {
+        if (paperPostScrollRef.current) {
+          paperPostScrollRef.current.scrollTo({
+            top:
+              paperPostScrollRef.current.scrollTop +
+              itemOriginalPostHeight[index] / 3,
+            behavior: "smooth",
+          });
+        }
+      }, 500);
+      scrollLongPicTimer.current = setTimeout(() => {
+        postDivRef.current[index].scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 1300);
+    }
+  };
+
+  ///
+  ///
+  ///
+  /// SLIDER DISPATCH
+
+  const onPostsItemClicked = (index: number) => {
+    if (itemCLICKED[index]) {
+      const newclickArray = [...itemCLICKED];
+      newclickArray[index] = false;
+      setitemCLICKED(newclickArray);
+      postitemSHOWFULLHEIGHT(index, 1);
+      scrollToPost(index);
+    } else {
+      AUTOSlideLongImages(index);
+      if (scrollTypeTimer.current) {
+        clearTimeout(scrollTypeTimer.current);
+      }
+
+      const newclickArray = [...itemCLICKED];
+      newclickArray[index] = true;
+      setitemCLICKED(newclickArray);
+      postitemSHOWFULLHEIGHT(index, 0);
+      scrollToPost(index);
+    }
+  };
 
   ///
   ///
@@ -65,21 +371,6 @@ function Profilex({
     ...state.IsLoggedReducer,
   }));
   const loggedInReducer = loggedIn;
-
-  ///
-  ///
-  ///
-  /// GET DARKMODE FROM REDUX STORE
-  interface RootStateGlobalReducer {
-    GlobalReducer: {
-      darkmode: boolean;
-    };
-  }
-  const { darkmode } = useSelector((state: RootStateGlobalReducer) => ({
-    ...state.GlobalReducer,
-  }));
-
-  const darkmodeReducer = darkmode;
 
   ///
   ///
@@ -200,6 +491,7 @@ function Profilex({
               columns={matchPc ? 2 : 1}
               spacing={0}
               style={{
+                padding: "0px",
                 marginTop: matchPc ? "-13.5vh" : matchTablet ? "-5vh" : "-4vh",
               }}
             >
@@ -208,6 +500,8 @@ function Profilex({
                   key={i}
                   style={{
                     position: "relative",
+                    scrollSnapAlign: x ? "start" : "",
+                    padding: "0px",
                   }}
                 >
                   <Post

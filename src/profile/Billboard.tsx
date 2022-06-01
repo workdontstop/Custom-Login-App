@@ -9,8 +9,9 @@ import { SliderBillboard } from "./SliderBillboard";
 import AddIcon from "@mui/icons-material/Add";
 import { usePalette } from "react-palette";
 import { UpdateColorAction } from ".././GlobalActions";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 
-function Billboardx({ OpenModalForm }: any): JSX.Element {
+function Billboardx({ OpenModalForm, click, billboardx }: any): JSX.Element {
   ///
   ///
   ///
@@ -128,16 +129,22 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
     setShowBillboard(false);
   };
 
+  var fontOptions = "";
+
+  if (matchPc) {
+    fontOptions = "5.6vw";
+  } else if (matchTablet) {
+    fontOptions = "5.2rem";
+  } else {
+    fontOptions = "2.1rem";
+  }
+
   ///hoverOverImageRef.current.style.background = "red";
 
   return (
     <>
       <>
-        <Grid
-          container
-          className="dontallowhighlighting"
-          style={{ scrollSnapAlign: "start" }}
-        >
+        <Grid container className="dontallowhighlighting" style={{}}>
           {/*///////////////////////////////////////////////////////////////////////////BACKPAD BILLBOARD LIGHTINING/DARKEN*/}
           <Grid
             container
@@ -214,7 +221,6 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
                 }}
               >
                 <span
-                  onClick={switchThemes}
                   className={
                     darkmodeReducer
                       ? `fontfamilyArial ${usernameClass} turdark`
@@ -311,7 +317,7 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
                     }}
                     className={`fontfamilyArial zuperxyinfo ${fanclass}  `}
                   >
-                    147
+                    .
                   </span>{" "}
                 </Grid>
                 <Grid item style={{ textAlign: "center", height: "0px" }}>
@@ -351,7 +357,7 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
                     }}
                     className={`fontfamilyArial zuperxyinfo  ${favclass}`}
                   >
-                    20
+                    .
                   </span>
                 </Grid>
               </Grid>
@@ -367,6 +373,62 @@ function Billboardx({ OpenModalForm }: any): JSX.Element {
             }}
             container
           >
+            {" "}
+            <Grid
+              item
+              xs={12}
+              style={{
+                width: "100%",
+                position: "fixed",
+                top: "3em",
+                margin: "auto",
+                textAlign: "center",
+                zIndex: 0,
+              }}
+            >
+              <>
+                <input
+                  onClick={click}
+                  onInput={() => {
+                    setShowBillboard(false);
+                  }}
+                  onChange={billboardx}
+                  type="file"
+                  name="superImages"
+                  accept="image/*"
+                  multiple
+                  id="billboardxx"
+                  style={{ visibility: "hidden" }}
+                />
+              </>
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              style={{
+                width: "100%",
+                position: "fixed",
+                top: "3em",
+                margin: "auto",
+                textAlign: "center",
+                zIndex: 200,
+              }}
+            >
+              {ShowBillboard ? (
+                <>
+                  <label htmlFor="billboardxx">
+                    <AddPhotoAlternateIcon
+                      style={{
+                        fontSize: fontOptions,
+                        color: "#ffffff",
+                        cursor: "pointer",
+                      }}
+                      className="zuperkinginfo"
+                    />{" "}
+                  </label>
+                </>
+              ) : null}
+            </Grid>
             <Grid
               item
               component={Box}

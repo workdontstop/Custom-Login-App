@@ -298,8 +298,8 @@ function ModalAboutLayoutx({
                       <EditTwoToneIcon
                         className={
                           darkmodeReducer
-                            ? "make-small-icons-clickable-dark dontallowhighlighting zuperkinginfo "
-                            : "make-small-icons-clickable-light  dontallowhighlightingzuperkinginfo  "
+                            ? "make-small-icons-clickable-dark dontallowhighlighting zuperkingIcon "
+                            : "make-small-icons-clickable-light  dontallowhighlighting zuperkingIcon  "
                         }
                         style={{
                           color: "#ffffff",

@@ -69,72 +69,193 @@ function PreviewCanvasHolderx({
 
   return (
     <>
+      {/* SD IMAGE  CREATED  itemUploadRef */}
+      {selectedImage.length > 0 ? (
+        <Masonry
+          columns={
+            matchPc
+              ? selectedImage.length > 2
+                ? 3
+                : 2
+              : selectedImage.length > 1
+              ? 2
+              : 1
+          }
+          spacing={0}
+          style={{
+            overflowX: "hidden",
+            zIndex: 2,
+            position: activatecropImageReducer ? "fixed" : "relative",
+            top: activatecropImageReducer ? "-800vh" : "0px",
+            padding: "0px",
+          }}
+        >
+          {selectedImage.map((photo: any, index: any) => {
+            return (
+              <div key={index} style={{ padding: "0px" }}>
+                <PreviewCanvasCropAll
+                  setwaitcropall={setwaitcropall}
+                  waitcropall={waitcropall}
+                  zoom={zoom}
+                  setwaitONLOAD={setwaitONLOAD}
+                  allowCropAllCanvas={allowCropAllCanvas}
+                  WideImageCheck={WideImageCheck}
+                  SourceWidthForCropX={SourceWidthForCropX}
+                  SourceWidthForCropY={SourceWidthForCropY}
+                  hdcanvasvalue={hdcanvasvalue}
+                  BoxCropActivated={BoxCropActivated}
+                  cropheight={cropheight}
+                  cropwidth={cropwidth}
+                  CropImageHolder={CropImageHolder}
+                  cropCanvasRef={cropCanvasRef}
+                  crop={cropToo}
+                  image={photo}
+                  index={index}
+                  getpreviewFixedWidth={getpreviewFixedWidth}
+                  myCropHeight={myCropHeight}
+                  canvasToimage={canvasToimage}
+                  refWithimageData={refWithimageData}
+                  addUploadItemsRef={addUploadItemsRef}
+                  itemUploadRef={itemUploadRef}
+                  itemUploadRefSD={itemUploadRefSD}
+                  itemUploadRefThumb={itemUploadRefThumb}
+                  setsuperCropLoadFade={setsuperCropLoadFade}
+                  length={selectedImage.length}
+                  filterImage={filterImage}
+                  setfilterImage={setfilterImage}
+                  setallowFilters={setallowFilters}
+                  cutOffLoader={cutOffLoader}
+                  setcutOffLoader={setcutOffLoader}
+                  addUploadItemsRefThumb={addUploadItemsRefThumb}
+                  addUploadItemsRefSD={addUploadItemsRefSD}
+                  type={2}
+                />
+              </div>
+            );
+          })}{" "}
+        </Masonry>
+      ) : null}
+
+      {/* SD IMAGE  CREATED  itemUploadRef */}
+      {/* /////////////////// */}
+
       {/* HD IMAGE  CREATED  itemUploadRef */}
       <>
         {selectedImage.length > 0 ? (
-          <Masonry
-            columns={
-              matchPc
-                ? selectedImage.length > 2
-                  ? 3
-                  : 2
-                : selectedImage.length > 1
-                ? 2
-                : 1
-            }
-            spacing={0}
-            style={{
-              overflowX: "hidden",
-              zIndex: 2,
-              position: activatecropImageReducer ? "fixed" : "relative",
-              top: activatecropImageReducer ? "-800vh" : "0px",
-              padding: "0px",
-            }}
-          >
-            {selectedImage.map((photo: any, index: any) => {
-              return (
-                <div key={index} style={{ padding: "0px" }}>
-                  <PreviewCanvasCropAll
-                    setwaitcropall={setwaitcropall}
-                    waitcropall={waitcropall}
-                    zoom={zoom}
-                    setwaitONLOAD={setwaitONLOAD}
-                    allowCropAllCanvas={allowCropAllCanvas}
-                    WideImageCheck={WideImageCheck}
-                    SourceWidthForCropX={SourceWidthForCropX}
-                    SourceWidthForCropY={SourceWidthForCropY}
-                    hdcanvasvalue={hdcanvasvalue}
-                    BoxCropActivated={BoxCropActivated}
-                    cropheight={cropheight}
-                    cropwidth={cropwidth}
-                    CropImageHolder={CropImageHolder}
-                    cropCanvasRef={cropCanvasRef}
-                    crop={cropToo}
-                    image={photo}
-                    index={index}
-                    getpreviewFixedWidth={getpreviewFixedWidth}
-                    myCropHeight={myCropHeight}
-                    canvasToimage={canvasToimage}
-                    refWithimageData={refWithimageData}
-                    addUploadItemsRef={addUploadItemsRef}
-                    itemUploadRef={itemUploadRef}
-                    itemUploadRefSD={itemUploadRefSD}
-                    itemUploadRefThumb={itemUploadRefThumb}
-                    setsuperCropLoadFade={setsuperCropLoadFade}
-                    length={selectedImage.length}
-                    filterImage={filterImage}
-                    setfilterImage={setfilterImage}
-                    setallowFilters={setallowFilters}
-                    cutOffLoader={cutOffLoader}
-                    setcutOffLoader={setcutOffLoader}
-                    addUploadItemsRefThumb={addUploadItemsRefThumb}
-                    addUploadItemsRefSD={addUploadItemsRefSD}
-                    type={1}
-                  />
-                </div>
-              );
-            })}{" "}
-          </Masonry>
+          selectedImage.length === 1 ? (
+            <>
+              {selectedImage.map((photo: any, index: any) => {
+                return (
+                  <div key={index} style={{ padding: "0px" }}>
+                    <PreviewCanvasCropAll
+                      setwaitcropall={setwaitcropall}
+                      waitcropall={waitcropall}
+                      zoom={zoom}
+                      setwaitONLOAD={setwaitONLOAD}
+                      allowCropAllCanvas={allowCropAllCanvas}
+                      WideImageCheck={WideImageCheck}
+                      SourceWidthForCropX={SourceWidthForCropX}
+                      SourceWidthForCropY={SourceWidthForCropY}
+                      hdcanvasvalue={hdcanvasvalue}
+                      BoxCropActivated={BoxCropActivated}
+                      cropheight={cropheight}
+                      cropwidth={cropwidth}
+                      CropImageHolder={CropImageHolder}
+                      cropCanvasRef={cropCanvasRef}
+                      crop={cropToo}
+                      image={photo}
+                      index={index}
+                      getpreviewFixedWidth={getpreviewFixedWidth}
+                      myCropHeight={myCropHeight}
+                      canvasToimage={canvasToimage}
+                      refWithimageData={refWithimageData}
+                      addUploadItemsRef={addUploadItemsRef}
+                      itemUploadRef={itemUploadRef}
+                      itemUploadRefSD={itemUploadRefSD}
+                      itemUploadRefThumb={itemUploadRefThumb}
+                      setsuperCropLoadFade={setsuperCropLoadFade}
+                      length={selectedImage.length}
+                      filterImage={filterImage}
+                      setfilterImage={setfilterImage}
+                      setallowFilters={setallowFilters}
+                      cutOffLoader={cutOffLoader}
+                      setcutOffLoader={setcutOffLoader}
+                      addUploadItemsRefThumb={addUploadItemsRefThumb}
+                      addUploadItemsRefSD={addUploadItemsRefSD}
+                      type={1}
+                    />
+                  </div>
+                );
+              })}{" "}
+            </>
+          ) : (
+            <>
+              {" "}
+              <Masonry
+                columns={
+                  matchPc
+                    ? selectedImage.length > 2
+                      ? 3
+                      : 2
+                    : selectedImage.length > 1
+                    ? 2
+                    : 1
+                }
+                spacing={0}
+                style={{
+                  overflowX: "hidden",
+                  zIndex: 2,
+                  position: activatecropImageReducer ? "fixed" : "relative",
+                  top: activatecropImageReducer ? "-800vh" : "0px",
+                  padding: "0px",
+                }}
+              >
+                {selectedImage.map((photo: any, index: any) => {
+                  return (
+                    <div key={index} style={{ padding: "0px" }}>
+                      <PreviewCanvasCropAll
+                        setwaitcropall={setwaitcropall}
+                        waitcropall={waitcropall}
+                        zoom={zoom}
+                        setwaitONLOAD={setwaitONLOAD}
+                        allowCropAllCanvas={allowCropAllCanvas}
+                        WideImageCheck={WideImageCheck}
+                        SourceWidthForCropX={SourceWidthForCropX}
+                        SourceWidthForCropY={SourceWidthForCropY}
+                        hdcanvasvalue={hdcanvasvalue}
+                        BoxCropActivated={BoxCropActivated}
+                        cropheight={cropheight}
+                        cropwidth={cropwidth}
+                        CropImageHolder={CropImageHolder}
+                        cropCanvasRef={cropCanvasRef}
+                        crop={cropToo}
+                        image={photo}
+                        index={index}
+                        getpreviewFixedWidth={getpreviewFixedWidth}
+                        myCropHeight={myCropHeight}
+                        canvasToimage={canvasToimage}
+                        refWithimageData={refWithimageData}
+                        addUploadItemsRef={addUploadItemsRef}
+                        itemUploadRef={itemUploadRef}
+                        itemUploadRefSD={itemUploadRefSD}
+                        itemUploadRefThumb={itemUploadRefThumb}
+                        setsuperCropLoadFade={setsuperCropLoadFade}
+                        length={selectedImage.length}
+                        filterImage={filterImage}
+                        setfilterImage={setfilterImage}
+                        setallowFilters={setallowFilters}
+                        cutOffLoader={cutOffLoader}
+                        setcutOffLoader={setcutOffLoader}
+                        addUploadItemsRefThumb={addUploadItemsRefThumb}
+                        addUploadItemsRefSD={addUploadItemsRefSD}
+                        type={1}
+                      />
+                    </div>
+                  );
+                })}{" "}
+              </Masonry>
+            </>
+          )
         ) : null}
       </>
       {/* HD IMAGE  CREATED  itemUploadRef */}
@@ -145,15 +266,7 @@ function PreviewCanvasHolderx({
       <>
         {selectedImage.length > 0 ? (
           <Masonry
-            columns={
-              matchPc
-                ? selectedImage.length > 2
-                  ? 3
-                  : 2
-                : selectedImage.length > 1
-                ? 2
-                : 1
-            }
+            columns={2}
             spacing={0}
             style={{
               overflowX: "hidden",

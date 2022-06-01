@@ -312,12 +312,14 @@ function Sliderx({
             top: "0em",
           }}
         ></Grid>
-        <SliderNumber
-          activeSlide={sliderIndexSlow}
-          total={slides.length}
-          itemCLICKED={itemCLICKED}
-          pey={pey}
-        />
+        {slides.length > 0 ? (
+          <SliderNumber
+            activeSlide={sliderIndexSlow}
+            total={slides.length}
+            itemCLICKED={itemCLICKED}
+            pey={pey}
+          />
+        ) : null}
         <Arrow
           itemCLICKED={itemCLICKED}
           pey={pey}
@@ -330,41 +332,10 @@ function Sliderx({
         {transitions((style, i) => (
           <>
             <animated.img
-              src={`./images/posts/${slides[i]}`}
-              alt="a superstarz post "
-              style={{
-                ...style,
-                cursor: "alias",
-                width: "100%",
-                height: itemheight[pey],
-                display: sliderIndex === i ? "block" : "none",
-                position: "absolute",
-                filter: "blur(3px)",
-                padding: "0px",
-                marginTop:
-                  pey === length - 1
-                    ? matchPc
-                      ? "0px"
-                      : matchTablet
-                      ? "0px"
-                      : "-2.5px"
-                    : "0px",
-                objectFit:
-                  itemcroptype[pey] === 1 || itemcroptype[pey] === 2
-                    ? "cover"
-                    : "cover",
-                objectPosition:
-                  itemcroptype[pey] === 1 || itemcroptype[pey] === 2
-                    ? "50% top"
-                    : "50% 50",
-              }}
-            />
-
-            <animated.img
               onLoad={(e: any) => {
                 onPostsItemload(e, pey, i);
               }}
-              onClick={clickslider}
+              onMouseDown={clickslider}
               key={i}
               ref={addPostItemsRef}
               className={
@@ -374,7 +345,7 @@ function Sliderx({
               alt="a superstarz post "
               style={{
                 ...style,
-                cursor: "alias",
+                cursor: "copy",
                 width: "100%",
                 height: itemheight[pey],
                 position: "absolute",

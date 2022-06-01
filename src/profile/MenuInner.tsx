@@ -200,7 +200,7 @@ function MenuInnerx({
                             {" "}
                             <div
                               onClick={() => {
-                                clickOptions(i, optionsClickType, "");
+                                clickOptions(i, optionsClickType, "upload");
                               }}
                               style={{
                                 cursor: ActiveSlide === i ? "pointer" : "alias",
@@ -310,7 +310,7 @@ function MenuInnerx({
                           objectFit: "cover",
                           marginLeft: "2px",
                           marginTop: "14px",
-
+                          opacity: ActiveSlide === i ? 0.3 : 1,
                           boxShadow: darkmodeReducer
                             ? ActiveSlide === i
                               ? colortypeReducer === 0

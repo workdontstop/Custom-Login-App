@@ -2,6 +2,8 @@ import {
   REQUEST_USERDATA,
   REQUEST_USERDATA_ONLOAD,
   REQUEST_USER_INFO_UPDATE,
+  REQUEST_PROFILE_UPDATE,
+  REQUEST_BILLBOARD_UPDATE,
 } from "../log_ActionTypes";
 
 ///
@@ -30,6 +32,16 @@ export const UserdataReducer = (
   action: any
 ): MyUserdataReducer => {
   switch (action.type) {
+    case REQUEST_PROFILE_UPDATE:
+      return {
+        ...state,
+        image: action.payload.image,
+      };
+    case REQUEST_BILLBOARD_UPDATE:
+      return {
+        ...state,
+        billboard1: action.payload.billboard1,
+      };
     case REQUEST_USER_INFO_UPDATE:
       return {
         ...state,

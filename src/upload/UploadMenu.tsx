@@ -51,6 +51,8 @@ function UploadMenux({
   allowOverflow,
   closeUploadModal,
   cropscrollRef,
+  setShowModalUpload,
+  setStopBodyScroll,
 }: any): JSX.Element {
   const [filterImage, setfilterImage] = useState<Array<any>>([]);
 
@@ -115,6 +117,7 @@ function UploadMenux({
         }}
       >
         <FilterMode
+          closeUploadModal={closeUploadModal}
           itemUploadRefThumb={itemUploadRefThumb}
           itemUploadRefSD={itemUploadRefSD}
           itemUploadRef={itemUploadRef}

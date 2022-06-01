@@ -26,6 +26,10 @@ import { FilterModeArrow } from "./FilterModeArrow";
 import { Superstickers } from "./Superstickers";
 import { OptionsSlider } from "../profile/OptionsSlider";
 import { convertHexToRGB } from "material-ui/utils/colorManipulator";
+import { Caption } from "./Caption";
+import date from "date-and-time";
+
+Axios.defaults.withCredentials = true;
 
 function FilterModex({
   filterImage,
@@ -35,9 +39,16 @@ function FilterModex({
   setActivatefilterImage,
   ActivatefilterImage,
   getSliderWidthNew,
+  closeUploadModal,
   itemUploadRefThumb,
 }: any): JSX.Element {
   var newitemUploadRef = useRef<any>(null);
+
+  // Formatting the date and time
+  // by using date.format() method
+  /// const datevalue = date.format(now, "YYYY_MM_DD_HH_mm_ss");
+
+  const { REACT_APP_SUPERSTARZ_URL } = process.env;
 
   ///
   ///
@@ -110,48 +121,9 @@ function FilterModex({
 
   const [loaderArray, setloaderArray] = useState<any>([]);
 
-  const addpostImageRef = (imageRef: any) => {
-    if (imageRef && !getImageWidth.current.includes(imageRef)) {
-      getImageWidth.current.push(imageRef);
-    }
-    ////console.log(postItemsRef.current[1]);
-  };
+  const [duplicateItemupload, setduplicateItemupload] = useState<any>([]);
 
-  ///
-  ///
-  ///
-  /// GET GLOBAL INNER NAVIGATION VARIABLE
-  const { activatefilterImage } = useSelector((state: RootStateOrAny) => ({
-    ...state.GlobalNavuploadReducer,
-  }));
-  const activatefilterImageReducer = activatefilterImage;
-
-  ///
-  ///
-  ///
-  /// ACTIVATES SLIDER ITEM TO BE VIEWED ON CLICK
-  const clickOptions = (i: number) => {
-    //setTranslate(getImageWidth.current[0].clientWidth * i);
-    //setActiveSlide(i);
-  };
-
-  ///
-  ///
-  ///
-  ///CREATE OPTIONS SLIDER ANIMATION WITH  REACT SPRING
-  const modalanimation = useSpring({
-    config: {
-      mass: 2.5,
-      tension: 500,
-      friction: 35,
-    },
-    transform: `translateX(${ShowHideNegativeValue}${translate}px)`,
-    height: "auto",
-    display: "flex",
-    width: `auto`,
-    padding: "0px",
-    margin: "auto",
-  });
+  const [superUploadedImageName, setsuperUploadedImageName] = useState<any>([]);
 
   const [FilterSliderHeight, setFilterSliderHeight] = useState(0);
   const [FilterSliderWidth, setFilterSliderWidth] = useState(0);
@@ -166,6 +138,134 @@ function FilterModex({
   const [filterThumbWidthFull, setfilterThumbWidthFull] = useState(0);
 
   const [matchTabletMobile, setmatchTabletMobile] = useState<boolean>(false);
+
+  const [activeSticker, setactiveSticker] = useState<number>(100);
+
+  const [superStickerActivated, setsuperStickerActivated] =
+    useState<boolean>(true);
+
+  const [effectMode, seteffectMode] = useState<any>([]);
+
+  const [trapfilters, settrapfilters] = useState<boolean[]>([]);
+
+  const [regimageholdfilter, setregimageholdfilter] = useState<any>([]);
+
+  const [finalImageData, setfinalImageData] = useState<any>([]);
+
+  const [callfilter, setcallfilter] = useState<boolean>(false);
+
+  const [FilterUnderStickerStopFiltering, setFilterUnderStickerStopFiltering] =
+    useState<boolean>(false);
+
+  const [hdfilter, sethdfilter] = useState<boolean>(false);
+
+  const [superzeroeffect, setsuperzeroeffect] = useState<boolean[]>([]);
+  const [superzeroeffectonce, setsuperzeroeffectonce] = useState<boolean[]>([]);
+
+  const [startTopicCap, setstartTopicCap] = useState(false);
+
+  const [supeFilterLoadFade, setsupeFilterLoadFade] = useState<boolean>(false);
+
+  ///
+  ///
+  ///
+  /// GET GLOBAL INNER NAVIGATION VARIABLE
+  const { activatefilterImage } = useSelector((state: RootStateOrAny) => ({
+    ...state.GlobalNavuploadReducer,
+  }));
+  const activatefilterImageReducer = activatefilterImage;
+
+  ///
+
+  useEffect(() => {
+    const effectModexx = [...effectMode];
+
+    for (let i = 0; i < selectedImage.length; i++) {
+      effectModexx[i] = "normal";
+      if (selectedImage.length - 1 === i) {
+        seteffectMode(effectModexx);
+      }
+    }
+
+    const trapfiltersxx = [...trapfilters];
+
+    for (let i = 0; i < selectedImage.length; i++) {
+      trapfiltersxx[i] = false;
+      if (selectedImage.length - 1 === i) {
+        settrapfilters(trapfiltersxx);
+      }
+    }
+
+    const superzeroeffectx = [...superzeroeffect];
+
+    for (let i = 0; i < selectedImage.length; i++) {
+      superzeroeffectx[i] = false;
+      if (selectedImage.length - 1 === i) {
+        setsuperzeroeffect(superzeroeffectx);
+      }
+    }
+
+    const superzeroeffectoncex = [...superzeroeffectonce];
+
+    for (let i = 0; i < selectedImage.length; i++) {
+      superzeroeffectoncex[i] = false;
+      if (selectedImage.length - 1 === i) {
+        setsuperzeroeffectonce(superzeroeffectoncex);
+      }
+    }
+
+    const finalImageDatax = [...finalImageData];
+
+    for (let i = 0; i < selectedImage.length; i++) {
+      finalImageDatax[i] = null;
+      if (selectedImage.length - 1 === i) {
+        setfinalImageData(finalImageDatax);
+      }
+    }
+  }, [activatefilterImageReducer]);
+
+  useEffect(() => {
+    const regimageholdfilterxx = [...regimageholdfilter];
+    for (let i = 0; i < selectedImage.length; i++) {
+      regimageholdfilterxx[i] = itemUploadRef.current[i].src;
+      if (selectedImage.length - 1 === i) {
+        setregimageholdfilter(regimageholdfilterxx);
+      }
+    }
+  }, [activatefilterImageReducer]);
+
+  const addpostImageRef = (imageRef: any) => {
+    if (imageRef && !getImageWidth.current.includes(imageRef)) {
+      getImageWidth.current.push(imageRef);
+    }
+    ////console.log(postItemsRef.current[1]);
+  };
+
+  ///
+  ///
+  /// ACTIVATES SLIDER ITEM TO BE VIEWED ON CLICK
+  const clickOptions = (i: number) => {
+    //setTranslate(getImageWidth.current[0].clientWidth * i);
+    //setActiveSlide(i);
+  };
+
+  ///
+  ///
+  ///
+  ///CREATE OPTIONS SLIDER ANIMATION WITH  REACT SPRING
+  const modalanimation = useSpring({
+    config: {
+      mass: 1,
+      tension: 170,
+      friction: 26,
+    },
+    transform: `translateX(${ShowHideNegativeValue}${translate}px)`,
+    height: "auto",
+    display: "flex",
+    width: `auto`,
+    padding: "0px",
+    margin: "auto",
+  });
 
   ///
   ///
@@ -243,12 +343,24 @@ function FilterModex({
   ///
 
   //
+
+  //
+  //
+  //
+  //USE SLIDE DOWN ANIMATION FROM REACT SPRING
+  const animationxx = useSpring({
+    config: {
+      duration: 250,
+    },
+    opacity: startTopicCap ? 1 : 0,
+  });
+
   //
   //
   //USE SLIDE DOWN ANIMATION FROM REACT SPRING
   const animation = useSpring({
     config: {
-      duration: 100,
+      duration: 250,
     },
     opacity: startSuperSticker ? 1 : 0,
   });
@@ -364,8 +476,24 @@ function FilterModex({
   ///
   /// CLICK BILLBOARD OPEN ON DOUBLE CLICK
   const superstickerz = (index: number) => {
-    setstartSuperSticker(true);
     setsuperstickerIndex(index);
+    const trapfiltersxx = [...trapfilters];
+    trapfiltersxx[index] = false;
+    settrapfilters(trapfiltersxx);
+
+    setFilterUnderStickerStopFiltering(false);
+
+    sethdfilter(true);
+
+    setTimeout(function () {
+      if (duplicateItemupload[index]) {
+        const effectModexx = [...effectMode];
+        effectModexx[index] = "normalx";
+        seteffectMode(effectModexx);
+      }
+    }, 1500);
+
+    setstartSuperSticker(true);
 
     setstartSuperStickerblur(true);
   };
@@ -392,6 +520,24 @@ function FilterModex({
 
   return (
     <>
+      {supeFilterLoadFade ? (
+        <>
+          <Grid
+            container
+            style={{
+              backgroundColor: darkmodeReducer
+                ? "rgba(50,50,50,0.5)"
+                : "rgba(250,250,250,0.5)",
+              position: "fixed",
+              top: "0px",
+              width: "100%",
+              height: "100%",
+              zIndex: 10,
+            }}
+          ></Grid>{" "}
+        </>
+      ) : null}
+
       <Grid
         container
         style={{
@@ -430,6 +576,26 @@ function FilterModex({
           }}
         >
           <OptionsSlider
+            setstartTopicCap={setstartTopicCap}
+            finalImageData={finalImageData}
+            setfinalImageData={setfinalImageData}
+            superzeroeffect={superzeroeffect}
+            superstickerIndex={superstickerIndex}
+            sethdfilter={sethdfilter}
+            hdfilter={hdfilter}
+            trapfilters={trapfilters}
+            settrapfilters={settrapfilters}
+            FilterUnderStickerStopFiltering={FilterUnderStickerStopFiltering}
+            regimageholdfilter={regimageholdfilter}
+            setregimageholdfilter={setregimageholdfilter}
+            setcallfilter={setcallfilter}
+            callfilter={callfilter}
+            seteffectMode={seteffectMode}
+            effectMode={effectMode}
+            setactiveSticker={setactiveSticker}
+            activeSticker={activeSticker}
+            startSuperSticker={startSuperSticker}
+            duplicateItemupload={duplicateItemupload}
             selectedImage={selectedImage}
             length={selectedImage.length}
             getImageWidth={getImageWidth}
@@ -439,6 +605,8 @@ function FilterModex({
             getSliderWidthA={getSliderWidthNew}
             itemUploadRef={itemUploadRef}
             itemUploadRefThumb={itemUploadRefThumb}
+            itemUploadRefSD={itemUploadRefSD}
+            setsupeFilterLoadFade={setsupeFilterLoadFade}
           />
         </Grid>
 
@@ -590,24 +758,86 @@ function FilterModex({
           <animated.div
             style={{
               ...animation,
+              zIndex: 5,
+              position: "relative",
             }}
           >
             <Grid
+              className={
+                darkmodeReducer
+                  ? "dontallowhighlighting"
+                  : "dontallowhighlighting  "
+              }
               container
               style={{
                 width: "100%",
                 height: "100%",
                 position: "fixed",
                 top: "0vh",
-                zIndex: 10,
+                zIndex: 11,
               }}
             >
               <Superstickers
+                superzeroeffect={superzeroeffect}
+                setsuperzeroeffect={setsuperzeroeffect}
+                superzeroeffectonce={superzeroeffectonce}
+                setsuperzeroeffectonce={setsuperzeroeffectonce}
+                FilterUnderStickerStopFiltering={
+                  FilterUnderStickerStopFiltering
+                }
+                setFilterUnderStickerStopFiltering={
+                  setFilterUnderStickerStopFiltering
+                }
+                callfilter={callfilter}
+                setcallfilter={setcallfilter}
+                regimageholdfilter={regimageholdfilter}
+                seteffectMode={seteffectMode}
+                effectMode={effectMode}
+                setactiveSticker={setactiveSticker}
+                duplicateItemupload={duplicateItemupload}
+                setduplicateItemupload={setduplicateItemupload}
+                setsuperStickerActivated={setsuperStickerActivated}
                 setstartSuperStickerblur={setstartSuperStickerblur}
                 setstartSuperSticker={setstartSuperSticker}
                 index={superstickerIndex}
                 itemUploadRef={itemUploadRef}
                 startSuperSticker={startSuperSticker}
+              />
+            </Grid>{" "}
+          </animated.div>
+        </>
+      ) : null}
+
+      {startTopicCap ? (
+        <>
+          {" "}
+          <animated.div
+            style={{
+              ...animationxx,
+              zIndex: 5,
+              position: "relative",
+            }}
+          >
+            <Grid
+              className={
+                darkmodeReducer
+                  ? "dontallowhighlighting"
+                  : "dontallowhighlighting  "
+              }
+              container
+              style={{
+                width: "100%",
+                height: "100%",
+                position: "fixed",
+                top: "0vh",
+                zIndex: 11,
+              }}
+            >
+              <Caption
+                closeUploadModal={closeUploadModal}
+                finalImageData={finalImageData}
+                selectedImage={selectedImage}
+                setstartTopicCap={setstartTopicCap}
               />
             </Grid>{" "}
           </animated.div>

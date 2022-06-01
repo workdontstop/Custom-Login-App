@@ -35,6 +35,31 @@ function OptionsSliderx({
   allowOverflow,
   selectedImage,
   itemUploadRefThumb,
+  duplicateItemupload,
+  activeSticker,
+  startSuperSticker,
+  setactiveSticker,
+  seteffectMode,
+  effectMode,
+  setcallfilter,
+  callfilter,
+  regimageholdfilter,
+  setregimageholdfilter,
+  FilterUnderStickerStopFiltering,
+  trapfilters,
+  settrapfilters,
+  sethdfilter,
+  hdfilter,
+  superstickerIndex,
+  superzeroeffect,
+  setfinalImageData,
+  finalImageData,
+  setstartTopicCap,
+  setShowModalUpload,
+  setStopBodyScroll,
+  itemUploadRefSD,
+  setsupeFilterLoadFade,
+  setsuperSettings,
 }: any) {
   ///
   ///
@@ -120,16 +145,17 @@ function OptionsSliderx({
   var UploadFilterNameData = [
     "normal",
     "lift",
+    "juice",
     "kemi",
     "futurama",
     "tentacion",
-    "nebula",
     "floyd",
-    "juice",
+    "nebula",
     "jentle",
     "mint",
     "moonshine",
     "vintage",
+    "continue",
   ];
 
   ///
@@ -139,7 +165,7 @@ function OptionsSliderx({
 
   const optionsImages =
     typeUpload === 2
-      ? ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+      ? ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"]
       : typeUpload === 1
       ? ["1", "2", "3", "4"]
       : typeUpload === 0
@@ -181,9 +207,9 @@ function OptionsSliderx({
   ///CREATE OPTIONS SLIDER ANIMATION WITH  REACT SPRING
   const modalanimation = useSpring({
     config: {
-      mass: 2.5,
-      tension: 500,
-      friction: 35,
+      mass: 1,
+      tension: 120,
+      friction: 14,
     },
     transform: `translateX(${ShowHideNegativeValue}${translate}px)`,
     height: "auto",
@@ -212,9 +238,9 @@ function OptionsSliderx({
       if (source === "filter2") {
         if (ActiveSlide === i) {
         } else {
-          setTranslate(getSliderWidthNew * 6);
+          setTranslate(getSliderWidthNew * 7);
         }
-        setActiveSlide(11);
+        setActiveSlide(optionsImages.length - 1);
       } else if (source === "filter") {
         if (i === 1 || i === 0) {
           if (ActiveSlide === i) {
@@ -223,20 +249,20 @@ function OptionsSliderx({
           }
           setActiveSlide(i);
         } else {
-          var numberoffilterthumbs = 11;
+          var numberoffilterthumbs = optionsImages.length - 1;
           if (i === numberoffilterthumbs) {
             setActiveSlide(i);
           } else {
-            if (i === 12) {
+            if (i === optionsImages.length) {
               if (ActiveSlide === i) {
               } else {
-                setTranslate((translate) => 6);
+                setTranslate((translate) => 7);
               }
 
-              setActiveSlide(6);
+              setActiveSlide(7);
             } else {
               if (i > ActiveSlide) {
-                if (translate + getSliderWidthNew > getSliderWidthNew * 6) {
+                if (translate + getSliderWidthNew > getSliderWidthNew * 7) {
                   setActiveSlide(i);
                 } else {
                   if (ActiveSlide === i) {
@@ -270,8 +296,17 @@ function OptionsSliderx({
           setActiveSlide(i);
         }
 
-        if (ActiveSlide === i && source === "upload") {
+        var circleIdentify = typeTop ? 0 : 4;
+        var circleIdentify2 = typeTop ? 1 : 5;
+
+        if (ActiveSlide === i && source === "upload" && i === circleIdentify2) {
           OpenUploadModal();
+        } else if (
+          ActiveSlide === i &&
+          source === "upload" &&
+          i === circleIdentify
+        ) {
+          setsuperSettings(true);
         }
       }
     }
@@ -454,32 +489,36 @@ function OptionsSliderx({
   return (
     <>
       {typeUpload === 1 ? (
-        <UploadMenu
-          allowOverflow={allowOverflow}
-          cropscrollRef={cropscrollRef}
-          optionsShow={optionsShow}
-          optinstopshowingReducer={optinstopshowingReducer}
-          typeTop={false}
-          closeoptionsslide={closeoptionsslide}
-          animationop={animationop}
-          optionsCollectImageRef={optionsCollectImageRef}
-          handleTouchStartOptions={handleTouchStartOptions}
-          handleTouchMoveOptions={handleTouchMoveOptions}
-          modalanimation={modalanimation}
-          nextSlidePc={nextSlidePc}
-          optionsImages={optionsImages}
-          ActiveSlide={ActiveSlide}
-          optionsNameData={UploadOptionsNameData}
-          clickOptions={clickOptions}
-          optionsClickType={optionsClickType}
-          getSliderWidthNew={getSliderWidthNew}
-          cropTOPLEVELScrollRef={cropTOPLEVELScrollRef}
-          refWithimageData={refWithimageData}
-          CropSaved={CropSaved}
-          setCropSaved={setCropSaved}
-          setallowOverflow={setallowOverflow}
-          closeUploadModal={closeUploadModal}
-        />
+        <>
+          <UploadMenu
+            setShowModalUpload={setShowModalUpload}
+            setStopBodyScroll={setStopBodyScroll}
+            allowOverflow={allowOverflow}
+            cropscrollRef={cropscrollRef}
+            optionsShow={optionsShow}
+            optinstopshowingReducer={optinstopshowingReducer}
+            typeTop={false}
+            closeoptionsslide={closeoptionsslide}
+            animationop={animationop}
+            optionsCollectImageRef={optionsCollectImageRef}
+            handleTouchStartOptions={handleTouchStartOptions}
+            handleTouchMoveOptions={handleTouchMoveOptions}
+            modalanimation={modalanimation}
+            nextSlidePc={nextSlidePc}
+            optionsImages={optionsImages}
+            ActiveSlide={ActiveSlide}
+            optionsNameData={UploadOptionsNameData}
+            clickOptions={clickOptions}
+            optionsClickType={optionsClickType}
+            getSliderWidthNew={getSliderWidthNew}
+            cropTOPLEVELScrollRef={cropTOPLEVELScrollRef}
+            refWithimageData={refWithimageData}
+            CropSaved={CropSaved}
+            setCropSaved={setCropSaved}
+            setallowOverflow={setallowOverflow}
+            closeUploadModal={closeUploadModal}
+          />{" "}
+        </>
       ) : typeUpload === 0 ? (
         <MenuInner
           optionsShow={optionsShow}
@@ -501,6 +540,26 @@ function OptionsSliderx({
         />
       ) : (
         <ImageFilterinner
+          setstartTopicCap={setstartTopicCap}
+          finalImageData={finalImageData}
+          setfinalImageData={setfinalImageData}
+          superzeroeffect={superzeroeffect}
+          superstickerIndex={superstickerIndex}
+          sethdfilter={sethdfilter}
+          hdfilter={hdfilter}
+          settrapfilters={settrapfilters}
+          trapfilters={trapfilters}
+          FilterUnderStickerStopFiltering={FilterUnderStickerStopFiltering}
+          regimageholdfilter={regimageholdfilter}
+          setregimageholdfilter={setregimageholdfilter}
+          setcallfilter={setcallfilter}
+          callfilter={callfilter}
+          seteffectMode={seteffectMode}
+          effectMode={effectMode}
+          setactiveSticker={setactiveSticker}
+          activeSticker={activeSticker}
+          startSuperSticker={startSuperSticker}
+          duplicateItemupload={duplicateItemupload}
           itemUploadRefThumb={itemUploadRefThumb}
           selectedImage={selectedImage}
           length={length}
@@ -523,6 +582,8 @@ function OptionsSliderx({
           optionsNameData={UploadFilterNameData}
           clickOptions={clickOptions}
           optionsClickType={optionsClickType}
+          itemUploadRefSD={itemUploadRefSD}
+          setsupeFilterLoadFade={setsupeFilterLoadFade}
         />
       )}
     </>

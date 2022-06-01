@@ -72,6 +72,8 @@ function CropUploadModex({
 
   const [superCropLoadFade, setsuperCropLoadFade] = useState<boolean>(false);
 
+  const [ShowmaxPost, setShowmaxPost] = useState<boolean>(false);
+
   const [allowFilters, setallowFilters] = useState<boolean>(false);
 
   const [showCropper, setshowCropper] = useState<boolean>(false);
@@ -195,16 +197,19 @@ function CropUploadModex({
       const FileArray = Array.from(e.target.files).map((file: any) =>
         URL.createObjectURL(file)
       );
-      setselectedImage([]);
-      setselectedImage((prevImages: any) => prevImages.concat(FileArray));
-      setcropimage(FileArray[0]);
 
-      //const formData = new FormData();
-      ///for (let i = 0; i < e.target.files.length; i++) {
-      //formData.append("superImages", e.target.files[i]);}
-      ////
-      window.history.pushState(null, "", "Crop");
-      dispatch(UpdateNavCropReducer(true));
+      if (e.target.files.length > 8) {
+        setShowmaxPost(true);
+        setTimeout(function () {
+          setShowmaxPost(false);
+        }, 3000);
+      } else {
+        setselectedImage([]);
+        setselectedImage((prevImages: any) => prevImages.concat(FileArray));
+        setcropimage(FileArray[0]);
+        window.history.pushState(null, "", "Crop");
+        dispatch(UpdateNavCropReducer(true));
+      }
     }
   };
 
@@ -294,7 +299,7 @@ function CropUploadModex({
   ///
   ///
   ///
-  ///GET OPTIONS SLIDER IMAGE WIDTH FROM MATERIAL UI GRID
+  ///GET DIMENSIONS AND  SCREEN HEIGHT
   useLayoutEffect(() => {
     if (matchTablet || matchMobile) {
       setmatchTabletMobile(true);
@@ -1061,8 +1066,8 @@ function CropUploadModex({
               }}
             >
               {optionscropshow ? (
-                <CropIcon
-                  onClick={cropaspectchange}
+                <CheckIcon
+                  onClick={complete}
                   className={
                     darkmodeReducer
                       ? "make-small-icons-clickable-lightCrop turdark dontallowhighlighting zuperkingIcon "
@@ -1108,8 +1113,8 @@ function CropUploadModex({
               }}
             >
               {optionscropshow ? (
-                <CheckIcon
-                  onClick={complete}
+                <CropIcon
+                  onClick={cropaspectchange}
                   className={
                     darkmodeReducer
                       ? "make-small-icons-clickable-lightCrop turdark dontallowhighlighting zuperkingIcon "
@@ -1246,7 +1251,7 @@ function CropUploadModex({
                             textAlign: "center",
                             alignItems: "center",
                             display: "grid",
-
+                            opacity: ActiveSlide === i && i !== 3 ? 0.3 : 1,
                             justifyContent: "center",
                             boxShadow: darkmodeReducer
                               ? ActiveSlide === i
@@ -1409,6 +1414,47 @@ function CropUploadModex({
           }}
         ></Grid>
       </Grid>
+
+      {ShowmaxPost ? (
+        <Grid
+          container
+          style={{ height: "100%", position: "fixed", top: "0vh" }}
+        >
+          <Grid
+            item
+            xs={12}
+            style={{
+              padding: "0px",
+              margin: "auto",
+            }}
+          >
+            <span
+              className={
+                darkmodeReducer
+                  ? "dialog-container tur"
+                  : "dialog-container tur"
+              }
+              style={{
+                height: "30px",
+                width: "90px",
+                borderRadius: "00px",
+                backgroundColor: "#00ccff",
+                margin: "auto",
+                textAlign: "center",
+              }}
+            >
+              <span
+                style={{
+                  marginTop: "8px",
+                }}
+              >
+                {" "}
+                max 8
+              </span>
+            </span>
+          </Grid>
+        </Grid>
+      ) : null}
 
       <Grid
         container

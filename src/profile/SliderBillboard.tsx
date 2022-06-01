@@ -231,12 +231,14 @@ function SliderBillboardx({
   ///
   ///START AUTOPLAY ON PAGE LOAD
   useEffect(() => {
-    SliderAutoPlay();
-    changeBillboardAutoSlideDurationTimer.current = setTimeout(function () {
-      setsliderDuration(2000);
-      callNewAutoBillboard();
-    }, 6000);
-  }, []);
+    if (slides[1]) {
+      SliderAutoPlay();
+      changeBillboardAutoSlideDurationTimer.current = setTimeout(function () {
+        setsliderDuration(2000);
+        callNewAutoBillboard();
+      }, 6000);
+    }
+  }, [slides]);
 
   ///
   ///

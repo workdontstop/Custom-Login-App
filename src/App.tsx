@@ -1,15 +1,18 @@
 import "./App.css";
 import "typeface-roboto";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
+import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
 import Home from "./Home";
+import { matchPc, matchTablet, matchMobile } from "./DetectDevice";
 import Supercheck from "./Supercheck";
 import { IsLoggedAction } from "./log/actions/IsLoggedAction";
 import { IsLoggedProfileAction } from "./log/actions/IsLoggedAction";
 import { UserdataActionOnLoad } from "./log/actions/UserdataAction";
 import { UpdateColorAction } from "./GlobalActions";
-
+import { Grid, GridSize } from "@material-ui/core";
+import SuperstarzIconLight from "./images/s.png";
+import SuperstarzIconDark from "./images/sd.png";
 import ProfileOutter from "./profile/ProfileOutter";
 
 Axios.defaults.withCredentials = true;
@@ -20,6 +23,8 @@ function App(): JSX.Element {
   ///
   ///DISPATCH
   const dispatch = useDispatch();
+
+  const [superLoad, setsuperLoad] = useState<boolean>(true);
 
   ///
   ///
@@ -73,6 +78,16 @@ function App(): JSX.Element {
   ///
   ///MODAL ZOOMED STATE
   useEffect(() => {
+    setTimeout(function () {
+      setsuperLoad(false);
+    }, 4000);
+    document.title = "SuperstarZ";
+  }, []);
+
+  ///
+  ///
+  ///MODAL ZOOMED STATE
+  useEffect(() => {
     Axios.post(`http://${REACT_APP_SUPERSTARZ_URL}/checkIsLogged`, {
       withCredentials: true,
     })
@@ -92,7 +107,7 @@ function App(): JSX.Element {
         }
       })
       .catch(function (error) {
-        alert("app.tsx checkislogged error");
+        console.log("app.tsx checkislogged error");
       });
   }, [REACT_APP_SUPERSTARZ_URL, dispatch]);
 
@@ -110,6 +125,46 @@ function App(): JSX.Element {
   }));
   const darkmodeReducer = darkmode;
 
+  ///
+  ///
+  ///MUI PAPER STYLES FROM REDUX
+  const { PaperStyleLight, PaperStyleDark } = useSelector(
+    (state: RootStateOrAny) => ({
+      ...state.PaperReducerLightnDark,
+    })
+  );
+  var PaperStyleReducer = "";
+  var logoimage;
+
+  if (darkmodeReducer) {
+    PaperStyleReducer = PaperStyleDark;
+    logoimage = SuperstarzIconDark;
+  } else {
+    PaperStyleReducer = PaperStyleLight;
+    logoimage = SuperstarzIconLight;
+  }
+
+  var icon;
+  var containerApp = "containerappmobile";
+  ///
+  ///
+  ///
+  ///CONDITIONAL STATEMENT FOR DEVICE TYPE
+  if (matchPc) {
+    containerApp = "containerapp";
+    icon = "iconPc";
+
+    ///
+  } else if (matchTablet) {
+    containerApp = "containerapptablet";
+    icon = "iconTablet";
+
+    ///
+  } else {
+    containerApp = "containerappmobile";
+    icon = "iconMobile";
+  }
+
   return (
     <>
       {loggedInReducer ? (
@@ -121,6 +176,45 @@ function App(): JSX.Element {
       ) : (
         <Home />
       )}
+
+      {superLoad ? (
+        <>
+          <Grid
+            container
+            style={{
+              backgroundImage: PaperStyleReducer,
+              position: "fixed",
+              top: "0px",
+              width: "100%",
+              height: "100%",
+              zIndex: 10,
+            }}
+          >
+            <Grid container className={containerApp} style={{ top: "27%" }}>
+              <Grid item xs={3} sm={4} md={4}></Grid>
+              <Grid
+                item
+                className="centericon   dontallowhighlighting"
+                xs={6}
+                sm={4}
+                md={4}
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                <img
+                  className={icon}
+                  src={logoimage}
+                  alt="SuperstarZ logo"
+                  style={{ textAlign: "center" }}
+                />
+              </Grid>
+
+              <Grid item xs={3}></Grid>
+            </Grid>
+          </Grid>{" "}
+        </>
+      ) : null}
     </>
   );
 }

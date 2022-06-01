@@ -14,7 +14,7 @@ import { Option } from "./log/Option";
 import { LoginButtons } from "./log/LogButtons";
 
 import { CommentTemplate } from "./CommentTemplate";
-import { matchPc, matchTablet } from "./DetectDevice";
+import { matchPc, matchTablet, matchMobile } from "./DetectDevice";
 import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
 import { DarkmodeAction, screenHeightAction } from "./GlobalActions";
 
@@ -323,15 +323,22 @@ function Home(): JSX.Element {
 
             <Grid item xs={3}></Grid>
             <Grid item xs={4} className="littletext-outter">
-              <Typography className="app-little-text-typography">
+              <Typography
+                className="app-little-text-typography"
+                style={{ padding: matchMobile ? "35px" : "0px" }}
+              >
                 <span
                   className={littleText}
                   style={{
                     color: appVariables.littleTextColor,
                   }}
                 >
-                  <span style={{ verticalAlign: "middle" }}>
-                    express yourself
+                  <span
+                    style={{
+                      verticalAlign: "middle",
+                    }}
+                  >
+                    stickers, effects on audio gifs
                   </span>
                   <span
                     style={{ display: displayEmo1, verticalAlign: "middle" }}

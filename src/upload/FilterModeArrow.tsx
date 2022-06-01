@@ -57,10 +57,11 @@ function FilterModeArrowx({
             cursor: "pointer",
           }}
           xs={2}
+          sm={1}
         >
           {" "}
         </Grid>{" "}
-        <Grid item style={{ height: "0px" }} xs={8}>
+        <Grid item style={{ height: "0px" }} xs={8} sm={10}>
           {" "}
         </Grid>{" "}
         <Grid
@@ -76,6 +77,7 @@ function FilterModeArrowx({
             cursor: "pointer",
           }}
           xs={2}
+          sm={1}
         >
           {" "}
         </Grid>

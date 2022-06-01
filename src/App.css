@@ -209,13 +209,13 @@
 }
 
 .caption-darkPost {
-  text-shadow: 1.5px 3px 2.5px #000000;
+  text-shadow: 0.3px 0.5px 1px rgba(214, 220, 230, 0.52);
   height: auto;
 
-  background-color: rgba(29, 29, 29, 0.7);
-  -moz-box-shadow: 0 0 3.5px, #222222;
-  -webkit-box-shadow: 0 0 3.5px, #222222;
-  box-shadow: 0 0 3.5px, #222222;
+  background-color: rgba(20, 20, 20, 0.98);
+  -moz-box-shadow: 0 0 5px, #cccccc;
+  -webkit-box-shadow: 0 0 5px, #cccccc;
+  box-shadow: 0 0 5px, #cccccc;
 }
 
 .caption-dark {
@@ -231,7 +231,7 @@
   text-shadow: 0.3px 0.5px 1px rgba(11, 23, 40, 0.52);
   height: auto;
 
-  background-color: rgba(225, 225, 225, 0.7);
+  background-color: rgba(225, 225, 225, 0.8);
   -moz-box-shadow: 0 0 5px, #cccccc;
   -webkit-box-shadow: 0 0 5px, #cccccc;
   box-shadow: 0 0 5px, #cccccc;
@@ -524,7 +524,7 @@
 }
 
 .littletext-Pc {
-  font-size: 1.05vw;
+  font-size: 1.06vw;
   transition: opacity 1.5s;
   font-weight: bold;
 }
@@ -553,10 +553,34 @@
   transform: scale(0.38);
 }
 
+.make-small-icons-clickable-darkCroptheme {
+  -webkit-filter: drop-shadow(1.2px 0.1px 1.92px rgba(255, 255, 255, 0.4));
+  filter: drop-shadow(1.2px 0.1px 1.92px rgba(255, 255, 255, 0.4));
+
+  color: #ffffff;
+  border-radius: 25px;
+  padding: 5px;
+  cursor: pointer;
+  transition: 140ms transform ease-in;
+  transform: scale(1.6);
+}
+
+.make-small-icons-clickable-lightCroptheme {
+  -webkit-filter: drop-shadow(1.2px 0.1px 1.92px (41, 53, 70, 8.35));
+  filter: drop-shadow(1.2px 0.1px 1.92px rgba(41, 53, 70, 8.35));
+
+  border-radius: 25px;
+  color: #000000;
+  cursor: pointer;
+  padding: 5px;
+  transition: 140ms transform ease-in;
+  transform: scale(1.6);
+}
+
 .make-small-icons-clickable-lightCrop {
   -webkit-filter: drop-shadow(1.2px 0.1px 1.92px (41, 53, 70, 8.35));
   filter: drop-shadow(1.2px 0.1px 1.92px rgba(41, 53, 70, 8.35));
-  background-color: rgba(000, 000, 005, 0.2);
+  background-color: rgba(000, 000, 005, 0.4);
   border-radius: 25px;
   color: #000000;
   cursor: pointer;
@@ -566,7 +590,7 @@
 }
 
 .make-small-icons-clickable-lightCrop:hover {
-  background-color: rgba(000, 000, 005, 0.2);
+  background-color: rgba(000, 000, 005, 0.4);
   border-radius: 25px;
   padding: 5px;
   transition: 140ms transform ease-in;
@@ -582,7 +606,7 @@
 .make-small-icons-clickable-darkCrop {
   -webkit-filter: drop-shadow(1.2px 0.1px 1.92px rgba(255, 255, 255, 0.4));
   filter: drop-shadow(1.2px 0.1px 1.92px rgba(255, 255, 255, 0.4));
-  background-color: rgba(225, 225, 225, 0.2);
+  background-color: rgba(225, 225, 225, 0.4);
   color: #ffffff;
   border-radius: 25px;
   padding: 5px;
@@ -592,7 +616,7 @@
 }
 
 .make-small-icons-clickable-darkCrop:hover {
-  background-color: rgba(225, 225, 225, 0.2);
+  background-color: rgba(225, 225, 225, 0.4);
   border-radius: 25px;
   padding: 5px;
   transition: 140ms transform ease-in;
@@ -1409,9 +1433,9 @@ zuperxyinfo {
 .turlight {
   height: auto;
 
-  -moz-box-shadow: 0 0 5px, #dddddd;
-  -webkit-box-shadow: 0 0 5px, #dddddd;
-  box-shadow: 0 0 5px, #dddddd;
+  -moz-box-shadow: 0 0 3px, #dddddd;
+  -webkit-box-shadow: 0 0 3px, #dddddd;
+  box-shadow: 0 0 3px, #dddddd;
 }
 .turdark {
   height: auto;

@@ -171,6 +171,7 @@ function OptionInnerModalx({
                 className="dontallowhighlighting add-rounded-icon-right"
                 sm={2}
                 md={1}
+                style={{ opacity: 0.15 }}
               >
                 <ControlPointDuplicateIcon
                   className={

@@ -120,7 +120,11 @@ function PreviewCanvasCropAllx({
           cropH = previewFileReadimage.naturalHeight;
         }
         var quality;
-        type == 1 ? (quality = 1400) : (quality = matchMobile ? 150 : 300);
+        type == 1
+          ? (quality = 1400)
+          : type == 2
+          ? (quality = 700)
+          : (quality = matchMobile ? 150 : 300);
 
         if (cropW > cropH) {
           var Ratio1500 = cropW / quality;
@@ -193,6 +197,12 @@ function PreviewCanvasCropAllx({
       newArraa[index] = canvasRef.current.toDataURL();
       setfilterImage(newArraa);
       ///////////////////////////////
+      if (length - 1 === index) {
+        wait();
+      }
+    } else if (type === 2) {
+      itemUploadRefSD.current[index].src = canvasRef.current.toDataURL();
+
       if (length - 1 === index) {
         wait();
       }
@@ -453,8 +463,8 @@ function PreviewCanvasCropAllx({
           <img
             ref={addUploadItemsRef}
             style={{
-              width: "100%",
-              height: "auto",
+              width: length === 1 ? "auto" : "100%",
+              height: length === 1 ? "50%" : "auto",
               position: "relative",
               margin: "auto",
               display: callLayoutoNCE ? "none" : "block",
@@ -465,7 +475,12 @@ function PreviewCanvasCropAllx({
 
       <Grid
         container
-        style={{ height: "100%", position: "fixed", top: "-800vh" }}
+        style={{
+          height: "100%",
+          position: "fixed",
+          top: "-800vh",
+          margin: "auto",
+        }}
       >
         <Grid
           item

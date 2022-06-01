@@ -8,14 +8,18 @@ import { Profile } from "./Profile";
 import Axios from "axios";
 import { CommentTemplate } from "../CommentTemplate";
 import { Upload } from "../upload/Upload";
+import { UploadProfilePic } from "../upload/UploadProfilePic";
 import AddIcon from "@mui/icons-material/Add";
 import { OptionsSlider } from "./OptionsSlider";
 import { UpdateNavFilterReducer } from "../GlobalActions";
 import { UpdateNavCropReducer } from "../GlobalActions";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { DarkmodeToggleAction } from ".././GlobalActions";
 
 import {
   Paper,
   Grid,
+  Switch,
   Typography,
   createTheme,
   MuiThemeProvider,
@@ -35,39 +39,29 @@ function ProfileOutter() {
   const [formtype] = useState<number>(1);
   const [showModalForm, setShowModalForm] = useState<boolean>(false);
 
+  const [x, setx] = useState<boolean>(false);
+
+  useEffect(() => {}, []);
+
   const [getSliderWidth, setgetSliderWidth] = useState(0);
 
   const [aboutTemplateGo] = useState<boolean>(true);
   const [commentTemplateGo] = useState<boolean>(false);
 
-  const [itemheight, setitemheight] = useState<Array<string>>([]);
-  const [itemheighthold, setitemheighthold] = useState<Array<string>>([]);
-  const [itemcroptype, setitemcroptype] = useState<Array<number>>([]);
-  const [itemFinalPostHeight, setitemFinalPostHeight] = useState<Array<number>>(
-    []
-  );
-  const [itemOriginalPostHeight, setitemOriginalPostHeight] = useState<
-    Array<number>
-  >([]);
-
-  const [itemCLICKED, setitemCLICKED] = useState<Array<boolean>>([]);
-  const [onLoadDataOnce, setonLoadDataOnce] = useState<Array<boolean>>([]);
-  const [ActiveAutoPlay, setActiveAutoPlay] = useState<Array<boolean>>([]);
-
-  const postDivRef = useRef<any>([]);
-
-  const postItemsRef = useRef<any>([]);
-
-  var heightplus = matchPc ? 0.38 : matchTablet ? 0.3 : 0.265;
-  var postbackheighthold = document.documentElement.clientHeight * heightplus;
-
-  const [postbackheight] = useState<number>(postbackheighthold);
-
-  const scrollTypeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const [navigateUpload, setnavigateUpload] = useState<any>(0);
 
   const [stopBodyScroll, setStopBodyScroll] = useState<boolean>(false);
+
+  const [showModalUploadProfile, setShowModalUploadProfile] =
+    useState<boolean>(false);
+
+  const [showModalUpload, setShowModalUpload] = useState<boolean>(false);
+
+  const [showProfiileData, setshowProfiileData] = useState<boolean>(false);
+
+  const [ShowmaxPost, setShowmaxPost] = useState<boolean>(false);
+
+  const [superSettings, setsuperSettings] = useState<boolean>(false);
 
   ///
   ///
@@ -129,7 +123,12 @@ function ProfileOutter() {
     if (getSliderWidthRef.current && getSliderWidthRef.current.clientWidth) {
       setgetSliderWidth(getSliderWidthRef.current.clientWidth);
     }
-  }, []);
+  }, [showProfiileData]);
+
+  ///
+  ///
+  ///
+  ///GET OPTIONS SLIDER IMAGE WIDTH FROM MATERIAL UI GRID
 
   ///
   ///
@@ -143,56 +142,34 @@ function ProfileOutter() {
   const activatefilterImageReducer = activatefilterImage;
   const activatecropImageReducer = activatecropImage;
 
-  const uploadClose = (DeviceBackButtonClicked: number) => {
-    if (DeviceBackButtonClicked === 1) {
-      ///onpopstate fires when back and forward buttons used
-      window.onpopstate = () => {
-        if (activatefilterImageReducer) {
-          dispatch(UpdateNavFilterReducer(false));
-        } else if (activatecropImageReducer) {
-          dispatch(UpdateNavCropReducer(false));
-        } else {
-          setStopBodyScroll(false);
-          setShowModalUpload(false);
-        }
-      };
+  window.onpopstate = () => {
+    if (activatefilterImageReducer) {
+      dispatch(UpdateNavFilterReducer(false));
+    } else if (activatecropImageReducer) {
+      dispatch(UpdateNavCropReducer(false));
+    } else if (showModalUploadProfile) {
+      setStopBodyScroll(false);
+      setShowModalUploadProfile(false);
     } else {
-      if (activatefilterImageReducer) {
-        dispatch(UpdateNavFilterReducer(false));
-      } else {
-        setStopBodyScroll(false);
-        setShowModalUpload(false);
-      }
-      ///Replace modal history state with previous history state
-      window.history.back();
+      setStopBodyScroll(false);
+      setShowModalUpload(false);
     }
   };
 
-  ///
-  ///
-  ///
-  /// CLOSE MODAL (STARTS AN ONPOPSTATE EVENT)
-  const closeboy = useCallback(
-    (DeviceBackButtonClicked: number, navigateUploadx: number) => {
-      //pop states fires when back and forward buttons used
-      if (showModalUpload) {
-        uploadClose(DeviceBackButtonClicked);
-      }
-    },
-    [window.onpopstate, uploadClose]
-  );
-
-  ///
-  ///
-  ///
-  ///GET OPTIONS SLIDER IMAGE WID TH FROM MATERIAL UI GRID
-  useEffect(() => {
-    closeboy(1, 0);
-    ///
-    if (getSliderWidthRef.current && getSliderWidthRef.current.clientWidth) {
-      setgetSliderWidth(getSliderWidthRef.current.clientWidth);
+  const uploadClose = (DeviceBackButtonClicked: number) => {
+    if (DeviceBackButtonClicked === 2) {
+      dispatch(UpdateNavFilterReducer(false));
+      dispatch(UpdateNavCropReducer(false));
+      ///Replace modal history state with previous history state
+      window.history.back();
+      setshowProfiileData(false);
+      callfeeds();
+    } else if (DeviceBackButtonClicked === 3) {
+      window.history.back();
+    } else {
     }
-  }, [closeboy]);
+  };
+
   ///
   ///
   ///
@@ -242,34 +219,9 @@ function ProfileOutter() {
   ///
   ///
   ///
-  ///CREATE REFS FROM POSTS AND ADD THEM TO ARRAY
-  const addPostItemsRef = (itemsRef: any) => {
-    if (itemsRef && !postItemsRef.current.includes(itemsRef)) {
-      postItemsRef.current.push(itemsRef);
-    }
-    ////console.log(postItemsRef.current[1]);
-  };
-
-  ///
-  ///
-  ///
-  ///CREATE div REFS FROM POSTS AND ADD THEM TO ARRAY
-  const addpostDivRef = (divRef: any) => {
-    if (divRef && !postDivRef.current.includes(divRef)) {
-      postDivRef.current.push(divRef);
-    }
-    ////console.log(postItemsRef.current[1]);
-  };
-
-  ///
-  ///
-  ///
   ///DOT ENV DATA
 
-  ///
-  ///
-  ///MODAL ZOOMED STATE
-  useEffect(() => {
+  const callfeeds = () => {
     Axios.post(`http://${REACT_APP_SUPERSTARZ_URL}/feeds_chronological`, {
       withCredentials: true,
     })
@@ -333,244 +285,28 @@ function ProfileOutter() {
                 newArrxt[index] = newArrxtq;
                 setpostDatainner(newArrxt);
               }
+              document.body.focus();
               /////
               ///////////////////////////////
             }
           });
-
           setPostData(postdataRep);
+          setshowProfiileData(true);
         } else if (response.data.message === "error in fetching feeds") {
           alert("Connection malfunction profile outter");
         }
       })
       .catch(function (error) {
-        alert("Connection malfunction profile outter 2");
+        console.log("Connection malfunction profile outter 2");
       });
-  }, [REACT_APP_SUPERSTARZ_URL]);
+  };
 
+  ///
+  ///
+  ///MODAL ZOOMED STATE
   useEffect(() => {
-    if (postData.length > 0) {
-      const initialItemheight = postData.map((obj) => obj.itemheight);
-      setitemheight(initialItemheight);
-
-      const initialItemrealheighthold = postData.map(
-        (obj) => obj.itemrealheighthold
-      );
-      setitemheighthold(initialItemrealheighthold);
-
-      const initialtemcroptype = postData.map((obj) => obj.itemcroptype);
-      setitemcroptype(initialtemcroptype);
-
-      const initialitemFinalPostHeight = postData.map(
-        (obj) => obj.itemFinalPostHeight
-      );
-      setitemFinalPostHeight(initialitemFinalPostHeight);
-
-      const initialitemOriginalPostHeight = postData.map(
-        (obj) => obj.itemOriginalPostHeight
-      );
-      setitemOriginalPostHeight(initialitemOriginalPostHeight);
-
-      const initialitemCLICKED = postData.map((obj) => obj.itemCLICKED);
-      setitemCLICKED(initialitemCLICKED);
-
-      const initialsetonLoadDataOnce = postData.map(
-        (obj) => obj.onLoadDataOnce
-      );
-      setonLoadDataOnce(initialsetonLoadDataOnce);
-
-      const initialsetActiveAutoPlay = postData.map(
-        (obj) => obj.ActiveAutoPlay
-      );
-      setActiveAutoPlay(initialsetActiveAutoPlay);
-    }
-  }, [postData]);
-
-  ///
-  ///
-  const onPostsItemload = useCallback(
-    (e: any, index: number, itemnum: number) => {
-      if (onLoadDataOnce[index]) {
-      } else {
-        if (itemnum === 0) {
-          if (postItemsRef.current[index]) {
-            var imageHeight = postItemsRef.current[index].clientHeight;
-
-            ///////////////////////////////
-            const newArraa = [...itemheight];
-            newArraa[index] = `${imageHeight}px`;
-            setitemheight(newArraa);
-            ///////////////////////////////
-
-            ///////////////////////////////
-            const newArrx = [...itemheighthold];
-            var newh = imageHeight / 1.042 - postbackheighthold;
-            newArrx[index] = `${newh}`;
-            setitemheighthold(newArrx);
-            ///////////////////////////////
-            const newArrayFinalPostHeight = [...itemFinalPostHeight];
-            newArrayFinalPostHeight[index] = imageHeight;
-            setitemFinalPostHeight(newArrayFinalPostHeight);
-
-            ///////////////////////////////
-            const newArrayitemOriginalPostHeight = [...itemOriginalPostHeight];
-            newArrayitemOriginalPostHeight[index] = imageHeight;
-            setitemOriginalPostHeight(newArrayitemOriginalPostHeight);
-            ///////////////////////////////
-
-            var choppedHeight = percentage(screenHeightReducer, 100);
-
-            var choppedwidth = percentage(
-              screenHeightReducer,
-              matchPc ? 55 : matchTablet ? 52 : 40
-            );
-
-            if (imageHeight < choppedwidth) {
-              /////WIDE IMAGE SET
-              const newArr = [...itemheight];
-              newArr[index] = `${choppedwidth}px`;
-              setitemheight(newArr);
-              ///////////////////////////////
-              const newArrx = [...itemheighthold];
-              var newh = choppedwidth / 1.015 - postbackheighthold;
-              newArrx[index] = `${newh}`;
-              setitemheighthold(newArrx);
-              ////////////////////////////
-              ///////////////////////////////
-              const newArrxq = [...itemcroptype];
-              newArrxq[index] = 1;
-              setitemcroptype(newArrxq);
-              ////////////////////////////
-              ///////////////////////////////
-              const newArrayFinalPostHeight = [...itemFinalPostHeight];
-              newArrayFinalPostHeight[index] = choppedwidth;
-              setitemFinalPostHeight(newArrayFinalPostHeight);
-            } else if (imageHeight > choppedHeight) {
-              /////LONG IMAGE SET
-              const newArr = [...itemheight];
-              newArr[index] = `${choppedHeight}px`;
-              setitemheight(newArr);
-              ///////////////////////////////
-              const newArrx = [...itemheighthold];
-              var newh = choppedHeight / 1 - postbackheighthold;
-              newArrx[index] = `${newh}`;
-              setitemheighthold(newArrx);
-              ////////////////////////////////
-              ///////////////////////////////
-              const newArrxq = [...itemcroptype];
-              newArrxq[index] = 2;
-              setitemcroptype(newArrxq);
-              ///////////////////////////////
-              const newArrayFinalPostHeight = [...itemFinalPostHeight];
-              newArrayFinalPostHeight[index] = choppedHeight;
-              setitemFinalPostHeight(newArrayFinalPostHeight);
-              ///////////////////////////////
-            } else {
-              var imageWidth = postItemsRef.current[index].clientWidth;
-              if (imageWidth > imageHeight) {
-                ///////////////////////////////
-                const newArrx = [...itemheighthold];
-                var newh = imageHeight / 1.066 - postbackheighthold;
-                newArrx[index] = `${newh}`;
-                setitemheighthold(newArrx);
-                ///////////////////////////////
-                ///////////////////////////////
-                const newArrxq = [...itemcroptype];
-                newArrxq[index] = 3;
-                setitemcroptype(newArrxq);
-                ///////////////////////////////
-              } else {
-                ///////////////////////////////
-                const newArrxq = [...itemcroptype];
-                newArrxq[index] = 4;
-                setitemcroptype(newArrxq);
-                ///////////////////////////////
-              }
-            }
-            ///////////////////////////////
-            const newArrxy = [...onLoadDataOnce];
-            newArrxy[index] = true;
-            setonLoadDataOnce(newArrxy);
-            ///////////////////////////////
-          }
-        }
-      }
-    },
-    [screenHeightReducer, itemheight, itemheighthold, itemFinalPostHeight]
-  );
-
-  const scrollToPost = (index: any) => {
-    postDivRef.current[index].scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  };
-
-  const postitemSHOWFULLHEIGHT = (index: any, type: number) => {
-    if (itemcroptype[index] === 1 || itemcroptype[index] === 2) {
-      if (type === 0) {
-        const newitemHeight = [...itemheight];
-        newitemHeight[index] = `auto`;
-        setitemheight(newitemHeight);
-      } else {
-        const newitemHeight = [...itemheight];
-        newitemHeight[index] = `${itemFinalPostHeight[index]}px`;
-        setitemheight(newitemHeight);
-      }
-    }
-  };
-
-  const scrollLongPicTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const scrollLongPicTimerx = useRef<ReturnType<typeof setTimeout> | null>(
-    null
-  );
-
-  const AUTOSlideLongImages = (index: number) => {
-    if (itemcroptype[index] === 2) {
-      scrollLongPicTimerx.current = setTimeout(() => {
-        if (paperPostScrollRef.current) {
-          paperPostScrollRef.current.scrollTo({
-            top:
-              paperPostScrollRef.current.scrollTop +
-              itemOriginalPostHeight[index] / 3,
-            behavior: "smooth",
-          });
-        }
-      }, 500);
-      scrollLongPicTimer.current = setTimeout(() => {
-        postDivRef.current[index].scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }, 1300);
-    }
-  };
-
-  ///
-  ///
-  ///
-  /// SLIDER DISPATCH
-
-  const onPostsItemClicked = (index: number) => {
-    if (itemCLICKED[index]) {
-      const newclickArray = [...itemCLICKED];
-      newclickArray[index] = false;
-      setitemCLICKED(newclickArray);
-      postitemSHOWFULLHEIGHT(index, 1);
-      scrollToPost(index);
-    } else {
-      AUTOSlideLongImages(index);
-      if (scrollTypeTimer.current) {
-        clearTimeout(scrollTypeTimer.current);
-      }
-
-      const newclickArray = [...itemCLICKED];
-      newclickArray[index] = true;
-      setitemCLICKED(newclickArray);
-      postitemSHOWFULLHEIGHT(index, 0);
-      scrollToPost(index);
-    }
-  };
+    callfeeds();
+  }, [REACT_APP_SUPERSTARZ_URL]);
 
   const breakPoints = {
     default: 2,
@@ -596,7 +332,17 @@ function ProfileOutter() {
 
   const paperPostScrollRef = useRef<any>(null);
 
-  const [showModalUpload, setShowModalUpload] = useState<boolean>(false);
+  ///
+  ///
+  ///
+  ///OPEN MODAL THEN CALL CLOSEMODAL FUNCTION WHICH WAITS FOR A POP EVENT(for closing modal)
+  const OpenUploadModalProfile = useCallback(() => {
+    setStopBodyScroll(true);
+    setShowModalUploadProfile(true);
+    //pushstate add enteries to your history
+    // uploadClose(1);
+    window.history.pushState(null, "", "Profile_Pic");
+  }, [showModalUploadProfile]);
 
   ///
   ///
@@ -604,7 +350,7 @@ function ProfileOutter() {
   ///OPEN MODAL THEN CALL CLOSEMODAL FUNCTION WHICH WAITS FOR A POP EVENT(for closing modal)
   const OpenUploadModal = useCallback(() => {
     setStopBodyScroll(true);
-    setShowModalUpload(!showModalUpload);
+    setShowModalUpload(true);
     //pushstate add enteries to your history
     window.history.pushState(null, "", "Upload");
   }, [showModalUpload]);
@@ -757,6 +503,108 @@ function ProfileOutter() {
     },
   });
 
+  const [profileimageSource, setprofileimageSource] = useState<any>([]);
+  const [cropimageProfile, setcropimageProfile] = useState<any>(null);
+
+  const [typex, settypex] = useState<any>(null);
+
+  const click = (event: any) => {
+    event.target.value = null;
+  };
+
+  const billboardx = (e: any) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const FileArray = Array.from(e.target.files).map((file: any) =>
+        URL.createObjectURL(file)
+      );
+
+      if (e.target.files.length > 1) {
+        setShowmaxPost(true);
+        setTimeout(function () {
+          setShowmaxPost(false);
+        }, 3000);
+      } else {
+        settypex("billboard");
+        setprofileimageSource([]);
+        setprofileimageSource((prevImages: any) =>
+          prevImages.concat(FileArray)
+        );
+        setcropimageProfile(FileArray[0]);
+        OpenUploadModalProfile();
+      }
+
+      //const formData = new FormData();
+      ///for (let i = 0; i < e.target.files.length; i++) {
+      //formData.append("superImages", e.target.files[i]);}
+      ////
+
+      ///dispatch(UpdateNavCropReducer(true));
+    }
+  };
+
+  const profilex = (e: any) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const FileArray = Array.from(e.target.files).map((file: any) =>
+        URL.createObjectURL(file)
+      );
+
+      if (e.target.files.length > 1) {
+        setShowmaxPost(true);
+        setTimeout(function () {
+          setShowmaxPost(false);
+        }, 3000);
+      } else {
+        settypex("Profile");
+        setprofileimageSource([]);
+        setprofileimageSource((prevImages: any) =>
+          prevImages.concat(FileArray)
+        );
+        setcropimageProfile(FileArray[0]);
+        OpenUploadModalProfile();
+      }
+
+      //const formData = new FormData();
+      ///for (let i = 0; i < e.target.files.length; i++) {
+      //formData.append("superImages", e.target.files[i]);}
+      ////
+
+      ///dispatch(UpdateNavCropReducer(true));
+    }
+  };
+
+  var toggleDarkMode: boolean = false;
+
+  const switchThemes = () => {
+    if (darkmodeReducer) {
+      toggleDarkMode = false;
+    } else {
+      toggleDarkMode = true;
+    }
+    dispatch(DarkmodeToggleAction());
+    ////ACESSING LOCALSTORAGE
+    localStorage.setItem("darkmode", toggleDarkMode.toString());
+  };
+
+  const rememberUser = () => {
+    Axios.post(
+      `http://${REACT_APP_SUPERSTARZ_URL}/keepmeloggedin`,
+      {
+        values: "logout",
+      },
+      {
+        withCredentials: true,
+      }
+    )
+      .then((response) => {
+        if (response.data.message === "cookie") {
+          window.location.reload();
+        }
+      })
+      .catch(function (error) {
+        console.log("Connection failure ");
+      });
+  };
+
   return (
     <>
       {loggedInReducer ? (
@@ -768,41 +616,43 @@ function ProfileOutter() {
                 ? darkmodeReducer
                   ? "postscroll-dark"
                   : "postscroll-light"
-                : ""
+                : darkmodeReducer
+                ? "postscroll-darkm"
+                : "postscroll-lightm"
             }
             style={{
+              scrollSnapType: x ? "y mandatory" : "",
+
               backgroundImage: PaperStyleReducer,
               borderRadius: "0px",
-              minHeight: matchPc
-                ? ""
-                : (stopBodyScroll && matchMobile) ||
-                  (stopBodyScroll && matchTablet)
-                ? " "
-                : "100vh",
-              height: matchPc
-                ? "100vh"
-                : (stopBodyScroll && matchMobile) ||
-                  (stopBodyScroll && matchTablet)
-                ? "100vh"
-                : "",
+              height: "100vh",
+              width: "100%",
               overflowY:
                 (stopBodyScroll && matchMobile) ||
                 (stopBodyScroll && matchTablet)
                   ? "hidden"
                   : "auto",
               overflowX: "hidden",
-              paddingBottom: matchPc ? "20px" : "9px",
+              paddingBottom: "15vh",
             }}
           >
             <MuiThemeProvider theme={themeGeneralSettings}>
-              <Grid container className="dontallowhighlighting">
+              <Grid
+                container
+                className="dontallowhighlighting"
+                style={{ scrollSnapAlign: "start" }}
+              >
                 <Menu
                   showModalUpload={showModalUpload}
                   OpenUploadModal={OpenUploadModal}
                   getSliderWidth={getSliderWidth}
                   paperPostScrollRef={paperPostScrollRef}
                 />
-                <Billboard OpenModalForm={OpenModalForm} />
+                <Billboard
+                  OpenModalForm={OpenModalForm}
+                  click={click}
+                  billboardx={billboardx}
+                />
 
                 <Grid
                   item
@@ -865,7 +715,6 @@ function ProfileOutter() {
                       />
                     </Grid>
                     <img
-                      onClick={OpenModalForm}
                       className={
                         darkmodeReducer
                           ? `turprofileDark image-zoom-on-click`
@@ -881,29 +730,34 @@ function ProfileOutter() {
                         borderRadius: "50%",
                         margin: "auto",
                         filter: "blur(1.3px)",
+                        display: "none",
                       }}
                       src={`./images/profilethumb/${imageReducer}`}
                       alt="Superstarz Billboard "
                     />{" "}
-                    <img
-                      onClick={OpenModalForm}
-                      className={
-                        darkmodeReducer
-                          ? `turprofileDark image-gray-on-click`
-                          : ` turprofileLight image-gray-on-click`
-                      }
-                      style={{
-                        cursor: "pointer",
-                        position: "relative",
-                        zIndex: 1,
-                        objectFit: "contain",
-                        width: "100%",
-                        borderRadius: "50%",
-                        margin: "auto",
-                      }}
-                      src={`./images/profile/${imageReducer}`}
-                      alt="Superstarz Billboard "
-                    />
+                    <label htmlFor="profilexx">
+                      <img
+                        onClick={() => {
+                          ////OpenModalForm();
+                        }}
+                        className={
+                          darkmodeReducer
+                            ? `turprofileDark image-gray-on-click`
+                            : ` turprofileLight image-gray-on-click`
+                        }
+                        style={{
+                          cursor: "pointer",
+                          position: "relative",
+                          zIndex: 1,
+                          objectFit: "contain",
+                          width: "100%",
+                          borderRadius: "50%",
+                          margin: "auto",
+                        }}
+                        src={`./images/profile/${imageReducer}`}
+                        alt="Superstarz Billboard "
+                      />
+                    </label>
                   </Grid>
                 </Grid>
 
@@ -924,6 +778,7 @@ function ProfileOutter() {
                   }}
                 >
                   <OptionsSlider
+                    setsuperSettings={setsuperSettings}
                     typeUpload={0}
                     showModalUpload={showModalUpload}
                     OpenUploadModal={OpenUploadModal}
@@ -934,35 +789,201 @@ function ProfileOutter() {
                 </Grid>
               </Grid>
 
-              <Profile
-                getSliderWidthRef={getSliderWidthRef}
-                OpenModalForm={OpenModalForm}
-                getSliderWidth={getSliderWidth}
-                postData={postData}
-                addPostItemsRef={addPostItemsRef}
-                postDivRef={postDivRef}
-                onPostsItemload={onPostsItemload}
-                itemheight={itemheight}
-                itemheighthold={itemheighthold}
-                postbackheight={postbackheight}
-                formtype={formtype}
-                showModalForm={showModalForm}
-                CloseModalForm={CloseModalForm}
-                aboutTemplateGo={aboutTemplateGo}
-                commentTemplateGo={commentTemplateGo}
-                itemcroptype={itemcroptype}
-                itemFinalPostHeight={itemFinalPostHeight}
-                onPostsItemClicked={onPostsItemClicked}
-                itemCLICKED={itemCLICKED}
-                addpostDivRef={addpostDivRef}
-                postDatainner={postDatainner}
-                itemOriginalPostHeight={itemOriginalPostHeight}
-                ActiveAutoPlay={ActiveAutoPlay}
-                setActiveAutoPlay={setActiveAutoPlay}
-                AUTOSlideLongImages={AUTOSlideLongImages}
-                paperPostScrollRef={paperPostScrollRef}
-                onLoadDataOnce={onLoadDataOnce}
-              />
+              {ShowmaxPost ? (
+                <Grid
+                  container
+                  style={{
+                    height: "100%",
+                    position: "fixed",
+                    top: "0vh",
+                    zIndex: 99,
+                  }}
+                >
+                  <Grid
+                    item
+                    xs={12}
+                    style={{
+                      padding: "0px",
+                      margin: "auto",
+                    }}
+                  >
+                    <span
+                      className={
+                        darkmodeReducer
+                          ? "dialog-container tur"
+                          : "dialog-container tur"
+                      }
+                      style={{
+                        height: "30px",
+                        width: "90px",
+                        borderRadius: "00px",
+                        backgroundColor: "#00ccff",
+                        margin: "auto",
+                        textAlign: "center",
+                      }}
+                    >
+                      <span
+                        style={{
+                          marginTop: "8px",
+                        }}
+                      >
+                        {" "}
+                        max 1
+                      </span>
+                    </span>
+                  </Grid>
+                </Grid>
+              ) : null}
+              {showProfiileData ? (
+                <Profile
+                  x={x}
+                  setx={setx}
+                  showProfiileData={showProfiileData}
+                  getSliderWidthRef={getSliderWidthRef}
+                  OpenModalForm={OpenModalForm}
+                  getSliderWidth={getSliderWidth}
+                  postData={postData}
+                  formtype={formtype}
+                  showModalForm={showModalForm}
+                  CloseModalForm={CloseModalForm}
+                  aboutTemplateGo={aboutTemplateGo}
+                  commentTemplateGo={commentTemplateGo}
+                  postDatainner={postDatainner}
+                  paperPostScrollRef={paperPostScrollRef}
+                />
+              ) : null}
+
+              {superSettings ? (
+                <>
+                  <Grid
+                    container
+                    style={{
+                      position: "fixed",
+                      top: "0px",
+                      width: "100%",
+                      height: "100%",
+                      zIndex: 10,
+                    }}
+                  >
+                    <Grid
+                      container
+                      onClick={() => {
+                        setsuperSettings(false);
+                      }}
+                      style={{
+                        backgroundColor: darkmodeReducer
+                          ? "rgba(50,50,50,0.05)"
+                          : "rgba(250,250,250,0.05)",
+                        position: "fixed",
+                        top: "0px",
+                        width: "100%",
+                        height: "100%",
+                        zIndex: 8,
+                      }}
+                    ></Grid>{" "}
+                    <Grid
+                      xs={6}
+                      style={{
+                        padding: "0px",
+                        backgroundColor: darkmodeReducer
+                          ? "rgba(50,50,50,0.85)"
+                          : "rgba(250,250,250,0.75)",
+                        height: "26vh",
+                        marginTop: "22vh",
+                        textAlign: "center",
+                        justifyContent: "center",
+                        display: "grid",
+                        alignItems: "center",
+                        position: "relative",
+                        zIndex: 10,
+                      }}
+                    >
+                      <Switch
+                        size="medium"
+                        checked={darkmodeReducer}
+                        className={
+                          darkmodeReducer
+                            ? "make-small-icons-clickable-lightCroptheme  "
+                            : "make-small-icons-clickable-darkCroptheme    "
+                        }
+                        style={{
+                          fontSize:
+                            matchTablet || matchMobile ? "2.8vh" : "2.9vw",
+                        }}
+                        onChange={() => {
+                          switchThemes();
+                        }}
+                      />
+                      <Grid
+                        item
+                        xs={12}
+                        style={{
+                          fontSize: matchPc
+                            ? "1.1vw"
+                            : matchTablet
+                            ? "2vh"
+                            : "1.8vh",
+                          fontWeight: "bolder",
+                          fontFamily: "Arial, Helvetica, sans-serif",
+
+                          color: darkmodeReducer ? "#dddddd" : "#0b111b",
+                        }}
+                      >
+                        theme
+                      </Grid>
+                    </Grid>
+                    <Grid
+                      xs={6}
+                      style={{
+                        padding: "0px",
+                        backgroundColor: darkmodeReducer
+                          ? "rgba(50,50,50,0.85)"
+                          : "rgba(250,250,250,0.75)",
+                        height: "26vh",
+                        marginTop: "22vh",
+                        textAlign: "center",
+                        justifyContent: "center",
+                        display: "grid",
+                        alignItems: "center",
+                        position: "relative",
+                        zIndex: 10,
+                      }}
+                    >
+                      <LogoutIcon
+                        onClick={rememberUser}
+                        className={
+                          darkmodeReducer
+                            ? "make-small-icons-clickable-lightCrop turdark dontallowhighlighting zuperkingIcon "
+                            : "make-small-icons-clickable-darkCrop  turdark dontallowhighlighting zuperkingIcon  "
+                        }
+                        style={{
+                          margin: "auto",
+
+                          fontSize:
+                            matchTablet || matchMobile ? "4.8vh" : "2.9vw",
+                        }}
+                      />
+                      <Grid
+                        item
+                        xs={12}
+                        style={{
+                          fontSize: matchPc
+                            ? "1.1vw"
+                            : matchTablet
+                            ? "2vh"
+                            : "1.8vh",
+                          fontWeight: "bolder",
+                          fontFamily: "Arial, Helvetica, sans-serif",
+
+                          color: darkmodeReducer ? "#dddddd" : "#0b111b",
+                        }}
+                      >
+                        log out
+                      </Grid>
+                    </Grid>
+                  </Grid>{" "}
+                </>
+              ) : null}
 
               <CommentTemplate
                 formtype={formtype}
@@ -972,10 +993,32 @@ function ProfileOutter() {
                 commentTemp={commentTemplateGo}
               />
 
+              <UploadProfilePic
+                uploadClose={uploadClose}
+                profileimageSource={profileimageSource}
+                cropimageProfile={cropimageProfile}
+                showModalUploadProfile={showModalUploadProfile}
+                typex={typex}
+              />
+
               <Upload
+                setShowModalUpload={setShowModalUpload}
+                setStopBodyScroll={setStopBodyScroll}
+                closeUploadModal={uploadClose}
                 showModalUpload={showModalUpload}
                 OpenUploadModal={OpenUploadModal}
                 getSliderWidth={getSliderWidth}
+              />
+
+              <input
+                onClick={click}
+                onChange={profilex}
+                type="file"
+                name="superImages"
+                accept="image/*"
+                multiple
+                id="profilexx"
+                style={{ visibility: "hidden" }}
               />
             </MuiThemeProvider>
           </Paper>

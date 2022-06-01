@@ -13,6 +13,8 @@ function Uploadx({
   closeUploadModal,
   OpenUploadModal,
   getSliderWidth,
+  setShowModalUpload,
+  setStopBodyScroll,
 }: any): JSX.Element {
   //
   //
@@ -115,6 +117,9 @@ function Uploadx({
               }}
             >
               <OptionsSlider
+                setShowModalUpload={setShowModalUpload}
+                setStopBodyScroll={setStopBodyScroll}
+                closeUploadModal={closeUploadModal}
                 allowOverflow={allowOverflow}
                 cropscrollRef={cropscrollRef}
                 typeUpload={1}

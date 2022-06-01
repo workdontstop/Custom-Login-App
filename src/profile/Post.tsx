@@ -50,6 +50,8 @@ function Postx({
 
   const [LImiter, setLImiter] = useState<boolean>(false);
 
+  var emoOpacity = 0.25;
+
   useEffect(() => {
     if (onLoadDataOnce[pey]) {
       if (LImiter) {
@@ -321,9 +323,9 @@ function Postx({
 
   var postcirclefont = matchPc ? "0.7vw" : matchTablet ? "1.2vw" : "1.1vh";
   var dotspace = matchPc ? "1.7vw" : matchTablet ? "1.9vh" : "1.9vh";
-  var dotspace2 = matchPc ? "0.4vw" : matchTablet ? "0.4vw" : "0.3vh";
+  var dotspace2 = matchPc ? "0.9vw" : matchTablet ? "1.9vh" : "1.9vh";
 
-  var posttopicfont = matchPc ? "0.99vw" : matchTablet ? "1.8vh" : "1.6vh";
+  var posttopicfont = matchPc ? "1.05vw" : matchTablet ? "1.8vh" : "1.6vh";
 
   var postcaptiontop = matchPc ? "-1.85vh" : matchTablet ? "-9.2vh" : "-9.6vh";
   var postcaptionfont = matchPc ? "1.2vw" : matchTablet ? "2.35vh" : "1.82vh";
@@ -366,7 +368,7 @@ function Postx({
           style={{
             padding: "0px",
             width: "100%",
-            marginTop: pey === 0 || pey === 1 ? "0px" : "0.6px",
+            marginTop: pey === 0 || pey === 1 ? "-0.5px" : "-1.1px",
             zIndex: length - 1 - pey,
           }}
         >
@@ -462,7 +464,7 @@ function Postx({
                     zIndex: 7,
                   }}
                 ></Grid>
-                {/*///////////////////////////////////////////////////////////////////////////EMOTIONS*/}
+                {/*///////////////////////////////////////////////////// opacity: 0.6,//////////////////////EMOTIONS*/}
 
                 <Grid
                   item
@@ -478,7 +480,7 @@ function Postx({
                     zIndex: 8,
                     left: matchPc ? "91.5%" : matchTablet ? "93%" : "92.3%",
                     backgroundColor: emocolor,
-                    opacity: 0.6,
+                    opacity: emoOpacity,
                   }}
                 >
                   <span
@@ -524,7 +526,7 @@ function Postx({
                     zIndex: 8,
                     left: matchPc ? "91.5%" : matchTablet ? "93%" : "92.3%",
                     backgroundColor: emocolor,
-                    opacity: 0.6,
+                    opacity: emoOpacity,
                   }}
                 >
                   <span
@@ -570,7 +572,7 @@ function Postx({
                     zIndex: 8,
                     left: matchPc ? "91.5%" : matchTablet ? "93%" : "92.3%",
                     backgroundColor: emocolor,
-                    opacity: 0.6,
+                    opacity: emoOpacity,
                   }}
                 >
                   <span
@@ -616,7 +618,7 @@ function Postx({
                     zIndex: 8,
                     left: matchPc ? "91.5%" : matchTablet ? "93%" : "92.3%",
                     backgroundColor: emocolor,
-                    opacity: 0.6,
+                    opacity: emoOpacity,
                   }}
                 >
                   <span
@@ -655,7 +657,7 @@ function Postx({
                   onClick={clickslider}
                   style={{
                     opacity: darkmodeReducer ? 0.89 : 0.94,
-                    cursor: "alias",
+                    cursor: "copy",
                     top: `-1vh`,
                     position: "absolute",
                     zIndex: 6,
@@ -777,6 +779,16 @@ function Postx({
                           }}
                         />
                       )}
+
+                      <span
+                        style={{
+                          opacity: 0,
+                          fontSize: dotspace2,
+                        }}
+                      >
+                        .
+                      </span>
+
                       <span
                         style={{
                           fontSize: posttopicfont,
@@ -813,10 +825,10 @@ function Postx({
                       fontSize: postcaptionfont,
                       fontWeight: "normal",
                       margin: "0",
-                      opacity: 0.54,
+                      opacity: darkmodeReducer ? 0.5 : 0.55,
                       padding: "7px",
                       justifyContent: "center",
-                      color: darkmodeReducer ? "#dddddd" : "#111111",
+                      color: darkmodeReducer ? "#dddddd" : "#222222",
                     }}
                   >
                     {post.caption}{" "}
@@ -854,6 +866,7 @@ function Postx({
                       style={{
                         verticalAlign: "middle",
                         fontSize: postcommentfont,
+                        opacity: 0.35,
                         color: darkmodeReducer ? "#222222" : "#ffffff",
                       }}
                     />
