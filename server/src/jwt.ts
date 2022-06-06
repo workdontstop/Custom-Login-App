@@ -1,12 +1,6 @@
 const { sign, verify } = require("jsonwebtoken");
-
-const path = require("path");
-
-require("dotenv").config({ path: path.resolve(__dirname, "./.env") });
-
-const { SECRET_KEYY } = process.env;
-
-var secretKey = SECRET_KEYY;
+const secretKey =
+  "nin$etails54890$$60x1breakneck20119ki77777$$ngofhsaganatlion71qqxxzigoid00910cwcdmekirokuvira$@sagnalgatapuika66$$$$xxfax";
 
 const createTokens = (logindata: any) => {
   const accessToken = sign(

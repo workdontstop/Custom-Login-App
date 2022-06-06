@@ -121,7 +121,7 @@ function PreviewCanvasCropAllx({
         }
         var quality;
         type == 1
-          ? (quality = 1400)
+          ? (quality = 800)
           : type == 2
           ? (quality = 700)
           : (quality = matchMobile ? 150 : 300);

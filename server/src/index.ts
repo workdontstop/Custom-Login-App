@@ -7,25 +7,12 @@ var cors = require("cors");
 const path = require("path");
 const multer = require("multer");
 
-require("dotenv").config({ path: path.resolve(__dirname, "./.env") });
-
-const {
-  ORIGIN,
-  LISTEN,
-  USER_DATABASE,
-  HOST_DATABASE,
-  PASSWORD_DATABASE,
-  DATABASE_NAME,
-} = process.env;
-
-const host = window.location.host;
-
 app.use(
   cors({
     credentials: true,
     /////origin: "http://192.168.43.137:3000",
     //// origin: "http://localhost:3000",
-    origin: `http://${host}:3000`,
+    origin: "http://192.168.43.136:3000",
   })
 );
 
@@ -39,10 +26,10 @@ import { body, validationResult } from "express-validator";
 
 import jwt_decode from "jwt-decode";
 const CONNECTION_CONFIG = {
-  user: USER_DATABASE,
-  host: HOST_DATABASE,
-  password: PASSWORD_DATABASE,
-  database: DATABASE_NAME,
+  user: "root",
+  host: "localhost",
+  password: "password",
+  database: "superdata",
 };
 
 // Node.js program to demonstrate the
@@ -55,7 +42,7 @@ const CONNECTION_CONFIG = {
 ///
 ///
 ///reg
-const register = `INSERT INTO members (username,password,email,color1,color2,color_type,status,notification,tutorial,date,reg) VALUES (?,?,?,?,?,?,?,?,?,?,?)`;
+const register = `INSERT INTO members (username,password,email,billboard1,profile_image,color1,color2,color_type,status,notification,tutorial,date,reg) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
 ///
 ///login
 const login = `SELECT username,id,password,color1,color2,color_type,profile_image,first_name,sur_name,quote,reg,billboard1,billboard2,biography FROM members WHERE username =?`;
@@ -534,6 +521,8 @@ app.post(
             values.inputedUsername,
             hash,
             values.inputedEmail,
+            "bill.png",
+            "z.png",
             color,
             color,
             0,
@@ -548,14 +537,14 @@ app.post(
           const payloadValue = {
             id: signupData.insertId,
             username: values.inputedUsername,
-            userimage: "",
+            userimage: "z.png",
             usercolor1: color,
             usercolor2: color,
             usercolortype: 0,
             userfirstname: "",
             usersurname: "",
             userquote: " ",
-            userbillboard1: "",
+            userbillboard1: "bill.png",
             userbillboard2: "",
             biography: "",
           };
@@ -591,6 +580,6 @@ app.post(
   }
 );
 
-app.listen(LISTEN, (): any => {
+app.listen("1000", (): any => {
   console.log("running");
 });

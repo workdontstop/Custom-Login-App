@@ -7,12 +7,12 @@ import "./log/logCss.css";
 import { ICommentTemplate, IGrid } from "./log/log-Interfaces";
 import { useSelector } from "react-redux";
 
-import image1 from "./log/images/modalpic1.jpg";
-import image2 from "./log/images/modalpic2.jpg";
+import image1 from "./log/images/modalpic1.png";
+import image2 from "./log/images/modalpic2.png";
 import image3 from "./log/images/modalpic3.png";
-import image4 from "./log/images/modalpic4.jpg";
-import image5 from "./log/images/modalpic5.jpg";
-import image6 from "./log/images/modalpic6.jpg";
+import image4 from "./log/images/modalpic4.png";
+import image5 from "./log/images/modalpic5.png";
+import image6 from "./log/images/modalpic6.png";
 import { ModalLogLayout } from "./log/ModalLogLayout";
 import { ModalAboutLayout } from "./profile/ModalAboutLayout";
 
