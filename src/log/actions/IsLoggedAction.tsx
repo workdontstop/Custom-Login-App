@@ -1,4 +1,4 @@
-import { SIGN_IN, LOGIN_ISLOGGED } from ".././log_ActionTypes";
+import { SIGN_IN, LOGIN_ISLOGGED } from "./log_ActionTypes";
 
 export function IsLoggedAction() {
   return {

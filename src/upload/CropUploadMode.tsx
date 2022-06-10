@@ -1318,6 +1318,51 @@ function CropUploadModex({
           xs={12}
           style={{
             padding: "0px",
+          }}
+        >
+          <PreviewCanvasHolder
+            selectedImage={selectedImage}
+            myCropHeight={myCropHeight}
+            cropToo={cropToo}
+            zoom={zoom}
+            setwaitONLOAD={setwaitONLOAD}
+            allowCropAllCanvas={allowCropAllCanvas}
+            WideImageCheck={WideImageCheck}
+            SourceWidthForCropX={SourceWidthForCropX}
+            SourceWidthForCropY={SourceWidthForCropY}
+            hdcanvasvalue={hdcanvasvalue}
+            BoxCropActivated={BoxCropActivated}
+            cropheight={cropheight}
+            cropwidth={cropwidth}
+            CropImageHolder={CropImageHolder}
+            cropCanvasRef={cropCanvasRef}
+            crop={cropToo}
+            getpreviewFixedWidth={getpreviewFixedWidth}
+            canvasToimage={canvasToimage}
+            refWithimageData={refWithimageData}
+            addUploadItemsRef={addUploadItemsRef}
+            itemUploadRef={itemUploadRef}
+            itemUploadRefSD={itemUploadRefSD}
+            itemUploadRefThumb={itemUploadRefThumb}
+            setsuperCropLoadFade={setsuperCropLoadFade}
+            length={selectedImage.length}
+            filterImage={filterImage}
+            setfilterImage={setfilterImage}
+            setallowFilters={setallowFilters}
+            cutOffLoader={cutOffLoader}
+            setcutOffLoader={setcutOffLoader}
+            addUploadItemsRefThumb={addUploadItemsRefThumb}
+            addUploadItemsRefSD={addUploadItemsRefSD}
+          />
+        </Grid>
+      </Grid>
+
+      <Grid container style={{ padding: "0px" }}>
+        <Grid
+          item
+          xs={12}
+          style={{
+            padding: "0px",
             marginTop: activatecropImage
               ? "0px"
               : matchMobile
@@ -1368,41 +1413,6 @@ function CropUploadModex({
               </animated.div>
             </>
           ) : null}
-
-          <PreviewCanvasHolder
-            selectedImage={selectedImage}
-            myCropHeight={myCropHeight}
-            cropToo={cropToo}
-            zoom={zoom}
-            setwaitONLOAD={setwaitONLOAD}
-            allowCropAllCanvas={allowCropAllCanvas}
-            WideImageCheck={WideImageCheck}
-            SourceWidthForCropX={SourceWidthForCropX}
-            SourceWidthForCropY={SourceWidthForCropY}
-            hdcanvasvalue={hdcanvasvalue}
-            BoxCropActivated={BoxCropActivated}
-            cropheight={cropheight}
-            cropwidth={cropwidth}
-            CropImageHolder={CropImageHolder}
-            cropCanvasRef={cropCanvasRef}
-            crop={cropToo}
-            getpreviewFixedWidth={getpreviewFixedWidth}
-            canvasToimage={canvasToimage}
-            refWithimageData={refWithimageData}
-            addUploadItemsRef={addUploadItemsRef}
-            itemUploadRef={itemUploadRef}
-            itemUploadRefSD={itemUploadRefSD}
-            itemUploadRefThumb={itemUploadRefThumb}
-            setsuperCropLoadFade={setsuperCropLoadFade}
-            length={selectedImage.length}
-            filterImage={filterImage}
-            setfilterImage={setfilterImage}
-            setallowFilters={setallowFilters}
-            cutOffLoader={cutOffLoader}
-            setcutOffLoader={setcutOffLoader}
-            addUploadItemsRefThumb={addUploadItemsRefThumb}
-            addUploadItemsRefSD={addUploadItemsRefSD}
-          />
         </Grid>
         <Grid
           className="bottomcanvas"

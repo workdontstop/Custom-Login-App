@@ -1,4 +1,4 @@
-import { SIGN_IN, LOGIN_ISLOGGED } from ".././log_ActionTypes";
+import { SIGN_IN, LOGIN_ISLOGGED } from "../actions/log_ActionTypes";
 
 ///////////////////////////////ISLOGGED///////////////
 const initialState = {

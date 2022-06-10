@@ -4,7 +4,7 @@ import {
   REQUEST_USER_INFO_UPDATE,
   REQUEST_PROFILE_UPDATE,
   REQUEST_BILLBOARD_UPDATE,
-} from "../log_ActionTypes";
+} from "../actions/log_ActionTypes";
 
 ///
 ///
