@@ -459,7 +459,7 @@ function PreviewCanvasCropAllx({
   return (
     <>
       <Grid container>
-        <Grid xs={12} item>
+        <Grid xs={8} item>
           <img
             ref={addUploadItemsRef}
             style={{

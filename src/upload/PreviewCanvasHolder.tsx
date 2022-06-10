@@ -71,17 +71,7 @@ function PreviewCanvasHolderx({
     <>
       {/* SD IMAGE  CREATED  itemUploadRef */}
       {selectedImage.length > 0 ? (
-        <Masonry
-          columns={
-            matchPc
-              ? selectedImage.length > 2
-                ? 3
-                : 2
-              : selectedImage.length > 1
-              ? 2
-              : 1
-          }
-          spacing={0}
+        <div
           style={{
             overflowX: "hidden",
             zIndex: 2,
@@ -133,7 +123,7 @@ function PreviewCanvasHolderx({
               </div>
             );
           })}{" "}
-        </Masonry>
+        </div>
       ) : null}
 
       {/* SD IMAGE  CREATED  itemUploadRef */}
@@ -191,17 +181,7 @@ function PreviewCanvasHolderx({
           ) : (
             <>
               {" "}
-              <Masonry
-                columns={
-                  matchPc
-                    ? selectedImage.length > 2
-                      ? 3
-                      : 2
-                    : selectedImage.length > 1
-                    ? 2
-                    : 1
-                }
-                spacing={0}
+              <div
                 style={{
                   overflowX: "hidden",
                   zIndex: 2,
@@ -253,7 +233,7 @@ function PreviewCanvasHolderx({
                     </div>
                   );
                 })}{" "}
-              </Masonry>
+              </div>
             </>
           )
         ) : null}
@@ -265,9 +245,7 @@ function PreviewCanvasHolderx({
       {/* Thumb IMAGE  CREATED  itemUploadRefThumb */}
       <>
         {selectedImage.length > 0 ? (
-          <Masonry
-            columns={2}
-            spacing={0}
+          <div
             style={{
               overflowX: "hidden",
               zIndex: 2,
@@ -317,7 +295,7 @@ function PreviewCanvasHolderx({
                 </div>
               );
             })}{" "}
-          </Masonry>
+          </div>
         ) : null}
       </>
       {/* Thumb IMAGE  CREATED  itemUploadRefThumb */}
